@@ -1,0 +1,488 @@
+html
+{
+    width:100%;
+    height:100%;
+}
+body
+{
+    width:100%;
+    height:100%;
+    background-color: #1e1e1e;
+    margin:0px;
+}
+.structure-header
+{
+    width:100%;
+    height:50px;
+    background-color: #333333;
+    box-shadow: 0 -5px 10px 0 rgba(0,0,0,.5)!important;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+.structure-header-inner-container
+{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+    overflow:hidden;
+}
+.structure-header-info-container
+{
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    text-align: left;
+    border:none;
+    background-color:#3A3A3A ;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    color:rgb(182, 182, 182);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.logo-container
+{
+    width:120px;
+    overflow: hidden;
+    height:50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.logo-container img
+{
+    height:40px;
+}
+#usernameContainer
+{
+    margin-left: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+    text-align: right;
+    font-size: 15px;
+    color:#EBEBEB;
+}
+.section-container
+{
+    box-sizing: border-box;
+    padding:20px;
+    width:100% - 40px;
+    height:calc(100% - 50px);
+    display: flex;
+    flex-direction: row;
+}
+#listOuterContainer
+{
+    width:500px;
+    height:100%;
+    background-color: #333333;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+.listTitleContainer
+{
+    width: 100%;
+    height:50px;
+    box-sizing: border-box;
+    color:#ddd;
+    background-color: #3d3d3d;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.16), 0 2px 3px rgba(0,0,0,0.23);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.listTitleItem
+{
+    height:50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.listTitleItemRow
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.listTitleItemRow span
+{
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    text-align: left;
+    font-size: 14px;
+    margin-left: 10px;
+}
+#labelLottoSelezionato b,#labelCabinaSelezionata b,#labelPannelloSelezionato b,#labelId_distintaSelezionata b
+{
+    color:#4C91CB;
+}
+#labelLottoSelezionato,#labelCabinaSelezionata,#labelPannelloSelezionato,#labelId_distintaSelezionata
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#containerNItems span
+{
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+}
+.listButtonIndietro
+{
+    height: 30px;
+    line-height: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    text-align: left;
+    border:none;
+    background-color:#313131 ;
+    border-radius: 4px;
+    color:#ddd;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    outline: none;
+    cursor: pointer;
+}
+.listButtonIndietro span
+{
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+    font-weight: normal;
+}
+.listButtonIndietro i
+{
+    margin-right: 5px;
+}
+.listButtonIndietro:active
+{
+    color:#4C91CB;
+}
+#listInnerContainer
+{
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    /*padding:5px;*/
+    margin:10px;
+    max-height:calc(100% - 120px);
+    min-height:calc(100% - 120px);
+    height:calc(100% - 120px);
+    overflow-y: scroll;
+    width: calc(100% - 20px);
+}
+#listInnerContainerSpinner
+{
+    height:25px;
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#listInnerContainerSpinner i
+{
+    color:#ddd;
+    margin-right: 5px;
+}
+#listInnerContainerSpinner span
+{
+    color:#ddd;
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    font-size: 12px;
+}
+.list-actions-container
+{
+    width: 100%;
+    height:50px;
+    box-sizing: border-box;
+    background-color: #3d3d3d;
+    box-shadow: 0 0 5px rgba(0,0,0,0.16), 0 0 10px rgba(0,0,0,0.23);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:flex-start;
+}
+.odp-item,.cabine-item,.pannelli-item
+{
+    height: 35px;
+    min-height: 35px;
+    width: calc(100% - 10px);
+    margin-right:10px;
+    border:none;
+    outline:none;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.16), 0 2px 3px rgba(0,0,0,0.23);
+    background-color: #404040;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    color:#EBEBEB;
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding:0px;
+}
+.odp-item span,.cabine-item span,.pannelli-item span
+{
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.odp-item:focus,.cabine-item:focus
+{
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    background-color: #494949;
+    color:#4C91CB;
+}
+.pdf-outer-container
+{
+    width:calc(100% - 520px); 
+    margin-left: 20px;
+    height:100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: #333333;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.pdf-title-container
+{
+    width: 100%;
+    height:50px;
+    box-sizing: border-box;
+    background-color: #3d3d3d;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.16), 0 2px 3px rgba(0,0,0,0.23);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:space-between;
+}
+.pdf-title-item
+{
+    display: flex;
+    height:50px;
+}
+.pdf-title-item-row
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.pdf-title-button
+{
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    margin-left: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+    background-color:#313131 ;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    outline: none;
+    cursor: pointer;
+}
+.pdf-title-button span
+{
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+}
+.pdf-title-button i
+{
+    margin-left: 10px;
+}
+#titleButtonConferma
+{
+    color:#70B085;
+    border:1px solid #70B085;
+}
+#titleButtonAnnulla
+{
+    color:#DA6969;
+    border:1px solid #DA6969;
+}
+#titleButtonConferma:active
+{
+    background-color:#70B085;
+    border:1px solid #70B085;
+    color:white;
+}
+#titleButtonAnnulla:active
+{
+    background-color:#DA6969;
+    border:1px solid #DA6969;
+    color:white;
+}
+#labelPannelloSelezionato,#labelId_distintaSelezionata
+{
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    text-align: left;
+    font-size: 14px;
+    margin-left: 10px;
+    color:#ddd;
+}
+#messageCodicePannello
+{
+    margin-right: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+}
+#messageCodicePannello span
+{
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+}
+#inputSearchCodicePannello
+{
+    margin-right: 10px;
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    height:30px;
+    width:160px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+    border:none;
+    background-color:#313131 ;
+    border-radius: 4px;
+    font-family: 'Questrial', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    outline:none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    color:#ddd;
+}
+#pdfContainer
+{
+    background-image: url("../images/logo.png");
+	background-position: center center;
+	background-repeat: no-repeat;
+    height: calc(100% - 140px);
+    margin:20px;
+    width: calc(100% - 40px);
+}
+#pdfContainer iframe
+{
+    width: 100%;
+    height: 100%;
+    border:none;
+}
+.pdf-actions-container
+{
+    width: 100%;
+    height:50px;
+    box-sizing: border-box;
+    background-color: #3d3d3d;
+    box-shadow: 0 0 5px rgba(0,0,0,0.16), 0 0 10px rgba(0,0,0,0.23);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:flex-start;
+}
+.action-button
+{
+    height: 40px;
+    width: 40px;
+    box-sizing: border-box;
+    border:none;
+    /*background-color:#313131 ;*/
+    background-color: gray;
+    border-radius: 4px;
+    color:#ddd;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    font-size: 20px;
+}
+.action-button:active
+{
+    color:#4C91CB;
+}
+/*--------------------------------------------------*/
+#poweredBy
+{
+    position: absolute;
+    right:30px;
+    bottom:80px;
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    font-size: 12px;
+    color:gray;
+}
+#poweredBy b
+{
+    color:rgb(76, 145, 203);
+    font-weight: normal;
+}
+/*--------------------------------------------------*/
+::-webkit-scrollbar
+{
+    width: 30px;
+    background-color: #3d3d3d;
+    border-radius: 2px;
+}
+::-webkit-scrollbar-track
+{
+    /*box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    background-color: rgba(0,0,0,0.05);*/
+}
+::-webkit-scrollbar-thumb
+{
+    background: rgb(128, 127, 127); 
+    border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover
+{
+   background: #aaa;
+}
+/*--------------------------------------------------*/

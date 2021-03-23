@@ -3,9 +3,7 @@
 	include "connessione.php";
 	
     $username= $_REQUEST ['username'];
-    $turno= $_REQUEST ['turno'];
     $stazione= $_REQUEST ['stazione'];
-    $linea= $_REQUEST ['linea'];
 
     $error=true;
 
@@ -24,9 +22,7 @@
                 session_start();
                 $_SESSION['username']=$username;
                 $_SESSION['id_utente']=$row2['id_utente'];
-                $_SESSION['turno']=$turno;
                 $_SESSION['stazione']=$stazione;
-                $_SESSION['linea']=$linea;
                 
                 echo "ok";
                 $error=false;

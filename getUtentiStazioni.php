@@ -4,7 +4,7 @@
 
     $utenti=[];
 
-    $query2="SELECT * FROM dbo.utenti_stazioni WHERE eliminato='false' ORDER BY [number]";	
+    $query2="SELECT * FROM dbo.utenti_stazioni WHERE eliminato='false' ORDER BY [username]";	
     $result2=sqlsrv_query($conn,$query2);
     if($result2==TRUE)
     {
@@ -12,7 +12,6 @@
         {
             $utente["id_utente"]=$row2['id_utente'];
             $utente["username"]=$row2['username'];
-            $utente["number"]=$row2['number'];
 
             array_push($utenti,$utente);
         }

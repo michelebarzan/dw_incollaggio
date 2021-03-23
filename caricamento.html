@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Caricamento</title>
+
+        <script type="text/javascript" src="libs/js/jquery.min.js"></script>
+        <link href="libs/css/fontawesome6/pro/css/all.css" rel="stylesheet">
+        <script src="libs/js/sweetalert2.all.min.js"></script>
+
+        <script src="js/global.js"></script>
+        <link href="css/global.css" rel="stylesheet">
+        <script src="js/caricamento.js"></script>
+        <link href="css/caricamento.css" rel="stylesheet">
+        <link href="css/fonts.css" rel="stylesheet">
+    </head>
+    <body onclick="setFocus()">
+        <header class="structure-header">
+            <div class="structure-header-inner-container" style="width:calc(50% - 60px);box-sizing:border-box;padding-right: 10px;">
+                <div id="clockContainer" class="structure-header-info-container"></div>
+            </div>
+            <div class="structure-header-inner-container">
+                <div class="logo-container">
+                    <img src="images/logo.png" alt="Logo">
+                </div>
+            </div>
+            <div class="structure-header-inner-container" style="width:calc(50% - 60px)">
+                <div id="infoStazioneContainer" class="structure-header-info-container" style="margin-left: auto;"></div>
+                <div id="usernameContainer"></div>
+            </div>
+        </header>
+        <div class="section-container">
+            <div id="listOuterContainer">
+                <div class="listTitleContainer">
+                    <div class="listTitleItem" style="max-width:280px">
+                        <div class="listTitleItemRow">
+                            <span id="labelLottoSelezionato">ODP :</span>
+                        </div>
+                        <div class="listTitleItemRow">
+                            <span id="labelCabinaSelezionata">CABINA :</span>
+                        </div>
+                    </div>
+                    <div class="listTitleItem" id="containerNItems" style="margin-left:auto;"></div>
+                    <div class="listTitleItem" style="margin-left:10px">
+                        <button class="listButtonIndietro" onclick="indietro()">
+                            <i class="fas fa-chevron-left"></i>
+                            <span>INDIETRO</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="listInnerContainer"></div>
+                <div class="list-actions-container">
+                    <button class="action-button" onclick="listToTop()"><i class="far fa-arrow-to-top"></i></button>
+                    <button class="action-button" onclick="listToBottom()"><i class="far fa-arrow-to-bottom"></i></button>
+                    <button class="action-button" style="margin-left:auto" onclick="listScrolltop()"><i class="far fa-angle-up"></i></button>
+                    <button class="action-button" style="margin-right: 5px;" onclick="listScrolldown()"><i class="far fa-angle-down"></i></button>
+                </div>
+            </div>
+            <div class="pdf-outer-container">
+                <div class="pdf-title-container">
+                    <div class="pdf-title-item" style="flex-direction: column;align-items: flex-start;justify-content: space-evenly;width:320px">
+                        <div class="pdf-title-item-row">
+                            <span id="labelPannelloSelezionato">PANNELLO :</span>
+                        </div>
+                        <div class="pdf-title-item-row">
+                            <span id="labelId_distintaSelezionata"># :</span>
+                        </div>
+                    </div>
+                    <div class="pdf-title-item" style="flex-direction: row;align-items: center;justify-content: center;width:calc(100% - 650px);margin-right:5px;margin-left: 5px;">
+                        <button class="pdf-title-button" onclick="confermaSelectPannello()" id="titleButtonConferma"><span>CONFERMA</span><i class="fad fa-list-check"></i></button>
+                        <button class="pdf-title-button" onclick="cancelSelectPannello()" id="titleButtonAnnulla"><span>ANNULLA</span><i class="fad fa-arrow-left-rotate"></i></button>
+                    </div>
+                    <div class="pdf-title-item" style="flex-direction: row;align-items: center;justify-content: flex-start;width:320px">
+                        <div id="messageCodicePannello"></div>
+                        <input type="search" id="inputSearchCodicePannello" placeholder="Codice pannello..." onsearch="checkCodicePannello(this)" onkeyup="keyUpInputCodicePannello(this)">
+                    </div>
+                </div>
+                <div id="pdfContainer"></div>
+                <div class="pdf-actions-container">
+                    <button class="action-button" onclick="pdfZoomout()"><i class="far fa-minus"></i></button>
+                    <button class="action-button" onclick="pdfZoomin()"><i class="far fa-plus"></i></button>
+                    <button class="action-button" onclick="pdfScrollleft()"><i class="far fa-angle-left"></i></button>
+                    <button class="action-button" onclick="pdfScrolltop()"><i class="far fa-angle-up"></i></button>
+                    <button class="action-button" onclick="pdfScrolldown()"><i class="far fa-angle-down"></i></button>
+                    <button class="action-button" onclick="pdfScrollright()"><i class="far fa-angle-right"></i></button>
+                    <button class="action-button" style="margin-left:auto;margin-right: 5px;" onclick="resetPdfZoom()"><i class="far fa-expand"></i></button>
+                </div>
+            </div>
+        </div>
+        <div id="poweredBy">Powered by <b>Servizio Globale</b> (www.servizioglobale.it)</div>
+    </body>
+</html>
