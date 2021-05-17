@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Incollaggio Lana</title>
+
+        <script type="text/javascript" src="libs/js/jquery.min.js"></script>
+        <link href="libs/css/fontawesome6/pro/css/all.css" rel="stylesheet">
+        <script src="libs/js/sweetalert2.all.min.js"></script>
+        <script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script>
+
+        <script src="js/global.js"></script>
+        <link href="css/global.css" rel="stylesheet">
+        <script src="js/incollaggio_lana.js"></script>
+        <link href="css/incollaggio_lana.css" rel="stylesheet">
+        <link href="css/fonts.css" rel="stylesheet">
+    </head>
+    <body>
+        <header class="structure-header">
+            <div class="structure-header-inner-container" style="width:calc(50% - 60px);box-sizing:border-box;padding-right: 10px;">
+                <div id="clockContainer" class="structure-header-info-container"></div>
+            </div>
+            <div class="structure-header-inner-container">
+                <div class="logo-container">
+                    <img src="images/logo.png" alt="Logo">
+                </div>
+            </div>
+            <div class="structure-header-inner-container" style="width:calc(50% - 60px)">
+                <div id="infoStazioneContainer" class="structure-header-info-container" style="margin-left: auto;"></div>
+                <div id="usernameContainer"></div>
+                <button class="structure-header-logout-button" onclick="logout()"><i class="fad fa-sign-out"></i></button>
+            </div>
+        </header>
+        <div class="section-title-container">
+            <div class="section-title-item" style="width:calc(100% - calc(390px / 2));overflow: hidden;">
+                <div class="section-title-item-row">
+                    <span class="section-title-label" id="labelOrdineDiProduzione">ODP :</span>
+                    <span class="section-title-label" style="margin-left: auto;" id="labelCodicePannello">PANNELLO :</span>
+                </div>
+                <div class="section-title-item-row">
+                    <span class="section-title-label" id="labelNumeroCabina">CABINA :</span>
+                    <span class="section-title-label" style="margin-left: auto;" id="labelIdDistinta"># :</span>
+                </div>
+            </div>
+            <div class="section-title-item" style="flex-direction: row;align-items: center;justify-content: center;width:370px;margin-right:10px;margin-left: 10px;">
+                <button class="section-title-action-button" onclick="avanzaPannello()" id="sectionTitleActionButtonAvanza"><span>AVANZA PANNELLO</span><i class="fad fa-list-check"></i></button>
+                <button class="section-title-action-button" onclick="eliminaPannello()" id="sectionTitleActionButtonElimina"><span>ELIMINA PANNELLO</span><i class="fad fa-trash"></i></button>
+            </div>
+            <div class="section-title-item" style="width:calc(100% - calc(390px / 2));overflow: hidden;">
+                <span class="section-title-label" style="margin-left: auto;margin-right: 20px;" id="labelIdIncollaggio">ID INCOLLAGGIO :</span>
+            </div>
+        </div>
+        <div class="section-container">
+            <div id="drawing-outer-container">
+                <div id="drawingInnerContainer"></div>
+                <div class="drawing-actions-container">
+                    <button class="text-action-button" onclick="toggleDrawing()">
+                        <span id="labelToggleDrawing">LANA</span>
+                        <i class="far fa-sync"></i>
+                    </button>
+                    <!--<button class="action-button" onclick="listToTop()"><i class="far fa-arrow-to-top"></i></button>
+                    <button class="action-button" onclick="listToBottom()"><i class="far fa-arrow-to-bottom"></i></button>
+                    <button class="action-button" style="margin-left:auto" onclick="listScrolltop()"><i class="far fa-angle-up"></i></button>
+                    <button class="action-button" style="margin-right: 5px;" onclick="listScrolldown()"><i class="far fa-angle-down"></i></button>-->
+                </div>
+            </div>
+            <div class="pdf-outer-container">
+                <div id="pdfContainer"></div>
+                <div class="pdf-actions-container">
+                    <button class="action-button" onclick="pdfZoomout()"><i class="far fa-minus"></i></button>
+                    <button class="action-button" onclick="pdfZoomin()"><i class="far fa-plus"></i></button>
+                    <button class="action-button" onclick="pdfScrollleft()"><i class="far fa-angle-left"></i></button>
+                    <button class="action-button" onclick="pdfScrolltop()"><i class="far fa-angle-up"></i></button>
+                    <button class="action-button" onclick="pdfScrolldown()"><i class="far fa-angle-down"></i></button>
+                    <button class="action-button" onclick="pdfScrollright()"><i class="far fa-angle-right"></i></button>
+                    <button class="action-button" style="margin-left:auto;margin-right: 5px;" onclick="resetPdfZoom()"><i class="far fa-expand"></i></button>
+                </div>
+            </div>
+        </div>
+        <div id="poweredBy">Powered by <b>Servizio Globale</b> (www.servizioglobale.it)</div>
+    </body>
+</html>

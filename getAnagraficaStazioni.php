@@ -4,7 +4,7 @@
 
     $stazioni=[];
 
-    $query2="SELECT * FROM dbo.anagrafica_stazioni";	
+    $query2="SELECT * FROM dbo.anagrafica_stazioni WHERE [hidden]='false'";	
     $result2=sqlsrv_query($conn,$query2);
     if($result2==TRUE)
     {

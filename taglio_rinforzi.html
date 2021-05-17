@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Taglio Rinforzi</title>
+
+        <script type="text/javascript" src="libs/js/jquery.min.js"></script>
+        <link href="libs/css/fontawesome6/pro/css/all.css" rel="stylesheet">
+        <script src="libs/js/sweetalert2.all.min.js"></script>
+        <script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script>
+
+        <script src="js/global.js"></script>
+        <link href="css/global.css" rel="stylesheet">
+        <script src="js/taglio_rinforzi.js"></script>
+        <link href="css/taglio_rinforzi.css" rel="stylesheet">
+        <link href="css/fonts.css" rel="stylesheet">
+    </head>
+    <body>
+        <header class="structure-header">
+            <div class="structure-header-inner-container" style="width:calc(50% - 60px);box-sizing:border-box;padding-right: 10px;">
+                <div id="clockContainer" class="structure-header-info-container"></div>
+            </div>
+            <div class="structure-header-inner-container">
+                <div class="logo-container">
+                    <img src="images/logo.png" alt="Logo">
+                </div>
+            </div>
+            <div class="structure-header-inner-container" style="width:calc(50% - 60px)">
+                <div id="infoStazioneContainer" class="structure-header-info-container" style="margin-left: auto;"></div>
+                <div id="usernameContainer"></div>
+                <button class="structure-header-logout-button" onclick="logout()"><i class="fad fa-sign-out"></i></button>
+            </div>
+        </header>
+        <div class="section-title-container">
+            <div class="section-title-item" style="width:calc(100% - calc(390px / 2));overflow: hidden;">
+                <div class="section-title-item-row">
+                    <span class="section-title-label" id="labelOrdineDiProduzione">ODP :</span>
+                    <span class="section-title-label" style="margin-left: auto;" id="labelCodicePannello">PANNELLO :</span>
+                </div>
+                <div class="section-title-item-row">
+                    <span class="section-title-label" id="labelNumeroCabina">CABINA :</span>
+                    <span class="section-title-label" style="margin-left: auto;" id="labelIdDistinta"># :</span>
+                </div>
+            </div>
+            <div class="section-title-item" style="flex-direction: row;align-items: center;justify-content: center;width:370px;margin-right:10px;margin-left: 10px;">
+                <button class="section-title-action-button" onclick="avanzaPannello()" id="sectionTitleActionButtonAvanza"><span>AVANZA PANNELLO</span><i class="fad fa-list-check"></i></button>
+                <button class="section-title-action-button" onclick="eliminaPannello()" id="sectionTitleActionButtonElimina"><span>ELIMINA PANNELLO</span><i class="fad fa-trash"></i></button>
+            </div>
+            <div class="section-title-item" style="width:calc(100% - calc(390px / 2));overflow: hidden;">
+                <span class="section-title-label" style="margin-left: auto;margin-right: 20px;" id="labelIdIncollaggio">ID INCOLLAGGIO :</span>
+            </div>
+        </div>
+        <div class="section-container">
+            <div id="drawing-outer-container">
+                <div id="drawingInnerContainer"></div>
+                <div class="drawing-actions-container">
+                    <!--<button class="action-button" onclick="listToTop()"><i class="far fa-arrow-to-top"></i></button>
+                    <button class="action-button" onclick="listToBottom()"><i class="far fa-arrow-to-bottom"></i></button>
+                    <button class="action-button" style="margin-left:auto" onclick="listScrolltop()"><i class="far fa-angle-up"></i></button>
+                    <button class="action-button" style="margin-right: 5px;" onclick="listScrolldown()"><i class="far fa-angle-down"></i></button>-->
+                </div>
+            </div>
+            <div class="right-section-outer-container">
+                <div class="armadio-rinforzi-outer-container">
+                    <svg class="armadio-rinforzi-canvas">
+                        <!--DISEGNO SCAFFALE-->
+                        <rect x="0" y="0" width="calc(calc(600*50)/3110)" height="calc(calc(600*1910)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*50)/3110)" y="0" width="calc(calc(600*1300)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*1350)/3110)" y="0" width="calc(calc(600*50)/3110)" height="calc(calc(600*1910)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*1400)/3110)" y="0" width="calc(calc(600*1300)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*2700)/3110)" y="0" width="calc(calc(600*50)/3110)" height="calc(calc(600*1910)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*2750)/3110)" y="0" width="calc(calc(600*100)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*2850)/3110)" y="0" width="calc(calc(600*20)/3110)" height="calc(calc(600*1910)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*2870)/3110)" y="0" width="calc(calc(600*100)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*2970)/3110)" y="0" width="calc(calc(600*20)/3110)" height="calc(calc(600*1910)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*2990)/3110)" y="0" width="calc(calc(600*100)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*3090)/3110)" y="0" width="calc(calc(600*20)/3110)" height="calc(calc(600*1910)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*50)/3110)" y="calc(calc(600*530)/3110)" width="calc(calc(600*1300)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*1400)/3110)" y="calc(calc(600*530)/3110)" width="calc(calc(600*1300)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*50)/3110)" y="calc(calc(600*1060)/3110)" width="calc(calc(600*1300)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*1400)/3110)" y="calc(calc(600*1060)/3110)" width="calc(calc(600*1300)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <!--<rect x="calc(calc(600*2750)/3110)" y="calc(calc(600*1060)/3110)" width="calc(calc(600*100)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />-->
+                        <!--<rect x="calc(calc(600*2870)/3110)" y="calc(calc(600*1060)/3110)" width="calc(calc(600*100)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />-->
+                        <!--<rect x="calc(calc(600*2990)/3110)" y="calc(calc(600*1060)/3110)" width="calc(calc(600*100)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />-->
+                        <rect x="calc(calc(600*2750)/3110)" y="calc(calc(600*1630)/3110)" width="calc(calc(600*100)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*2870)/3110)" y="calc(calc(600*1630)/3110)" width="calc(calc(600*100)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+                        <rect x="calc(calc(600*2990)/3110)" y="calc(calc(600*1630)/3110)" width="calc(calc(600*100)/3110)" height="calc(calc(600*80)/3110)" style="fill:#bbb;stroke-width:0;" />
+
+                        <rect x="calc(calc(600*250)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 1-->
+                        <rect x="calc(calc(600*470)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 1-->
+                        <rect x="calc(calc(600*690)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 1-->
+                        <rect x="calc(calc(600*910)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 1-->
+                        <rect x="calc(calc(600*1130)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 1-->
+
+                        <rect x="calc(calc(600*1600)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 1-->
+                        <rect x="calc(calc(600*1820)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 1-->
+                        <rect x="calc(calc(600*2040)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 1-->
+                        <rect x="calc(calc(600*2260)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 1-->
+                        <rect x="calc(calc(600*2480)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 1-->
+
+                        <rect x="calc(calc(600*250)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 2-->
+                        <rect x="calc(calc(600*470)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 2-->
+                        <rect x="calc(calc(600*690)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 2-->
+                        <rect x="calc(calc(600*910)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 2-->
+                        <rect x="calc(calc(600*1130)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 2-->
+
+                        <rect x="calc(calc(600*1600)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 2-->
+                        <rect x="calc(calc(600*1820)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 2-->
+                        <rect x="calc(calc(600*2040)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 2-->
+                        <rect x="calc(calc(600*2260)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 2-->
+                        <rect x="calc(calc(600*2480)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*20)/3110)" height="calc(calc(600*450)/3110)" style="fill:#bbb;stroke-width:0;" /><!--SEPARATORE SCAFFALE RIGA 2-->
+
+                        <!--RIQUADRI DA ACCENDERE-->
+                        <rect id="luceRiquadroRinforzi1" x="calc(calc(600*50)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 1 RIGA 1-->
+                        <rect id="luceRiquadroRinforzi2" x="calc(calc(600*270)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 2 RIGA 1-->
+                        <rect id="luceRiquadroRinforzi3" x="calc(calc(600*490)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 3 RIGA 1-->
+                        <rect id="luceRiquadroRinforzi4" x="calc(calc(600*710)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 4 RIGA 1-->
+                        <rect id="luceRiquadroRinforzi5" x="calc(calc(600*930)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 5 RIGA 1-->
+                        <rect id="luceRiquadroRinforzi6" x="calc(calc(600*1150)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 6 RIGA 1-->
+
+                        <rect id="luceRiquadroRinforzi7" x="calc(calc(600*1400)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 7 RIGA 1-->
+                        <rect id="luceRiquadroRinforzi8" x="calc(calc(600*1620)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 8 RIGA 1-->
+                        <rect id="luceRiquadroRinforzi9" x="calc(calc(600*1840)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 9 RIGA 1-->
+                        <rect id="luceRiquadroRinforzi10" x="calc(calc(600*2060)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 10 RIGA 1-->
+                        <rect id="luceRiquadroRinforzi11" x="calc(calc(600*2280)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 11 RIGA 1-->
+                        <rect id="luceRiquadroRinforzi12" x="calc(calc(600*2500)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 12 RIGA 1-->
+
+                        <rect id="luceRiquadroRinforzi13" x="calc(calc(600*50)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 13 RIGA 2-->
+                        <rect id="luceRiquadroRinforzi14" x="calc(calc(600*270)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 14 RIGA 2-->
+                        <rect id="luceRiquadroRinforzi15" x="calc(calc(600*490)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 15 RIGA 2-->
+                        <rect id="luceRiquadroRinforzi16" x="calc(calc(600*710)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 16 RIGA 2-->
+                        <rect id="luceRiquadroRinforzi17" x="calc(calc(600*930)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 17 RIGA 1-->
+                        <rect id="luceRiquadroRinforzi18" x="calc(calc(600*1150)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 18 RIGA 2-->
+
+                        <rect id="luceRiquadroRinforzi19" x="calc(calc(600*1400)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 19 RIGA 2-->
+                        <rect id="luceRiquadroRinforzi20" x="calc(calc(600*1620)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 20 RIGA 2-->
+                        <rect id="luceRiquadroRinforzi21" x="calc(calc(600*1840)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 21 RIGA 2-->
+                        <rect id="luceRiquadroRinforzi22" x="calc(calc(600*2060)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 22 RIGA 2-->
+                        <rect id="luceRiquadroRinforzi23" x="calc(calc(600*2280)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 23 RIGA 2-->
+                        <rect id="luceRiquadroRinforzi24" x="calc(calc(600*2500)/3110)" y="calc(calc(600*610)/3110)" width="calc(calc(600*200)/3110)" height="calc(calc(600*450)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 24 RIGA 2-->
+
+                        <rect id="luceRiquadroRinforzi25" x="calc(calc(600*2750)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*100)/3110)" height="calc(calc(600*1550)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 25 VERTICALE-->
+                        <rect id="luceRiquadroRinforzi26" x="calc(calc(600*2870)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*100)/3110)" height="calc(calc(600*1550)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 26 VERTICALE-->
+                        <rect id="luceRiquadroRinforzi27" x="calc(calc(600*2990)/3110)" y="calc(calc(600*80)/3110)" width="calc(calc(600*100)/3110)" height="calc(calc(600*1550)/3110)" class="luce-riquadro-rinforzi"/><!--RIQUADRI DA ACCENDERE 27 VERTICALE-->
+                    </svg>
+                </div>
+                <div class="pdf-outer-container">
+                    <div id="pdfContainer"></div>
+                    <div class="pdf-actions-container">
+                        <button class="action-button" onclick="pdfZoomout()"><i class="far fa-minus"></i></button>
+                        <button class="action-button" onclick="pdfZoomin()"><i class="far fa-plus"></i></button>
+                        <button class="action-button" onclick="pdfScrollleft()"><i class="far fa-angle-left"></i></button>
+                        <button class="action-button" onclick="pdfScrolltop()"><i class="far fa-angle-up"></i></button>
+                        <button class="action-button" onclick="pdfScrolldown()"><i class="far fa-angle-down"></i></button>
+                        <button class="action-button" onclick="pdfScrollright()"><i class="far fa-angle-right"></i></button>
+                        <button class="action-button" style="margin-left:auto;margin-right: 5px;" onclick="resetPdfZoom()"><i class="far fa-expand"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="poweredBy">Powered by <b>Servizio Globale</b> (www.servizioglobale.it)</div>
+    </body>
+</html>

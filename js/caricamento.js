@@ -2,13 +2,13 @@ var iframe;
 var id_utente;
 var interval;
 var frequenza_aggiornamento_dati_linea
-var shownPdf;
 var stazione;
 var stazioni;
 var view;
 var odpSelezionato;
 var cabinaSelezionata;
 var pannelloSelezionato;
+var facciaPannelloSelezionato;
 var pannelli;
 var intervalOverflowPdf1;
 var intervalOverflowPdf2;
@@ -49,7 +49,6 @@ window.addEventListener("keydown", async function(event)
 {
     setFocus();
     var keyCode=event.keyCode;
-    //console.log(keyCode);
     switch (keyCode) 
     {
         case 9:event.preventDefault();break;//TAB
@@ -63,7 +62,7 @@ window.addEventListener("keydown", async function(event)
         case 119:event.preventDefault();break;//F8
         case 120:event.preventDefault();break;//F9
         case 121:event.preventDefault();break;//F10
-        //case 122:event.preventDefault();break;//F11
+        case 122:event.preventDefault();break;//F11
         case 123:event.preventDefault();break;//F12
         default:break;
     }
@@ -84,6 +83,7 @@ async function getListOrdiniDiProduzione()
     cabinaSelezionata=null;
     document.getElementById("labelCabinaSelezionata").innerHTML="CABINA :";
     pannelloSelezionato=null;
+    facciaPannelloSelezionato=null;
     document.getElementById("labelId_distintaSelezionata").innerHTML="# :";
     document.getElementById("labelPannelloSelezionato").innerHTML="PANNELLO :";
     cleanPannelliItem();
@@ -104,6 +104,8 @@ async function getListOrdiniDiProduzione()
 
     var i=1;
 
+    console.log(ordini_di_produzione);
+
     ordini_di_produzione.forEach(function (ordine_di_produzione)
     {
         var item=document.createElement("button");
@@ -113,16 +115,36 @@ async function getListOrdiniDiProduzione()
         item.setAttribute("id","odpItem"+ordine_di_produzione.id_ordine_di_produzione);
         item.setAttribute("onclick","selectOdp("+ordine_di_produzione.id_ordine_di_produzione+",'"+ordine_di_produzione.ordine_di_produzione+"')");
 
+        var textContainer=document.createElement("div");
+        textContainer.setAttribute("class","odp-item-text-container");
+
         var span=document.createElement("span");
         span.setAttribute("style","margin-left:10px;");
         span.innerHTML=ordine_di_produzione.ordine_di_produzione;
-        item.appendChild(span);
+        textContainer.appendChild(span);
 
         var span=document.createElement("span");
         span.setAttribute("class","odp-item-span-lotto");
-        span.setAttribute("style","margin-left:auto;box-sizing:border-box;padding-left:10px;padding-right:10px;height: 35px;line-height: 35px;background-color:#242424;border-top-right-radius:4px;border-bottom-right-radius:4px");
+        span.setAttribute("style","margin-left:auto;box-sizing:border-box;padding-left:10px;padding-right:10px;height: 35px;line-height: 35px;background-color:#313131");
         span.innerHTML=ordine_di_produzione.lotto;
-        item.appendChild(span);
+        textContainer.appendChild(span);
+
+        item.appendChild(textContainer);
+
+        var progressBarContainer=document.createElement("div");
+        progressBarContainer.setAttribute("class","odp-item-progress-bar-container");
+
+        var percentuale_pannelli_caricati=(ordine_di_produzione.pannelli_caricati*100)/ordine_di_produzione.totale_pannelli;
+
+        var progressBar=document.createElement("div");
+        progressBar.setAttribute("class","odp-item-progress-bar");
+        if(percentuale_pannelli_caricati==100)
+            progressBar.setAttribute("style","width:"+percentuale_pannelli_caricati+"%;background-color: #70B085;");
+        else
+            progressBar.setAttribute("style","width:"+percentuale_pannelli_caricati+"%;background-color: #4C91CB;");
+        progressBarContainer.appendChild(progressBar);
+
+        item.appendChild(progressBarContainer);
 
         container.appendChild(item);
 
@@ -163,6 +185,7 @@ async function getListCabine()
     cabinaSelezionata=null;
     document.getElementById("labelCabinaSelezionata").innerHTML="CABINA :";
     pannelloSelezionato=null;
+    facciaPannelloSelezionato=null;
     document.getElementById("labelId_distintaSelezionata").innerHTML="# :";
     document.getElementById("labelPannelloSelezionato").innerHTML="PANNELLO :";
     cleanPannelliItem();
@@ -189,13 +212,33 @@ async function getListCabine()
         if(i!=cabine.length)
             item.setAttribute("style","margin-bottom:10px");
         item.setAttribute("class","cabine-item");
-        item.setAttribute("id","cabineItem"+cabina);
-        item.setAttribute("onclick","selectCabina('"+cabina+"')");
+        item.setAttribute("id","cabineItem"+cabina.numero_cabina);
+        item.setAttribute("onclick","selectCabina('"+cabina.numero_cabina+"')");
+
+        var textContainer=document.createElement("div");
+        textContainer.setAttribute("class","cabine-item-text-container");
 
         var span=document.createElement("span");
         span.setAttribute("style","margin-left:10px;");
-        span.innerHTML=cabina;
-        item.appendChild(span);
+        span.innerHTML=cabina.numero_cabina;
+        textContainer.appendChild(span);
+
+        item.appendChild(textContainer);
+
+        var progressBarContainer=document.createElement("div");
+        progressBarContainer.setAttribute("class","cabine-item-progress-bar-container");
+
+        var percentuale_pannelli_caricati=(cabina.pannelli_caricati*100)/cabina.totale_pannelli;
+
+        var progressBar=document.createElement("div");
+        progressBar.setAttribute("class","cabine-item-progress-bar");
+        if(percentuale_pannelli_caricati==100)
+            progressBar.setAttribute("style","width:"+percentuale_pannelli_caricati+"%;background-color: #70B085;");
+        else
+            progressBar.setAttribute("style","width:"+percentuale_pannelli_caricati+"%;background-color: #4C91CB;");
+        progressBarContainer.appendChild(progressBar);
+
+        item.appendChild(progressBarContainer);
 
         container.appendChild(item);
 
@@ -217,6 +260,7 @@ async function getListPannelli()
     container.innerHTML='<div id="listInnerContainerSpinner"><i class="fad fa-spinner fa-spin"></i><span>Caricamento in corso...</span></div>'
 
     pannelloSelezionato=null;
+    facciaPannelloSelezionato=null;
     document.getElementById("labelId_distintaSelezionata").innerHTML="# :";
     document.getElementById("labelPannelloSelezionato").innerHTML="PANNELLO :";
     cleanPannelliItem();
@@ -244,18 +288,34 @@ async function getListPannelli()
             item.setAttribute("style","margin-bottom:10px");
         item.setAttribute("class","pannelli-item");
         item.setAttribute("id","pannelliItem"+pannello.id_distinta);
-        item.setAttribute("onclick","selectPannello("+pannello.id_distinta+","+pannello.id_pannello+",'"+pannello.codice_pannello+"')");
+        item.setAttribute("onclick","selectPannello("+pannello.id_distinta+","+pannello.id_pannello+",'"+pannello.codice_pannello+"','"+pannello.configurazione+"')");
+
+        var textContainer=document.createElement("div");
+        textContainer.setAttribute("class","pannelli-item-text-container");
 
         var span=document.createElement("span");
         span.setAttribute("style","margin-left:10px;");
-        span.innerHTML=pannello.codice_pannello;
-        item.appendChild(span);
+        span.innerHTML=pannello.codice_pannello+" ("+pannello.configurazione+")";
+        textContainer.appendChild(span);
 
+        if(pannello.elettrificato=="true")
+        {
+            var icon=document.createElement("i");
+            icon.setAttribute("class","fas fa-bolt");
+            icon.setAttribute("style","margin-left:auto;margin-right:10px");
+            textContainer.appendChild(icon);
+        }
+        
         var span=document.createElement("span");
         span.setAttribute("class","pannelli-item-span-id_distinta");
-        span.setAttribute("style","margin-left:auto;box-sizing:border-box;padding-left:10px;padding-right:10px;height: 35px;line-height: 35px;background-color:#242424;border-top-right-radius:4px;border-bottom-right-radius:4px");
-        span.innerHTML=pannello.id_distinta;
-        item.appendChild(span);
+        if(pannello.elettrificato=="true")
+            span.setAttribute("style","box-sizing:border-box;padding-left:10px;padding-right:10px;height: 35px;line-height: 35px;background-color:#313131");
+        else
+            span.setAttribute("style","margin-left:auto;box-sizing:border-box;padding-left:10px;padding-right:10px;height: 35px;line-height: 35px;background-color:#313131");
+        span.innerHTML="#"+pannello.id_distinta;
+        textContainer.appendChild(span);
+
+        item.appendChild(textContainer);
 
         container.appendChild(item);
 
@@ -279,14 +339,15 @@ async function getListPannelli()
         element.style.width=(max+5)+"px";
     }
 }
-function selectPannello(id_distinta,id_pannello,codice_pannello)
+function selectPannello(id_distinta,id_pannello,codice_pannello,configurazione)
 {
     document.getElementById("messageCodicePannello").innerHTML="";
     document.getElementById("inputSearchCodicePannello").value="";
 
     pannelloSelezionato=id_distinta;
+    facciaPannelloSelezionato="fronte";
     document.getElementById("labelId_distintaSelezionata").innerHTML="# : <b>"+id_distinta+"</b>";
-    document.getElementById("labelPannelloSelezionato").innerHTML="PANNELLO : <b>"+codice_pannello+"</b>";
+    document.getElementById("labelPannelloSelezionato").innerHTML="PANNELLO : <b>"+codice_pannello+" ("+configurazione+")</b>";
 
     cleanPannelliItem();
 
@@ -306,7 +367,6 @@ function cleanPannelliItem()
         item.style.backgroundColor="";
         item.style.color="";
     }
-    shownPdf=null;
 }
 function keyUpInputCodicePannello(input)
 {
@@ -340,12 +400,13 @@ function checkCodicePannello(value)
             codice_pannello=pannello.codice_pannello;
             id_distinta=pannello.id_distinta;
             id_pannello=pannello.id_pannello;
+            configurazione=pannello.configurazione;
         }
     });
 
     if(check)
     {
-        selectPannello(id_distinta,id_pannello,codice_pannello);
+        selectPannello(id_distinta,id_pannello,codice_pannello,configurazione);
         document.getElementById("messageCodicePannello").innerHTML="";
     }
     else
@@ -355,22 +416,17 @@ function checkCodicePannello(value)
 }
 async function getPdf(fileName)
 {
-    if(fileName != shownPdf)
-    {
-        shownPdf=fileName;
-        var container=document.getElementById("pdfContainer");
-        container.innerHTML="";
-        iframe=null;
-
-        iframe=document.createElement("iframe");
-        iframe.setAttribute("id","");
-        iframe.setAttribute("class","");
-        iframe.setAttribute("onload","fixPdf(this);shownPdf='"+fileName+"';");
-        var server_adress=await getServerValue("SERVER_ADDR");
-        var server_port=await getServerValue("SERVER_PORT");
-        iframe.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_incollaggio_pdf/pdf.js/web/viewer.html?file=pdf/pannelli/"+fileName+".pdf");
-        container.appendChild(iframe);
-    }
+    var container=document.getElementById("pdfContainer");
+    container.innerHTML="";
+    iframe=null;
+    iframe=document.createElement("iframe");
+    //iframe.setAttribute("id","");
+    //iframe.setAttribute("class","");
+    iframe.setAttribute("onload","fixPdf(this)");
+    var server_adress=await getServerValue("SERVER_ADDR");
+    var server_port=await getServerValue("SERVER_PORT");
+    iframe.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_incollaggio_pdf/pdf.js/web/viewer.html?file=pdf/pannelli/"+fileName+".pdf");
+    container.appendChild(iframe);
 }
 function fixPdf(iframe)
 {
@@ -398,10 +454,10 @@ function fixPdf(iframe)
 
     resetPdfZoom();
 
-    setTimeout(() =>
+    /*setTimeout(() =>
     {
         console.clear();
-    }, 500);
+    }, 500);*/
 }
 function resetPdfZoom()
 {
@@ -416,7 +472,11 @@ function resetPdfZoom()
 
         intervalOverflowPdf1 = setInterval(() => 
         {
-            overflow=checkOverflow(iframe.contentWindow.document.getElementById("viewerContainer"));
+            try {
+                overflow=checkOverflow(iframe.contentWindow.document.getElementById("viewerContainer"));
+            } catch (error) {
+                overflow=true;
+            }
             if(!overflow)
                 pdfZoomin();
             else
@@ -424,7 +484,11 @@ function resetPdfZoom()
                 clearInterval(intervalOverflowPdf1);
                 intervalOverflowPdf2 = setInterval(() => 
                 {
-                    overflow=checkOverflow(iframe.contentWindow.document.getElementById("viewerContainer"));
+                    try {
+                        overflow=checkOverflow(iframe.contentWindow.document.getElementById("viewerContainer"));
+                    } catch (error) {
+                        overflow=true;
+                    }
                     if(overflow)
                         pdfZoomout();
                     else
@@ -436,17 +500,20 @@ function resetPdfZoom()
 }
 function checkOverflow(el)
 {
-   var curOverflow = el.style.overflow;
+    try {
+        var curOverflow = el.style.overflow;
 
-   if ( !curOverflow || curOverflow === "visible" )
-      el.style.overflow = "hidden";
+        if ( !curOverflow || curOverflow === "visible" )
+            el.style.overflow = "hidden";
 
-   var isOverflowing = el.clientWidth < el.scrollWidth 
-      || el.clientHeight < el.scrollHeight;
+        var isOverflowing = el.clientWidth < el.scrollWidth || el.clientHeight < el.scrollHeight;
 
-   el.style.overflow = curOverflow;
+        el.style.overflow = curOverflow;
 
-   return isOverflowing;
+        return isOverflowing;
+    } catch (error) {
+        return true;
+    }
 }
 function pdfZoomin()
 {
@@ -677,6 +744,7 @@ function listScrolldown()
 function cancelSelectPannello()
 {
     pannelloSelezionato=null;
+    facciaPannelloSelezionato=null;
     document.getElementById("labelId_distintaSelezionata").innerHTML="# :";
     document.getElementById("labelPannelloSelezionato").innerHTML="PANNELLO :";
     cleanPannelliItem();
@@ -691,9 +759,11 @@ function confermaSelectPannello()
 {
     if(pannelloSelezionato!=null)
     {
+        var pannelloObj=getFirstObjByPropValue(pannelli,"id_distinta",pannelloSelezionato);
         $.post("caricaPannello.php",
         {
             id_distinta:pannelloSelezionato,
+            faccia:facciaPannelloSelezionato,
             id_utente,
             stazione:stazione.id_stazione
         },
@@ -708,10 +778,34 @@ function confermaSelectPannello()
                 }
                 else
                 {
-                    document.getElementById("pannelliItem"+pannelloSelezionato).remove();
-                    document.getElementsByClassName("pannelli-item")[document.getElementsByClassName("pannelli-item").length-1].style.marginBottom="0px";
-                    document.getElementById("containerNItems").innerHTML="<span><b style='letter-spacing:1px'>"+(pannelli.length-1)+"</b> righe</span>";
-                    cancelSelectPannello();
+                    if(pannelloObj.configurazione=="BF" && facciaPannelloSelezionato=="fronte")
+                    {
+                        Swal.fire
+                        ({
+                            icon:"success",
+                            title: "Configurazione non supportata",
+                            background:"#404040",
+                            showCloseButton:false,
+                            showConfirmButton:false,
+                            allowOutsideClick:false,
+                            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="white";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";document.getElementsByClassName("swal2-close")[0].style.outline="none";},
+                        });
+                    }
+                    else
+                    {
+                        document.getElementById("pannelliItem"+pannelloSelezionato).remove();
+                        var index=0;
+                        pannelli.forEach(pannello =>
+                        {
+                            if(pannello.id_distinta==pannelloSelezionato)
+                                pannelli.splice(index, 1);
+                            index++;
+                        });
+                        document.getElementById("containerNItems").innerHTML="<span><b style='letter-spacing:1px'>"+pannelli.length+"</b> righe</span>";
+                        if(pannelli.length>0)
+                            document.getElementsByClassName("pannelli-item")[document.getElementsByClassName("pannelli-item").length-1].style.marginBottom="0px";
+                        cancelSelectPannello();
+                    }
                 }
             }
         });

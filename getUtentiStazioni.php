@@ -4,7 +4,7 @@
 
     $utenti=[];
 
-    $query2="SELECT * FROM dbo.utenti_stazioni WHERE eliminato='false' ORDER BY [username]";	
+    $query2="SELECT * FROM dbo.utenti_stazioni WHERE eliminato='false' AND [hidden]='false' ORDER BY [username]";	
     $result2=sqlsrv_query($conn,$query2);
     if($result2==TRUE)
     {

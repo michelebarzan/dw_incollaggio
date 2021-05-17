@@ -29,6 +29,7 @@
             <div class="structure-header-inner-container" style="width:calc(50% - 60px)">
                 <div id="infoStazioneContainer" class="structure-header-info-container" style="margin-left: auto;"></div>
                 <div id="usernameContainer"></div>
+                <button class="structure-header-logout-button" onclick="logout()"><i class="fad fa-sign-out"></i></button>
             </div>
         </header>
         <div class="section-container">
@@ -74,7 +75,7 @@
                     </div>
                     <div class="pdf-title-item" style="flex-direction: row;align-items: center;justify-content: flex-start;width:320px">
                         <div id="messageCodicePannello"></div>
-                        <input type="search" id="inputSearchCodicePannello" placeholder="Codice pannello..." onsearch="checkCodicePannello(this)" onkeyup="keyUpInputCodicePannello(this)">
+                        <input type="search" id="inputSearchCodicePannello" placeholder="Codice pannello..." onsearch="checkCodicePannello(this.value)" onkeyup="keyUpInputCodicePannello(this)">
                     </div>
                 </div>
                 <div id="pdfContainer"></div>
