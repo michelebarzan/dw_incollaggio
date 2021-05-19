@@ -7,7 +7,7 @@
     $query2="SELECT dbo.pannelli_linea.id_incollaggio, db_tecnico.dbo.pannelli.id_pannello, db_tecnico.dbo.pannelli.codice_pannello, db_tecnico.dbo.pannelli.descrizione, db_tecnico.dbo.pannelli.profilo, 
                 dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta, db_tecnico.dbo.lamiere.lung1, db_tecnico.dbo.lamiere.lung2, db_tecnico.dbo.lamiere.halt, dw_produzione.dbo.distinta_ordini_di_produzione.numero_cabina, 
                 dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione, dw_produzione.dbo.ordini_di_produzione.nome AS nome_ordine_di_produzione, db_tecnico.dbo.lamiere.ang, 
-                dw_produzione.dbo.filtro_pannelli.configurazione, dbo.pannelli_linea.faccia
+                dw_produzione.dbo.filtro_pannelli.configurazione, dbo.pannelli_linea.faccia, db_tecnico.dbo.lamiere.tipo
             FROM dbo.pannelli_linea INNER JOIN
                 dw_produzione.dbo.distinta_ordini_di_produzione ON dbo.pannelli_linea.id_distinta = dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta INNER JOIN
                 db_tecnico.dbo.pannelli ON dw_produzione.dbo.distinta_ordini_di_produzione.pannello = db_tecnico.dbo.pannelli.id_pannello INNER JOIN
@@ -17,7 +17,7 @@
                 dw_produzione.dbo.filtro_pannelli ON db_tecnico.dbo.pannelli.codice_pannello = dw_produzione.dbo.filtro_pannelli.CODPAS
             GROUP BY dbo.pannelli_linea.id_incollaggio, db_tecnico.dbo.pannelli.id_pannello, db_tecnico.dbo.pannelli.codice_pannello, db_tecnico.dbo.pannelli.descrizione, db_tecnico.dbo.pannelli.profilo, 
                 dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta, db_tecnico.dbo.lamiere.lung1, db_tecnico.dbo.lamiere.lung2, db_tecnico.dbo.lamiere.halt, dw_produzione.dbo.distinta_ordini_di_produzione.numero_cabina, 
-                dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione, dw_produzione.dbo.ordini_di_produzione.nome, db_tecnico.dbo.lamiere.ang, dw_produzione.dbo.filtro_pannelli.configurazione, dbo.pannelli_linea.faccia";
+                dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione, dw_produzione.dbo.ordini_di_produzione.nome, db_tecnico.dbo.lamiere.ang, dw_produzione.dbo.filtro_pannelli.configurazione, dbo.pannelli_linea.faccia, db_tecnico.dbo.lamiere.tipo";
     $result2=sqlsrv_query($conn,$query2);
     if($result2==TRUE)
     {
@@ -37,13 +37,14 @@
             $pannello["ang"]=$row2['ang'];
             $pannello["faccia"]=$row2['faccia'];
             $pannello["configurazione"]=strtoupper($row2['configurazione']);
+            $pannello["tipo"]=$row2['tipo'];
 
             $id_pannello=$row2['id_pannello'];
 
             $rinforzi=[];
             $query="SELECT db_tecnico.dbo.rinforzi.id_rinforzo, db_tecnico.dbo.rinforzi.codice_rinforzo, db_tecnico.dbo.rinforzi.descrizione AS descrizione_rinforzo, db_tecnico.dbo.rinforzi_pannelli.posx, db_tecnico.dbo.rinforzi_pannelli.posy, 
                                 db_tecnico.dbo.materie_prime.id_materia_prima, db_tecnico.dbo.materie_prime.codice_materia_prima, db_tecnico.dbo.materie_prime.descrizione AS descrizione_materiale, db_tecnico.dbo.rinforzi.qnt AS lunghezza, 
-                                db_tecnico.dbo.rinforzi.vh
+                                db_tecnico.dbo.rinforzi.vh,db_tecnico.dbo.rinforzi.hrin
                     FROM db_tecnico.dbo.rinforzi INNER JOIN
                                 db_tecnico.dbo.rinforzi_pannelli ON db_tecnico.dbo.rinforzi.id_rinforzo = db_tecnico.dbo.rinforzi_pannelli.id_rinforzo INNER JOIN
                                 db_tecnico.dbo.materie_prime ON db_tecnico.dbo.rinforzi.id_materia_prima = db_tecnico.dbo.materie_prime.id_materia_prima
@@ -63,6 +64,7 @@
                     $rinforzo["descrizione_materiale"]=$row['descrizione_materiale'];
                     $rinforzo["lunghezza"]=$row['lunghezza'];
                     $rinforzo["vh"]=$row['vh'];
+                    $rinforzo["hrin"]=$row['hrin'];
 
                     array_push($rinforzi,$rinforzo);
                 }
@@ -70,10 +72,42 @@
             }
             else
                 die("error2".$query);
+
+            $lane=[];
+            $query3="SELECT db_tecnico.dbo.lane_pannelli.posx, db_tecnico.dbo.lane_pannelli.posy, db_tecnico.dbo.lane.lung, db_tecnico.dbo.lane.halt, db_tecnico.dbo.lane.spess, db_tecnico.dbo.materie_prime.id_materia_prima, 
+                                db_tecnico.dbo.materie_prime.codice_materia_prima, db_tecnico.dbo.materie_prime.descrizione, db_tecnico.dbo.lane.id_lana, db_tecnico.dbo.lane.codice_lana, db_tecnico.dbo.lane.descrizione AS descrizione_lana
+                    FROM db_tecnico.dbo.lane_pannelli INNER JOIN
+                                db_tecnico.dbo.lane ON db_tecnico.dbo.lane_pannelli.id_lana = db_tecnico.dbo.lane.id_lana INNER JOIN
+                                db_tecnico.dbo.materie_prime ON db_tecnico.dbo.lane.id_materia_prima = db_tecnico.dbo.materie_prime.id_materia_prima
+                    WHERE (db_tecnico.dbo.lane_pannelli.id_pannello = $id_pannello)
+                    ORDER BY db_tecnico.dbo.lane_pannelli.posx DESC";
+            $result3=sqlsrv_query($conn,$query3);
+            if($result3==TRUE)
+            {
+                while($row3=sqlsrv_fetch_array($result3))
+                {
+                    $lana["id_lana"]=$row3['id_lana'];
+                    $lana["codice_lana"]=$row3['codice_lana'];
+                    $lana["descrizione_lana"]=$row3['descrizione_lana'];
+                    $lana["posx"]=$row3['posx'];
+                    $lana["posy"]=$row3['posy'];
+                    $lana["id_materia_prima"]=$row3['id_materia_prima'];
+                    $lana["codice_materia_prima"]=$row3['codice_materia_prima'];
+                    $lana["descrizione_materiale"]=$row3['descrizione'];
+                    $lana["lung"]=$row3['lung'];
+                    $lana["halt"]=$row3['halt'];
+                    $lana["spess"]=$row3['spess'];
+
+                    array_push($lane,$lana);
+                }
+                $pannello["lane"]=$lane;
+            }
+            else
+                die("error2".$query);
         }
     }
     else
-        die("error1");
+        die("error1".$query2);
 
     echo json_encode($pannello);
 

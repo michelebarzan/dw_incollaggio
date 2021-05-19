@@ -56,13 +56,13 @@ window.addEventListener("keydown", async function(event)
         case 113:event.preventDefault();break;//F2
         case 114:event.preventDefault();break;//F3
         case 115:event.preventDefault();break;//F4
-        case 116:event.preventDefault();break;//F5
+        //case 116:event.preventDefault();break;//F5
         case 117:event.preventDefault();break;//F6
         case 118:event.preventDefault();break;//F7
         case 119:event.preventDefault();break;//F8
         case 120:event.preventDefault();break;//F9
         case 121:event.preventDefault();break;//F10
-        case 122:event.preventDefault();break;//F11
+        //case 122:event.preventDefault();break;//F11
         case 123:event.preventDefault();break;//F12
         default:break;
     }

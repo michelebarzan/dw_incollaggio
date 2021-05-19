@@ -7,8 +7,6 @@ var stazioni;
 var intervalOverflowPdf1;
 var intervalOverflowPdf2;
 var pannello;
-var drawing3DObj;
-var isDrawing3DObjSpinning;
 var currentDrawing;
 
 window.addEventListener("load", async function(event)
@@ -144,51 +142,30 @@ window.addEventListener("keydown", async function(event)
         case 113:event.preventDefault();break;//F2
         case 114:event.preventDefault();break;//F3
         case 115:event.preventDefault();break;//F4
-        case 116:event.preventDefault();break;//F5
+        //case 116:event.preventDefault();break;//F5
         case 117:event.preventDefault();break;//F6
         case 118:event.preventDefault();break;//F7
         case 119:event.preventDefault();break;//F8
         case 120:event.preventDefault();break;//F9
         case 121:event.preventDefault();break;//F10
-        case 122:event.preventDefault();break;//F11
+        //case 122:event.preventDefault();break;//F11
         case 123:event.preventDefault();break;//F12
         default:break;
     }
 });
-async function getDrawingLamiera()
-{
-    currentDrawing="lamiera";
-
-    var container=document.getElementById("drawingInnerContainer");
-    container.innerHTML="lamiera";
-}
 function toggleDrawing()
 {
     if(currentDrawing=='lana')
     {
         document.getElementById("labelToggleDrawing").innerHTML="LAMIERA";
         getDrawingLamiera();
+        currentDrawing="lamiera";
     }
     else
     {
         document.getElementById("labelToggleDrawing").innerHTML="LANA";
         getDrawingLana();
-    }
-}
-async function getDrawingLana()
-{
-    currentDrawing="lana";
-
-    var container=document.getElementById("drawingInnerContainer");
-    container.innerHTML="lana";
-}
-function animateDrawing3D()
-{
-    if(drawing3DObj!=null)
-    {
-        //drawing3DObj.rotate.x += isDrawing3DObjSpinning ? 0.003 : 0;
-        drawing3DObj.updateRenderGraph();
-        requestAnimationFrame( animateDrawing3D );
+        currentDrawing="lana";
     }
 }
 async function getPdf(fileName)
@@ -398,13 +375,6 @@ function logout()
     {
         window.location = 'login.html';
     });
-}
-function getScaledMeasure(measure,scale)
-{
-    var scaleFactor1=parseFloat(scale.split(":")[0]);
-    var scaleFactor2=parseFloat(scale.split(":")[1]);
-
-    return (measure*scaleFactor1)/scaleFactor2;
 }
 function avanzaPannello()
 {

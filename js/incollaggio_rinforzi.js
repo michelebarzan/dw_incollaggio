@@ -7,8 +7,6 @@ var stazioni;
 var intervalOverflowPdf1;
 var intervalOverflowPdf2;
 var pannello;
-var drawing3DObj;
-var isDrawing3DObjSpinning;
 
 window.addEventListener("load", async function(event)
 {
@@ -51,7 +49,7 @@ async function displayPannello()
 
         console.log(pannello)
 
-        getDrawing(pannello);
+        getDrawingLamiera();
         getPdf(pannello.codice_pannello);
     }
     else
@@ -142,238 +140,17 @@ window.addEventListener("keydown", async function(event)
         case 113:event.preventDefault();break;//F2
         case 114:event.preventDefault();break;//F3
         case 115:event.preventDefault();break;//F4
-        case 116:event.preventDefault();break;//F5
+        //case 116:event.preventDefault();break;//F5
         case 117:event.preventDefault();break;//F6
         case 118:event.preventDefault();break;//F7
         case 119:event.preventDefault();break;//F8
         case 120:event.preventDefault();break;//F9
         case 121:event.preventDefault();break;//F10
-        case 122:event.preventDefault();break;//F11
+        //case 122:event.preventDefault();break;//F11
         case 123:event.preventDefault();break;//F12
         default:break;
     }
 });
-async function getDrawing(pannello)
-{
-    var container=document.getElementById("drawingInnerContainer");
-    container.innerHTML="";
-
-    var containerWidth=container.offsetWidth;
-    var containerHeight=container.offsetHeight;
-
-    var scale="1:2.2";
-
-    //------------------------------------------------------3D------------------------------------------------------------
-
-    var lung1=getScaledMeasure(pannello.lung1,scale);
-    var lung2=getScaledMeasure(pannello.lung2,scale);
-    var halt=getScaledMeasure(pannello.halt,scale);
-
-    var altezza_pannello=halt;
-    if(lung1>lung2)//if(pannello.ruotato)???
-    {
-        var larghezza_lato_orrizzontale=lung1;
-        var larghezza_lato_verticale=lung2;
-    }
-    else
-    {
-        var larghezza_lato_orrizzontale=lung2;
-        var larghezza_lato_verticale=lung1;
-    }
-
-    var canvas=document.createElement("canvas");
-    canvas.setAttribute("class","zdog-canvas");
-    canvas.setAttribute("width","1200");
-    canvas.setAttribute("height","830");
-    container.appendChild(canvas);
-
-    const drawing3DTAU = Zdog.TAU;
-    isDrawing3DObjSpinning = true;
-
-    drawing3DObj = new Zdog.Illustration
-    ({
-        element: '.zdog-canvas',
-        dragRotate: true,
-        onDragStart: function()
-        {
-            isDrawing3DObjSpinning = false;
-        },
-    });
-
-    var lato_orrizzontale = new Zdog.Rect
-    ({
-        addTo: drawing3DObj,
-        width: altezza_pannello,
-        height: larghezza_lato_orrizzontale,
-        stroke: 2,
-        translate:
-        {
-            x:0,
-            z:0,
-            y:0
-        },
-        color: 'gray',
-        fill: true
-    });
-
-    if(larghezza_lato_verticale>0)
-    {
-        console.log(drawing3DTAU);
-        var lato_verticale = new Zdog.Rect
-        ({
-            addTo: drawing3DObj,
-            width: altezza_pannello,
-            height: larghezza_lato_verticale,
-            stroke: 2,
-            translate: 
-            {
-                x:0,
-                y:0-(larghezza_lato_orrizzontale/2),
-                z:larghezza_lato_verticale/2
-            },
-            rotate:
-            {
-                x: drawing3DTAU/4
-            },
-            color: '#bbb',
-            fill: true
-        });
-    }
-    
-    //rinforzi
-    pannello.rinforzi.forEach(rinforzo =>
-    {
-        //console.log(rinforzo);
-
-        rinforzo.largezza=80;//prenderlo da query???
-
-        var lunghezza=getScaledMeasure(rinforzo.lunghezza,scale);
-        var posx=getScaledMeasure(rinforzo.posx,scale);//asse del rinforzo
-        var posy=getScaledMeasure(rinforzo.posy,scale);//inizio del rinforzo
-        var larghezza_rinforzo=getScaledMeasure(rinforzo.largezza,scale);
-        if(rinforzo.vh=="VER")
-        {
-            if(posx<larghezza_lato_orrizzontale)
-            {
-                //il rinforzo verticale si trova sul lato orrizzontale
-                var rinforzo_verticale = new Zdog.Rect
-                ({
-                    addTo: drawing3DObj,
-                    width: lunghezza,
-                    height: larghezza_rinforzo,//larghezza del rinforzo
-                    stroke: 2,
-                    translate: 
-                    {
-                        x:(altezza_pannello/2)-(lunghezza/2)-posy,
-                        y:(larghezza_lato_orrizzontale/2)-(posx/2)-(larghezza_rinforzo/2),
-                        z:2
-                    },
-                    color: '#DA6969',
-                    fill: true
-                });
-            }
-            else
-            {
-                //il rinforzo verticale si trova sul lato verticale
-            }
-        }
-        else
-        {
-            var rinforzo_orrizontale = new Zdog.Shape
-            ({
-                addTo: drawing3DObj,
-                path:
-                [
-                    {
-                        x:-40,
-                        y:0,
-                        z:0
-                    },
-                    {
-                        x:-40,
-                        y:0,
-                        z:0
-                    }
-                ],
-                stroke: 2,
-                color: '#70B085',
-            });
-        }
-        
-    });
-
-    //drawing3DObj.rotate.z = -0.25;
-    drawing3DObj.updateRenderGraph();
-
-    animateDrawing3D();
-
-    /*
-    
-    ------------------------------------------------------2D------------------------------------------------------------
-    
-    var svg=document.createElementNS("http://www.w3.org/2000/svg", "svg");
-
-    var lung1=getScaledMeasure(pannello.lung1,scale);
-    var lung2=getScaledMeasure(pannello.lung2,scale);
-    var halt=getScaledMeasure(pannello.halt,scale);
-
-    console.log(lung1);
-    console.log(lung2);
-    console.log(halt);
-
-    //pannello
-    var Y_rettangolo1=lung1;
-	var Y_rettangolo2=lung1-lung2;
-
-    var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
-    rect.setAttribute("class","svg-rect-pannello");
-    rect.setAttribute("x","50");
-    rect.setAttribute("y",Y_rettangolo2);
-    rect.setAttribute("width",halt);
-    rect.setAttribute("height",lung2);
-    svg.appendChild(rect);
-
-    var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
-    rect.setAttribute("class","svg-rect-pannello");
-    rect.setAttribute("x","50");
-    rect.setAttribute("y",Y_rettangolo1);
-    rect.setAttribute("width",halt);
-    rect.setAttribute("height",lung1);
-    svg.appendChild(rect);
-
-    //rinforzi
-    pannello.rinforzi.forEach(rinforzo =>
-    {
-        var x1=50+rinforzo.posy;
-		var y1=490-rinforzo.posx;
-		var x2=x1;
-        y2=490-rinforzo.posx-rinforzo.lunghezza;
-        var x1Text=x1+8;
-        if(lung2<50)
-            var y1Text=480-lung1-lung2;
-		else
-            var y1Text=480-lung1;
-
-        var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-        line.setAttribute("class","svg-line-rinforzo");
-        line.setAttribute("x1",x1);
-        line.setAttribute("y1",y1);
-        line.setAttribute("x2",x2);
-        line.setAttribute("y2",y2);
-        svg.appendChild(line);
-    });
-
-    container.appendChild(svg);*/
-}
-function animateDrawing3D()
-{
-    if(drawing3DObj!=null)
-    {
-        //drawing3DObj.rotate.x += isDrawing3DObjSpinning ? 0.003 : 0;
-        drawing3DObj.updateRenderGraph();
-        requestAnimationFrame( animateDrawing3D );
-    }
-}
 async function getPdf(fileName)
 {
     var container=document.getElementById("pdfContainer");
@@ -581,13 +358,6 @@ function logout()
     {
         window.location = 'login.html';
     });
-}
-function getScaledMeasure(measure,scale)
-{
-    var scaleFactor1=parseFloat(scale.split(":")[0]);
-    var scaleFactor2=parseFloat(scale.split(":")[1]);
-
-    return (measure*scaleFactor1)/scaleFactor2;
 }
 function avanzaPannello()
 {
