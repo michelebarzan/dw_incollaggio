@@ -9,7 +9,7 @@ var odpSelezionato;
 var cabinaSelezionata;
 var pannelloSelezionato;
 var facciaPannelloSelezionato;
-var pannelli;
+var pannelli=[];
 var intervalOverflowPdf1;
 var intervalOverflowPdf2;
 
@@ -24,9 +24,11 @@ window.addEventListener("load", async function(event)
     
     var nome_stazione=await getSessionValue("stazione");
 
-    var stazioni=await getAnagraficaStazioni();
+    stazioni=await getAnagraficaStazioni();
 
     stazione=getFirstObjByPropValue(stazioni,"nome",nome_stazione);
+
+    svuotaLogoutStazione(stazione.id_stazione);
 
     document.getElementById("infoStazioneContainer").innerHTML=stazione.label;
     document.getElementById("infoStazioneContainer").setAttribute("nome",stazione.nome);
@@ -39,12 +41,12 @@ window.addEventListener("load", async function(event)
 
     setFocus();
     
-    //interval = setInterval(intervalFunctions, frequenza_aggiornamento_dati_linea);
+    interval = setInterval(intervalFunctions, frequenza_aggiornamento_dati_linea);
 });
-/*function intervalFunctions()
+function intervalFunctions()
 {
-    setFocus();
-}*/
+    checkLogoutStazione(stazione.id_stazione);
+}
 window.addEventListener("keydown", async function(event)
 {
     setFocus();
@@ -199,6 +201,7 @@ async function getListCabine()
     document.getElementById("inputSearchCodicePannello").value="";
 
     var cabine=await getCabine();
+    console.log(cabine);
 
     document.getElementById("containerNItems").innerHTML="<span><b style='letter-spacing:1px'>"+cabine.length+"</b> righe</span>";
 
@@ -224,6 +227,11 @@ async function getListCabine()
         textContainer.appendChild(span);
 
         item.appendChild(textContainer);
+
+        /*var span=document.createElement("span");
+        span.setAttribute("style","margin-left:auto;box-sizing:border-box;padding-left:10px;padding-right:10px;height: 35px;line-height: 35px;background-color:#313131");
+        span.innerHTML=cabina.codice_cabina;
+        textContainer.appendChild(span);*/
 
         var progressBarContainer=document.createElement("div");
         progressBarContainer.setAttribute("class","cabine-item-progress-bar-container");
@@ -386,32 +394,35 @@ function keyUpInputCodicePannello(input)
 }
 function checkCodicePannello(value)
 {
-    document.getElementById("messageCodicePannello").innerHTML="<i class='fad fa-spinner-third fa-spin' style='color:#ddd'></i>";
-
-    var check=false;
-    var codice_pannello;
-    var id_distinta;
-    var id_pannello;
-    pannelli.forEach(pannello =>
+    if(pannelli.length>0)
     {
-        if(pannello.codice_pannello.toLowerCase()==value.toLowerCase())
+        document.getElementById("messageCodicePannello").innerHTML="<i class='fad fa-spinner-third fa-spin' style='color:#ddd'></i>";
+
+        var check=false;
+        var codice_pannello;
+        var id_distinta;
+        var id_pannello;
+        pannelli.forEach(pannello =>
         {
-            check=true;
-            codice_pannello=pannello.codice_pannello;
-            id_distinta=pannello.id_distinta;
-            id_pannello=pannello.id_pannello;
-            configurazione=pannello.configurazione;
-        }
-    });
+            if(pannello.codice_pannello.toLowerCase()==value.toLowerCase())
+            {
+                check=true;
+                codice_pannello=pannello.codice_pannello;
+                id_distinta=pannello.id_distinta;
+                id_pannello=pannello.id_pannello;
+                configurazione=pannello.configurazione;
+            }
+        });
 
-    if(check)
-    {
-        selectPannello(id_distinta,id_pannello,codice_pannello,configurazione);
-        document.getElementById("messageCodicePannello").innerHTML="";
-    }
-    else
-    {
-        document.getElementById("messageCodicePannello").innerHTML="<span style='color:#DA6969'>Pannello non trovato</span>";
+        if(check)
+        {
+            selectPannello(id_distinta,id_pannello,codice_pannello,configurazione);
+            document.getElementById("messageCodicePannello").innerHTML="";
+        }
+        else
+        {
+            document.getElementById("messageCodicePannello").innerHTML="<span style='color:#DA6969'>Pannello non trovato</span>";
+        }
     }
 }
 async function getPdf(fileName)
@@ -826,5 +837,77 @@ function logout()
     function(response, status)
     {
         window.location = 'login.html';
+    });
+}
+function getPopupRiavviaLinea()
+{
+    Swal.fire
+	({
+		icon: 'warning',
+		title: "Vuoi svuotare la linea e riavviare tutti i programmi?",
+		width:550,
+		showCancelButton: true,
+        background:"#404040",
+		showConfirmButton: true,
+		cancelButtonText: `Annulla`,
+		confirmButtonText: `Riavvia linea`,
+		onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="#ddd";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";document.getElementsByClassName("swal2-confirm")[0].style.fontSize="14px";document.getElementsByClassName("swal2-cancel")[0].style.fontSize="14px";document.getElementsByClassName("swal2-close")[0].style.outline="none";}
+	}).then((result) =>
+	{
+		if (result.value)
+		{
+            svuotaLinea();
+            var id_stazioni=[];
+			stazioni.forEach(stazione =>
+            {
+                id_stazioni.push(stazione.id_stazione);
+            });
+            setLogoutStazioni(id_stazioni);
+		}
+	});
+}
+function setLogoutStazioni(id_stazioni)
+{
+    Swal.fire
+    ({
+        width:"100%",
+        background:"transparent",
+        title:"Caricamento in corso...",
+        html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+        allowOutsideClick:false,
+        showCloseButton:false,
+        showConfirmButton:false,
+        allowEscapeKey:false,
+        showCancelButton:false,
+        onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+    });
+
+    var JSONid_stazioni=JSON.stringify(id_stazioni);
+    $.get("setLogoutStazioni.php",{JSONid_stazioni},
+    function(response, status)
+    {
+        if(status=="success")
+        {
+            if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+            {
+				Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+            }
+        }
+    });
+}
+function svuotaLinea()
+{
+    $.get("svuotaLinea.php",
+    function(response, status)
+    {
+        if(status=="success")
+        {
+            if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+            {
+				Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+            }
+        }
     });
 }

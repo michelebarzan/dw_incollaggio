@@ -30,7 +30,7 @@
             <div class="structure-header-inner-container" style="width:calc(50% - 60px)">
                 <div id="infoStazioneContainer" class="structure-header-info-container" style="margin-left: auto;"></div>
                 <div id="usernameContainer"></div>
-                <button class="structure-header-logout-button" onclick="logout()"><i class="fad fa-sign-out"></i></button>
+                <button class="structure-header-icon-button" onclick="logout()"><i class="fad fa-sign-out"></i></button>
             </div>
         </header>
         <div class="section-title-container">
@@ -53,17 +53,14 @@
             </div>
         </div>
         <div class="section-container">
-            <div id="drawing-outer-container">
+            <div id="drawingOuterContainer">
                 <div id="drawingInnerContainer"></div>
                 <div class="drawing-actions-container">
+                    <button class="action-button" id="toggleDrawingFullscreenButton" onclick="toggleDrawingFullscreen()"><i class="far fa-expand-alt"></i></button>
                     <button class="text-action-button" id="toggleDrawingButton" onclick="toggleDrawing()">
                         <span id="labelToggleDrawing">LANA</span>
                         <i class="far fa-sync"></i>
                     </button>
-                    <!--<button class="action-button" onclick="listToTop()"><i class="far fa-arrow-to-top"></i></button>
-                    <button class="action-button" onclick="listToBottom()"><i class="far fa-arrow-to-bottom"></i></button>
-                    <button class="action-button" style="margin-left:auto" onclick="listScrolltop()"><i class="far fa-angle-up"></i></button>
-                    <button class="action-button" style="margin-right: 5px;" onclick="listScrolldown()"><i class="far fa-angle-down"></i></button>-->
                 </div>
             </div>
             <div class="pdf-outer-container">

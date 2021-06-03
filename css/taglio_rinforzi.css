@@ -83,7 +83,7 @@ body
     font-size: 15px;
     color:#EBEBEB;
 }
-.structure-header-logout-button
+.structure-header-icon-button
 {
     height: 30px;
     display: flex;
@@ -100,7 +100,7 @@ body
     font-size: 18px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
-.structure-header-logout-button:active
+.structure-header-icon-button:active
 {
     background-color: rgb(95, 95, 95);
 }
@@ -144,6 +144,7 @@ body
 .section-title-label b
 {
     color:#4C91CB;
+    letter-spacing: 1px;
 }
 .section-title-label
 {
@@ -213,7 +214,7 @@ body
     flex-direction: row;
 }
 /*---------------------------------------------*/
-#drawing-outer-container
+#drawingOuterContainer
 {
     width:1220px;
     height: 920px;
@@ -299,11 +300,11 @@ body
 {
     0%, 49%
     {
-        fill:transparent;
+        visibility: hidden;
     }
     50%, 100%
     {
-        fill:#4C91CB;
+        visibility: visible;
     }
 }
 .pdf-outer-container
@@ -323,7 +324,7 @@ body
     background-image: url("../images/logo.png");
 	background-position: center center;
 	background-repeat: no-repeat;
-    height: 100%;
+    height: calc(100% - 50px);
     margin:20px;
     width: calc(100% - 40px);
 }

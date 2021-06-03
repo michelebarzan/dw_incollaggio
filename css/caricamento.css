@@ -83,7 +83,7 @@ body
     font-size: 15px;
     color:#EBEBEB;
 }
-.structure-header-logout-button
+.structure-header-icon-button
 {
     height: 30px;
     display: flex;
@@ -100,7 +100,7 @@ body
     font-size: 18px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
-.structure-header-logout-button:active
+.structure-header-icon-button:active
 {
     background-color: rgb(95, 95, 95);
 }
@@ -159,6 +159,7 @@ body
 #labelLottoSelezionato b,#labelCabinaSelezionata b,#labelPannelloSelezionato b,#labelId_distintaSelezionata b
 {
     color:#4C91CB;
+    letter-spacing: 1px;
 }
 #labelLottoSelezionato,#labelCabinaSelezionata,#labelPannelloSelezionato,#labelId_distintaSelezionata
 {

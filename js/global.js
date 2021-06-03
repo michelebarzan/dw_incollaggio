@@ -1,13 +1,30 @@
-var scale="1:2.35";
+var scale="1:2.4";
 var svg_height=830;
 var svg_width=1180;
-var distanza_quota_pannello=40;
+var distanza_quota_pannello=45;
 var limite_recupero_lana=200;
 var lunghezza_trattino_quote=10;
 var distanza_testo_linea_quota=7;
 var svgDefaultTextPadding=4;
 var stroke_width_lana_fresatura=15;
+var currentDrawing;
+var drawingFullscreen=false;
 
+function svuotaLogoutStazione(id_stazione)
+{
+    $.get("svuotaLogoutStazione.php",{id_stazione},
+    function(response, status)
+    {
+        if(status=="success")
+        {
+            if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+            {
+				Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+            }
+        }
+    });
+}
 function setCookie(name,value)
 {
     $.post("setCookie.php",{name,value},
@@ -89,311 +106,98 @@ function logout()
         window.location = 'login.html';
     });
 }
-/*--------------------------------------------------------------------------------------------------*/
-async function getDrawingLamiera()
+async function checkLogoutStazione(id_stazione)
 {
-    var container=document.getElementById("drawingInnerContainer");
-    container.innerHTML="";
-
-    $(".drawing-lamiera-legenda-button").remove();
-    $(".drawing-lana-legenda-button").remove();
-    $("#messaggioRecuperoLanaButton").remove();
-
-    var containerWidth=container.offsetWidth;
-    var containerHeight=container.offsetHeight;
-
-    var lung1=getScaledMeasure(pannello.lung1);
-    var lung2=getScaledMeasure(pannello.lung2);
-    var halt=getScaledMeasure(pannello.halt);
-
-    var altezza_pannello=halt;
-    var larghezza_lato_orrizzontale=lung1;
-    var larghezza_lato_verticale=lung2;
-    
-    var svg=document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("id","drawingSvg");
-    container.appendChild(svg);
-
-    var svg=document.getElementById("drawingSvg");    
-    
-    var x_pannello=(svg_width/2)-(altezza_pannello/2);
-    var y_pannello=(svg_height/2)-((larghezza_lato_verticale+larghezza_lato_orrizzontale)/2);
-
-    //pannello
-    var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
-    rect.setAttribute("style","fill:gray;stroke:black;stroke-width:1;");
-    rect.setAttribute("x",x_pannello);
-    rect.setAttribute("y",y_pannello);
-    rect.setAttribute("width",altezza_pannello);
-    rect.setAttribute("height",larghezza_lato_verticale);
-    svg.appendChild(rect);
-
-    var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
-    rect.setAttribute("style","fill:gray;stroke:black;stroke-width:1;");
-    rect.setAttribute("x",x_pannello);
-    rect.setAttribute("y",y_pannello+larghezza_lato_verticale);
-    rect.setAttribute("width",altezza_pannello);
-    rect.setAttribute("height",larghezza_lato_orrizzontale);
-    svg.appendChild(rect);
-
-    //quota altezza pannello
-    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute("style","stroke:white;stroke-width:1;");
-    line.setAttribute("x1",x_pannello);
-    line.setAttribute("y1",y_pannello-distanza_quota_pannello);
-    line.setAttribute("x2",x_pannello+altezza_pannello);
-    line.setAttribute("y2",y_pannello-distanza_quota_pannello);
-    svg.appendChild(line);
-
-    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute("style","stroke:white;stroke-width:1;");
-    line.setAttribute("x1",x_pannello);
-    line.setAttribute("y1",y_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
-    line.setAttribute("x2",x_pannello);
-    line.setAttribute("y2",y_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
-    svg.appendChild(line);
-
-    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute("style","stroke:white;stroke-width:1;");
-    line.setAttribute("x1",x_pannello+altezza_pannello);
-    line.setAttribute("y1",y_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
-    line.setAttribute("x2",x_pannello+altezza_pannello);
-    line.setAttribute("y2",y_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
-    svg.appendChild(line);
-
-    var text=document.createElementNS('http://www.w3.org/2000/svg','text');
-    text.setAttribute("style","fill:white");
-    text.setAttribute("x",(x_pannello+altezza_pannello)/2);
-    text.setAttribute("y",y_pannello-distanza_quota_pannello-distanza_testo_linea_quota);
-    text.innerHTML=roundQuoteValue(pannello.halt);
-    svg.appendChild(text);
-
-    //quote larghezza pannello
-    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute("style","stroke:white;stroke-width:1;");
-    line.setAttribute("x1",x_pannello-distanza_quota_pannello);
-    line.setAttribute("y1",y_pannello);
-    line.setAttribute("x2",x_pannello-distanza_quota_pannello);
-    line.setAttribute("y2",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
-    svg.appendChild(line);
-
-    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute("style","stroke:white;stroke-width:1;");
-    line.setAttribute("x1",x_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
-    line.setAttribute("y1",y_pannello);
-    line.setAttribute("x2",x_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
-    line.setAttribute("y2",y_pannello);
-    svg.appendChild(line);
-
-    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute("style","stroke:white;stroke-width:1;");
-    line.setAttribute("x1",x_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
-    line.setAttribute("y1",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
-    line.setAttribute("x2",x_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
-    line.setAttribute("y2",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
-    svg.appendChild(line);
-
-    if(larghezza_lato_verticale>0)
+    $.get("checkLogoutStazione.php",{id_stazione},
+    function(response, status)
     {
-        var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-        line.setAttribute("style","stroke:white;stroke-width:1;");
-        line.setAttribute("x1",x_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
-        line.setAttribute("y1",y_pannello+larghezza_lato_verticale);
-        line.setAttribute("x2",x_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
-        line.setAttribute("y2",y_pannello+larghezza_lato_verticale);
-        svg.appendChild(line);
-
-        var text=document.createElementNS('http://www.w3.org/2000/svg','text');
-        text.setAttribute("style","fill:white;");
-        text.setAttribute("id","drawingQuotaLung2");
-        text.innerHTML=roundQuoteValue(pannello.lung2);
-        svg.appendChild(text);
-        document.getElementById("drawingQuotaLung2").setAttribute("x",x_pannello-distanza_quota_pannello-distanza_testo_linea_quota-(document.getElementById("drawingQuotaLung2").getBBox().width));
-        document.getElementById("drawingQuotaLung2").setAttribute("y",y_pannello+(larghezza_lato_verticale)/2+((document.getElementById("drawingQuotaLung2").getBBox().height-svgDefaultTextPadding)/2));
-    }
-
-    var text=document.createElementNS('http://www.w3.org/2000/svg','text');
-    text.setAttribute("style","fill:white;");
-    text.setAttribute("id","drawingQuotaLung1");
-    text.innerHTML=roundQuoteValue(pannello.lung1);
-    svg.appendChild(text);
-    document.getElementById("drawingQuotaLung1").setAttribute("x",x_pannello-distanza_quota_pannello-distanza_testo_linea_quota-(document.getElementById("drawingQuotaLung1").getBBox().width));
-    document.getElementById("drawingQuotaLung1").setAttribute("y",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale)/2+((document.getElementById("drawingQuotaLung1").getBBox().height-svgDefaultTextPadding)/2));
-
-    //rinforzi
-    var i=1;
-    var quote_rappresentate=[];
-    pannello.rinforzi.forEach(rinforzo =>
-    {
-        //console.log(rinforzo);
-        switch (rinforzo.codice_materia_prima)
+        if(status=="success")
         {
-            case "R1":
-                rinforzo.colore="#85D3D5";
-            break;
-            case "R69":
-                rinforzo.colore="#C7CEEA";
-            break;
-            case "R74":
-                rinforzo.colore="#F4F4E0";
-            break;
-            case "R7":
-                rinforzo.colore="#ADB3DB";
-            break;
-            case "R65":
-                rinforzo.colore="#8EA9D8";
-            break;
-        }
-
-        if(document.getElementById("drawingLegendaButton"+rinforzo.colore)==null)
-        {
-            var legendaItem=document.createElement("button");
-            legendaItem.setAttribute("class","text-action-button drawing-lamiera-legenda-button");
-            legendaItem.setAttribute("id","drawingLegendaButton"+rinforzo.colore);
-            legendaItem.setAttribute("disabled","disabled");
-            if((document.getElementsByClassName("drawing-lamiera-legenda-button").length+document.getElementsByClassName("drawing-lana-legenda-button").length)==0)
-                legendaItem.setAttribute("style","margin-left:auto;background-color:"+rinforzo.colore);
+            if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+            {
+                console.log(response);
+            }
             else
-                legendaItem.setAttribute("style","background-color:"+rinforzo.colore);
-            legendaItem.innerHTML="<span>"+rinforzo.descrizione_materiale+"</span>";
-            document.getElementsByClassName("drawing-actions-container")[0].appendChild(legendaItem);
-        }
-
-        var lunghezza=getScaledMeasure(rinforzo.lunghezza);
-        var hrin=getScaledMeasure(rinforzo.hrin);
-        var posy=getScaledMeasure(rinforzo.posy);
-        var posx=getScaledMeasure(rinforzo.posx);
-
-        if(rinforzo.vh=="VER")
-        {
-            var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
-            //rect.setAttribute("class","svg-rect-rinforzo");
-            rect.setAttribute("style","fill:"+rinforzo.colore+";stroke:white;stroke-width:1;");
-            rect.setAttribute("x",x_pannello+altezza_pannello-lunghezza-posy);
-            rect.setAttribute("y",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx-(hrin/2));
-            rect.setAttribute("width",lunghezza);
-            rect.setAttribute("height",hrin);
-            svg.appendChild(rect);
-            
-            //quota rinforzo
-            if(!quote_rappresentate.includes(rinforzo.posx))
             {
-                var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-                line.setAttribute("style","stroke:white;stroke-width:1;");
-                line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i));
-                line.setAttribute("y1",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx);
-                line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i));
-                line.setAttribute("y2",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale);
-                svg.appendChild(line);
-            
-                var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-                line.setAttribute("style","stroke:white;stroke-width:1;");
-                line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i)-(lunghezza_trattino_quote/2));
-                line.setAttribute("y1",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx);
-                line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+(lunghezza_trattino_quote/2));
-                line.setAttribute("y2",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx);
-                svg.appendChild(line);
-            
-                var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-                line.setAttribute("style","stroke:white;stroke-width:1;");
-                line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i)-(lunghezza_trattino_quote/2));
-                line.setAttribute("y1",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
-                line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+(lunghezza_trattino_quote/2));
-                line.setAttribute("y2",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
-                svg.appendChild(line);
-
-                var text=document.createElementNS('http://www.w3.org/2000/svg','text');
-                text.setAttribute("style","fill:white;");
-                text.setAttribute("id","drawingQuotaRinforzo"+i);
-                text.innerHTML=roundQuoteValue(rinforzo.posx);
-                svg.appendChild(text);
-                document.getElementById("drawingQuotaRinforzo"+i).setAttribute("x",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+distanza_testo_linea_quota);
-                document.getElementById("drawingQuotaRinforzo"+i).setAttribute("y",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale-(posx/2)+((document.getElementById("drawingQuotaRinforzo"+i).getBBox().height-svgDefaultTextPadding)/2));
-            
-                quote_rappresentate.push(rinforzo.posx);
+                try
+                {
+                    var shouldLogout=JSON.parse(response);
+                    if(shouldLogout)
+                        logout();
+                }
+                catch (error)
+                {
+                    console.log(error);
+                }
             }
         }
-        else
-        {
-            var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
-            //rect.setAttribute("class","svg-rect-rinforzo");
-            rect.setAttribute("style","fill:"+rinforzo.colore+";stroke:white;stroke-width:1;");
-            rect.setAttribute("x",x_pannello+altezza_pannello-lunghezza-posy+hrin);
-            rect.setAttribute("y",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx-lunghezza);
-            rect.setAttribute("width",hrin);
-            rect.setAttribute("height",lunghezza);
-            svg.appendChild(rect);
-
-            //quota rinforzo
-            if(!quote_rappresentate.includes(rinforzo.posx))
-            {
-                var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-                line.setAttribute("style","stroke:white;stroke-width:1;");
-                line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i));
-                line.setAttribute("y1",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-(lunghezza/2));
-                line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i));
-                line.setAttribute("y2",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale);
-                svg.appendChild(line);
-            
-                var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-                line.setAttribute("style","stroke:white;stroke-width:1;");
-                line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i)-(lunghezza_trattino_quote/2));
-                line.setAttribute("y1",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-(lunghezza/2));
-                line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+(lunghezza_trattino_quote/2));
-                line.setAttribute("y2",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-(lunghezza/2));
-                svg.appendChild(line);
-            
-                var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-                line.setAttribute("style","stroke:white;stroke-width:1;");
-                line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i)-(lunghezza_trattino_quote/2));
-                line.setAttribute("y1",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
-                line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+(lunghezza_trattino_quote/2));
-                line.setAttribute("y2",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
-                svg.appendChild(line);
-
-                var text=document.createElementNS('http://www.w3.org/2000/svg','text');
-                text.setAttribute("style","fill:white;");
-                text.setAttribute("id","drawingQuotaRinforzo"+i);
-                text.innerHTML=roundQuoteValue((rinforzo.lunghezza/2));
-                svg.appendChild(text);
-                document.getElementById("drawingQuotaRinforzo"+i).setAttribute("x",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+distanza_testo_linea_quota);
-                document.getElementById("drawingQuotaRinforzo"+i).setAttribute("y",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale-(lunghezza/4)+((document.getElementById("drawingQuotaRinforzo"+i).getBBox().height-svgDefaultTextPadding)/2));
-            
-                quote_rappresentate.push(rinforzo.posx);
-            }
-        }
-        i++;
     });
 }
-async function getDrawingLana()
+function toggleDrawingFullscreen()
 {
-    var container=document.getElementById("drawingInnerContainer");
-    container.innerHTML="";
+    var button=document.getElementById("toggleDrawingFullscreenButton");
+    
+    if(drawingFullscreen)
+    {
+        button.getElementsByTagName("i")[0].className="far fa-expand-alt";
 
-    $(".drawing-lamiera-legenda-button").remove();
-    $(".drawing-lana-legenda-button").remove();
-    $("#messaggioRecuperoLanaButton").remove();
+        document.getElementById("drawingOuterContainer").style.position="";
+        document.getElementById("drawingOuterContainer").style.left="";
+        document.getElementById("drawingOuterContainer").style.right="";
+        document.getElementById("drawingOuterContainer").style.top="";
+        document.getElementById("drawingOuterContainer").style.bottom="";
+        document.getElementById("drawingOuterContainer").style.height="";
+        document.getElementById("drawingOuterContainer").style.minHeight="";
+        document.getElementById("drawingOuterContainer").style.maxHeight="";
+        document.getElementById("drawingOuterContainer").style.width="";
 
-    var containerWidth=container.offsetWidth;
-    var containerHeight=container.offsetHeight;
+        scale="1:2.4";
+        svg_height=830;
+        svg_width=1180;
+    }
+    else
+    {
+        button.getElementsByTagName("i")[0].className="far fa-compress-alt";
 
+        document.getElementById("drawingOuterContainer").style.position="absolute";
+        document.getElementById("drawingOuterContainer").style.left="0px";
+        document.getElementById("drawingOuterContainer").style.right="0px";
+        document.getElementById("drawingOuterContainer").style.top="0px";
+        document.getElementById("drawingOuterContainer").style.bottom="0px";
+        document.getElementById("drawingOuterContainer").style.height="1080px";
+        document.getElementById("drawingOuterContainer").style.minHeight="1080px";
+        document.getElementById("drawingOuterContainer").style.maxHeight="1080px";
+        document.getElementById("drawingOuterContainer").style.width="1920px";
+
+        scale="1:1.45";
+        svg_height=990;
+        svg_width=1880;
+    }
+    
+    if(currentDrawing=='lana')
+        getDrawingLana();
+    else
+        getDrawingLamiera();
+
+    drawingFullscreen=!drawingFullscreen;
+}
+/*--------------------------------------------------------------------------------------------------*/
+function drawPannello()
+{
     var lung1=getScaledMeasure(pannello.lung1);
     var lung2=getScaledMeasure(pannello.lung2);
     var halt=getScaledMeasure(pannello.halt);
 
     var altezza_pannello=halt;
-    var larghezza_lato_orrizzontale=lung1;
     var larghezza_lato_verticale=lung2;
-    
-    var svg=document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("id","drawingSvg");
-    container.appendChild(svg);
-
-    var svg_height=830;
-    var svg_width=1180;
+    var larghezza_lato_orrizzontale=lung1;
     
     var x_pannello=(svg_width/2)-(altezza_pannello/2);
-    var y_pannello=(svg_height/2)-((larghezza_lato_verticale+larghezza_lato_orrizzontale)/2);
+    var y_pannello=(svg_height/2)-((larghezza_lato_orrizzontale+larghezza_lato_verticale)/2);
+
+    var svg=document.getElementById("drawingSvg");
+
+    console.log(pannello);
 
     //pannello
     var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
@@ -401,15 +205,15 @@ async function getDrawingLana()
     rect.setAttribute("x",x_pannello);
     rect.setAttribute("y",y_pannello);
     rect.setAttribute("width",altezza_pannello);
-    rect.setAttribute("height",larghezza_lato_verticale);
+    rect.setAttribute("height",larghezza_lato_orrizzontale);
     svg.appendChild(rect);
 
     var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
     rect.setAttribute("style","fill:gray;stroke:black;stroke-width:1;");
     rect.setAttribute("x",x_pannello);
-    rect.setAttribute("y",y_pannello+larghezza_lato_verticale);
+    rect.setAttribute("y",y_pannello+larghezza_lato_orrizzontale);
     rect.setAttribute("width",altezza_pannello);
-    rect.setAttribute("height",larghezza_lato_orrizzontale);
+    rect.setAttribute("height",larghezza_lato_verticale);
     svg.appendChild(rect);
 
     //quota altezza pannello
@@ -439,10 +243,11 @@ async function getDrawingLana()
 
     var text=document.createElementNS('http://www.w3.org/2000/svg','text');
     text.setAttribute("style","fill:white");
-    text.setAttribute("x",(x_pannello+altezza_pannello)/2);
+    text.setAttribute("id","drawingQuotaHalt");
     text.setAttribute("y",y_pannello-distanza_quota_pannello-distanza_testo_linea_quota);
     text.innerHTML=roundQuoteValue(pannello.halt);
     svg.appendChild(text);
+    document.getElementById("drawingQuotaHalt").setAttribute("x",x_pannello+(altezza_pannello/2)-((document.getElementById("drawingQuotaHalt").getBBox().width)/2));
 
     //quote larghezza pannello
     var line=document.createElementNS('http://www.w3.org/2000/svg','line');
@@ -450,7 +255,7 @@ async function getDrawingLana()
     line.setAttribute("x1",x_pannello-distanza_quota_pannello);
     line.setAttribute("y1",y_pannello);
     line.setAttribute("x2",x_pannello-distanza_quota_pannello);
-    line.setAttribute("y2",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
+    line.setAttribute("y2",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale));
     svg.appendChild(line);
 
     var line=document.createElementNS('http://www.w3.org/2000/svg','line');
@@ -464,44 +269,60 @@ async function getDrawingLana()
     var line=document.createElementNS('http://www.w3.org/2000/svg','line');
     line.setAttribute("style","stroke:white;stroke-width:1;");
     line.setAttribute("x1",x_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
-    line.setAttribute("y1",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
+    line.setAttribute("y1",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale));
     line.setAttribute("x2",x_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
-    line.setAttribute("y2",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
+    line.setAttribute("y2",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale));
     svg.appendChild(line);
+
+    var text=document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute("style","fill:white;");
+    text.setAttribute("id","drawingQuotaLung2");
+    text.innerHTML=roundQuoteValue(pannello.lung1);
+    svg.appendChild(text);
+    document.getElementById("drawingQuotaLung2").setAttribute("x",x_pannello-distanza_quota_pannello-distanza_testo_linea_quota-(document.getElementById("drawingQuotaLung2").getBBox().width));
+    document.getElementById("drawingQuotaLung2").setAttribute("y",y_pannello+(larghezza_lato_orrizzontale)/2+((document.getElementById("drawingQuotaLung2").getBBox().height-svgDefaultTextPadding)/2));
 
     if(larghezza_lato_verticale>0)
     {
         var line=document.createElementNS('http://www.w3.org/2000/svg','line');
         line.setAttribute("style","stroke:white;stroke-width:1;");
         line.setAttribute("x1",x_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
-        line.setAttribute("y1",y_pannello+larghezza_lato_verticale);
+        line.setAttribute("y1",y_pannello+larghezza_lato_orrizzontale);
         line.setAttribute("x2",x_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
-        line.setAttribute("y2",y_pannello+larghezza_lato_verticale);
+        line.setAttribute("y2",y_pannello+larghezza_lato_orrizzontale);
         svg.appendChild(line);
 
         var text=document.createElementNS('http://www.w3.org/2000/svg','text');
         text.setAttribute("style","fill:white;");
-        text.setAttribute("id","drawingQuotaLung2");
+        text.setAttribute("id","drawingQuotaLung1");
         text.innerHTML=roundQuoteValue(pannello.lung2);
         svg.appendChild(text);
-        document.getElementById("drawingQuotaLung2").setAttribute("x",x_pannello-distanza_quota_pannello-distanza_testo_linea_quota-(document.getElementById("drawingQuotaLung2").getBBox().width));
-        document.getElementById("drawingQuotaLung2").setAttribute("y",y_pannello+(larghezza_lato_verticale)/2+((document.getElementById("drawingQuotaLung2").getBBox().height-svgDefaultTextPadding)/2));
+        document.getElementById("drawingQuotaLung1").setAttribute("x",x_pannello-distanza_quota_pannello-distanza_testo_linea_quota-(document.getElementById("drawingQuotaLung1").getBBox().width));
+        document.getElementById("drawingQuotaLung1").setAttribute("y",y_pannello+larghezza_lato_orrizzontale+(larghezza_lato_verticale/2)+((document.getElementById("drawingQuotaLung1").getBBox().height-svgDefaultTextPadding)/2));
     }
+}
+function drawRinforzi()
+{
+    var lung1=getScaledMeasure(pannello.lung1);
+    var lung2=getScaledMeasure(pannello.lung2);
+    var halt=getScaledMeasure(pannello.halt);
 
-    var text=document.createElementNS('http://www.w3.org/2000/svg','text');
-    text.setAttribute("style","fill:white;");
-    text.setAttribute("id","drawingQuotaLung1");
-    text.innerHTML=roundQuoteValue(pannello.lung1);
-    svg.appendChild(text);
-    document.getElementById("drawingQuotaLung1").setAttribute("x",x_pannello-distanza_quota_pannello-distanza_testo_linea_quota-(document.getElementById("drawingQuotaLung1").getBBox().width));
-    document.getElementById("drawingQuotaLung1").setAttribute("y",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale)/2+((document.getElementById("drawingQuotaLung1").getBBox().height-svgDefaultTextPadding)/2));
+    var altezza_pannello=halt;
+    var larghezza_lato_verticale=lung2;
+    var larghezza_lato_orrizzontale=lung1;
+    
+    var x_pannello=(svg_width/2)-(altezza_pannello/2);
+    var y_pannello=(svg_height/2)-((larghezza_lato_orrizzontale+larghezza_lato_verticale)/2);
+
+    var svg=document.getElementById("drawingSvg");
 
     //rinforzi
     var i=1;
-    var quote_rappresentate=[];
+    var j=1;
+    var quote_orrizzontali_rappresentate=[];
     pannello.rinforzi.forEach(rinforzo =>
     {
-        //console.log(rinforzo);
+        console.log(rinforzo);
         switch (rinforzo.codice_materia_prima)
         {
             case "R1":
@@ -546,47 +367,62 @@ async function getDrawingLana()
             //rect.setAttribute("class","svg-rect-rinforzo");
             rect.setAttribute("style","fill:"+rinforzo.colore+";stroke:white;stroke-width:1;");
             rect.setAttribute("x",x_pannello+altezza_pannello-lunghezza-posy);
-            rect.setAttribute("y",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx-(hrin/2));
+            rect.setAttribute("y",y_pannello+posx-(hrin/2));
             rect.setAttribute("width",lunghezza);
             rect.setAttribute("height",hrin);
             svg.appendChild(rect);
+
+            var text=document.createElementNS('http://www.w3.org/2000/svg','text');
+            text.setAttribute("style","fill:black;font-weight:bold");
+            text.setAttribute("id","drawingQuotaOrrizontaleCodiceRinforzo"+i);
+            text.innerHTML=rinforzo.codice_materia_prima + " (" + rinforzo.hrin + " X " + rinforzo.lunghezza + ")";
+            svg.appendChild(text);
+            document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).setAttribute("x",x_pannello+altezza_pannello-(lunghezza/2)-posy-((document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).getBBox().width)/2));
+            document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).setAttribute("y",y_pannello+posx+((document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).getBBox().height-svgDefaultTextPadding)/2));
             
             //quota rinforzo
-            if(!quote_rappresentate.includes(rinforzo.posx))
+            if(!quote_orrizzontali_rappresentate.includes(rinforzo.posx))
             {
+                //quota orrizzontale rinforzo
                 var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+                line.setAttribute("id","drawingLineaQuotaRinforzo"+i);
                 line.setAttribute("style","stroke:white;stroke-width:1;");
                 line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i));
-                line.setAttribute("y1",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx);
+                line.setAttribute("y1",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale);
                 line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i));
+                line.setAttribute("y2",y_pannello+posx);
+                svg.appendChild(line);
+            
+                var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+                line.setAttribute("style","stroke:white;stroke-width:1;");
+                line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i)-(lunghezza_trattino_quote/2));
+                line.setAttribute("y1",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale);
+                line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+(lunghezza_trattino_quote/2));
                 line.setAttribute("y2",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale);
                 svg.appendChild(line);
             
                 var line=document.createElementNS('http://www.w3.org/2000/svg','line');
                 line.setAttribute("style","stroke:white;stroke-width:1;");
                 line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i)-(lunghezza_trattino_quote/2));
-                line.setAttribute("y1",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx);
+                line.setAttribute("y1",y_pannello+posx);
                 line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+(lunghezza_trattino_quote/2));
-                line.setAttribute("y2",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx);
+                line.setAttribute("y2",y_pannello+posx);
                 svg.appendChild(line);
-            
-                var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-                line.setAttribute("style","stroke:white;stroke-width:1;");
-                line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i)-(lunghezza_trattino_quote/2));
-                line.setAttribute("y1",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
-                line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+(lunghezza_trattino_quote/2));
-                line.setAttribute("y2",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
-                svg.appendChild(line);
+
+                var drawingLineaQuotaRinforzo = $("#drawingLineaQuotaRinforzo"+i).get(0);
+                var drawingLineaQuotaRinforzoLenght = getLineLenght(drawingLineaQuotaRinforzo.x1.baseVal.value, drawingLineaQuotaRinforzo.x2.baseVal.value,drawingLineaQuotaRinforzo.y1.baseVal.value, drawingLineaQuotaRinforzo.y2.baseVal.value);
 
                 var text=document.createElementNS('http://www.w3.org/2000/svg','text');
                 text.setAttribute("style","fill:white;");
                 text.setAttribute("id","drawingQuotaRinforzo"+i);
-                text.innerHTML=roundQuoteValue(rinforzo.posx);
+                text.innerHTML=roundQuoteValue(getUnscaledMeasure(drawingLineaQuotaRinforzoLenght));
                 svg.appendChild(text);
                 document.getElementById("drawingQuotaRinforzo"+i).setAttribute("x",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+distanza_testo_linea_quota);
-                document.getElementById("drawingQuotaRinforzo"+i).setAttribute("y",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale-(posx/2)+((document.getElementById("drawingQuotaRinforzo"+i).getBBox().height-svgDefaultTextPadding)/2));
+                document.getElementById("drawingQuotaRinforzo"+i).setAttribute("y",y_pannello+posx+(((y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale)-(y_pannello+posx))/2)+((document.getElementById("drawingQuotaRinforzo"+i).getBBox().height-svgDefaultTextPadding)/2));
             
-                quote_rappresentate.push(rinforzo.posx);
+                quote_orrizzontali_rappresentate.push(rinforzo.posx);
+                
+                i++;
             }
         }
         else
@@ -594,59 +430,126 @@ async function getDrawingLana()
             var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
             //rect.setAttribute("class","svg-rect-rinforzo");
             rect.setAttribute("style","fill:"+rinforzo.colore+";stroke:white;stroke-width:1;");
-            rect.setAttribute("x",x_pannello+altezza_pannello-lunghezza-posy+hrin);
-            rect.setAttribute("y",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx-lunghezza);
+            rect.setAttribute("x",x_pannello+altezza_pannello-posy-(hrin/2));
+            rect.setAttribute("y",y_pannello+posx);
             rect.setAttribute("width",hrin);
             rect.setAttribute("height",lunghezza);
             svg.appendChild(rect);
 
+            var text=document.createElementNS('http://www.w3.org/2000/svg','text');
+            text.setAttribute("style","fill:black;font-weight:bold;");
+            text.setAttribute("id","drawingQuotaOrrizontaleCodiceRinforzo"+i);
+            text.innerHTML=rinforzo.codice_materia_prima + " (" + rinforzo.hrin + " X " + rinforzo.lunghezza + ")";
+            svg.appendChild(text);
+            document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).setAttribute("x",(y_pannello+posx+(lunghezza/2)-((document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).getBBox().width)/2))*-1);
+            document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).setAttribute("y",x_pannello+altezza_pannello-posy-((document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).getBBox().height+svgDefaultTextPadding)/2));
+            document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).setAttribute("transform","translate("+document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).getBBox().height+","+document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).getBBox().width+") rotate(270)");
+
             //quota rinforzo
-            if(!quote_rappresentate.includes(rinforzo.posx))
-            {
+            if(!quote_orrizzontali_rappresentate.includes(rinforzo.posx))
+            {                
+                //quota orrizzontale rinforzo
                 var line=document.createElementNS('http://www.w3.org/2000/svg','line');
                 line.setAttribute("style","stroke:white;stroke-width:1;");
+                line.setAttribute("id","drawingLineaQuotaRinforzo"+i);
                 line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i));
-                line.setAttribute("y1",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-(lunghezza/2));
+                line.setAttribute("y1",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale);
                 line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i));
+                line.setAttribute("y2",y_pannello+posx+(lunghezza/2));
+                svg.appendChild(line);
+            
+                var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+                line.setAttribute("style","stroke:white;stroke-width:1;");
+                line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i)-(lunghezza_trattino_quote/2));
+                line.setAttribute("y1",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale);
+                line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+(lunghezza_trattino_quote/2));
                 line.setAttribute("y2",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale);
                 svg.appendChild(line);
             
                 var line=document.createElementNS('http://www.w3.org/2000/svg','line');
                 line.setAttribute("style","stroke:white;stroke-width:1;");
                 line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i)-(lunghezza_trattino_quote/2));
-                line.setAttribute("y1",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-(lunghezza/2));
+                line.setAttribute("y1",y_pannello+posx+(lunghezza/2));
                 line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+(lunghezza_trattino_quote/2));
-                line.setAttribute("y2",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-(lunghezza/2));
-                svg.appendChild(line);
-            
-                var line=document.createElementNS('http://www.w3.org/2000/svg','line');
-                line.setAttribute("style","stroke:white;stroke-width:1;");
-                line.setAttribute("x1",x_pannello+altezza_pannello+(distanza_quota_pannello*i)-(lunghezza_trattino_quote/2));
-                line.setAttribute("y1",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
-                line.setAttribute("x2",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+(lunghezza_trattino_quote/2));
-                line.setAttribute("y2",y_pannello+(larghezza_lato_orrizzontale+larghezza_lato_verticale));
+                line.setAttribute("y2",y_pannello+posx+(lunghezza/2));
                 svg.appendChild(line);
 
+                var drawingLineaQuotaRinforzo = $("#drawingLineaQuotaRinforzo"+i).get(0);
+                var drawingLineaQuotaRinforzoLenght = getLineLenght(drawingLineaQuotaRinforzo.x1.baseVal.value, drawingLineaQuotaRinforzo.x2.baseVal.value,drawingLineaQuotaRinforzo.y1.baseVal.value, drawingLineaQuotaRinforzo.y2.baseVal.value);
+                
                 var text=document.createElementNS('http://www.w3.org/2000/svg','text');
                 text.setAttribute("style","fill:white;");
                 text.setAttribute("id","drawingQuotaRinforzo"+i);
-                text.innerHTML=roundQuoteValue((rinforzo.lunghezza/2));
+                text.innerHTML=roundQuoteValue(getUnscaledMeasure(drawingLineaQuotaRinforzoLenght));
                 svg.appendChild(text);
                 document.getElementById("drawingQuotaRinforzo"+i).setAttribute("x",x_pannello+altezza_pannello+(distanza_quota_pannello*i)+distanza_testo_linea_quota);
-                document.getElementById("drawingQuotaRinforzo"+i).setAttribute("y",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale-(lunghezza/4)+((document.getElementById("drawingQuotaRinforzo"+i).getBBox().height-svgDefaultTextPadding)/2));
-            
-                quote_rappresentate.push(rinforzo.posx);
+                document.getElementById("drawingQuotaRinforzo"+i).setAttribute("y",y_pannello+posx+(lunghezza/4)+(((y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale)-(y_pannello+posx))/2)+((document.getElementById("drawingQuotaRinforzo"+i).getBBox().height-svgDefaultTextPadding)/2));
+
+                quote_orrizzontali_rappresentate.push(rinforzo.posx);
+
+                i++;
             }
+
+            //quota verticale rinforzi
+            var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+            line.setAttribute("style","stroke:white;stroke-width:1;");
+            line.setAttribute("x1",x_pannello+altezza_pannello-posy);
+            line.setAttribute("y1",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale)+(distanza_quota_pannello * j));
+            line.setAttribute("x2",x_pannello+altezza_pannello);
+            line.setAttribute("y2",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale)+(distanza_quota_pannello * j));
+            svg.appendChild(line);
+
+            var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+            line.setAttribute("style","stroke:white;stroke-width:1;");
+            line.setAttribute("x1",x_pannello+altezza_pannello-posy);
+            line.setAttribute("y1",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale)+(distanza_quota_pannello * j)-(lunghezza_trattino_quote/2));
+            line.setAttribute("x2",x_pannello+altezza_pannello-posy);
+            line.setAttribute("y2",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale)+(distanza_quota_pannello * j)+(lunghezza_trattino_quote/2));
+            svg.appendChild(line);
+
+            var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+            line.setAttribute("style","stroke:white;stroke-width:1;");
+            line.setAttribute("x1",x_pannello+altezza_pannello);
+            line.setAttribute("y1",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale)+(distanza_quota_pannello * j)-(lunghezza_trattino_quote/2));
+            line.setAttribute("x2",x_pannello+altezza_pannello);
+            line.setAttribute("y2",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale)+(distanza_quota_pannello * j)+(lunghezza_trattino_quote/2));
+            svg.appendChild(line);
+
+            var text=document.createElementNS('http://www.w3.org/2000/svg','text');
+            text.setAttribute("style","fill:white");
+            text.setAttribute("id","drawingQuotaVerticaleCodiceRinforzo"+j);
+            text.setAttribute("y",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale)+(distanza_quota_pannello * j)+distanza_testo_linea_quota);
+            text.innerHTML=roundQuoteValue(rinforzo.posy);
+            svg.appendChild(text);
+            document.getElementById("drawingQuotaVerticaleCodiceRinforzo"+j).setAttribute("x",x_pannello+altezza_pannello-(posy/2)-((document.getElementById("drawingQuotaVerticaleCodiceRinforzo"+j).getBBox().width)/2));
+            document.getElementById("drawingQuotaVerticaleCodiceRinforzo"+j).setAttribute("y",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale)+(distanza_quota_pannello * j)+distanza_testo_linea_quota+((document.getElementById("drawingQuotaVerticaleCodiceRinforzo"+j).getBBox().height-svgDefaultTextPadding)));
+
+            j++;
         }
-        i++;
     });
+}
+function drawLana()
+{
+    var lung1=getScaledMeasure(pannello.lung1);
+    var lung2=getScaledMeasure(pannello.lung2);
+    var halt=getScaledMeasure(pannello.halt);
+
+    var altezza_pannello=halt;
+    var larghezza_lato_verticale=lung2;
+    var larghezza_lato_orrizzontale=lung1;
+    
+    var x_pannello=(svg_width/2)-(altezza_pannello/2);
+    var y_pannello=(svg_height/2)-((larghezza_lato_orrizzontale+larghezza_lato_verticale)/2);
+
+    var svg=document.getElementById("drawingSvg");
 
     //lane
     var lanaUsata=0;
     var posxArray=[];
+    var i=0;
     pannello.lane.forEach(lana =>
     {
-        //console.log(lana);
+        console.log(lana);
         switch (lana.spess)
         {
             case 15:
@@ -681,33 +584,26 @@ async function getDrawingLana()
 
         var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
         rect.setAttribute("style","fill:"+lana.colore+";stroke:#DA6969;stroke-width:1;");
-        rect.setAttribute("x",x_pannello+altezza_pannello-halt);
-        rect.setAttribute("y",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx-lung);
+        rect.setAttribute("x",x_pannello+altezza_pannello-posy-halt);
+        rect.setAttribute("y",y_pannello+posx);
         rect.setAttribute("width",halt);
         rect.setAttribute("height",lung);
         svg.appendChild(rect);
 
+        var text=document.createElementNS('http://www.w3.org/2000/svg','text');
+        text.setAttribute("style","fill:black;font-weight:bold");
+        text.setAttribute("id","drawingQuotaLana"+i);
+        text.innerHTML=lana.halt + " X " + lana.lung;
+        svg.appendChild(text);
+        document.getElementById("drawingQuotaLana"+i).setAttribute("x",x_pannello+altezza_pannello-posy-(halt/2)-(document.getElementById("drawingQuotaLana"+i).getBBox().width/2));
+        document.getElementById("drawingQuotaLana"+i).setAttribute("y",y_pannello+posx+(lung/2)+((document.getElementById("drawingQuotaLana"+i).getBBox().height-svgDefaultTextPadding)/2));
+
         lanaUsata+=lana.lung;
         posxArray.push(lana.posx);
+        i++;
     });
 
-    //controllo scarto lana
-    var messaggioRecuperoLana=document.createElement("button");
-    messaggioRecuperoLana.setAttribute("class","text-action-button");
-    messaggioRecuperoLana.setAttribute("id","messaggioRecuperoLanaButton");
-    messaggioRecuperoLana.setAttribute("disabled","disabled");
-    if(600-lanaUsata>limite_recupero_lana)
-    {
-        messaggioRecuperoLana.setAttribute("style","background-color:transparent;color:#DA6969;box-shadow:none");
-        messaggioRecuperoLana.innerHTML="<span>Recupera lana restante</span>";
-    }
-    else
-    {
-        messaggioRecuperoLana.setAttribute("style","background-color:transparent;color:white;box-shadow:none");
-        messaggioRecuperoLana.innerHTML="<span>Scarta lana restante</span>";
-    }
-    document.getElementById("toggleDrawingButton").parentNode.insertBefore(messaggioRecuperoLana, document.getElementById("toggleDrawingButton").nextSibling);
-    if(pannello.tipo=="STD")
+    /*if(pannello.tipo=="STD")
     {
         var maxPosx=Math.max.apply(null, posxArray);
         var lana_fresatura;
@@ -722,18 +618,54 @@ async function getDrawingLana()
         var posy=getScaledMeasure(lana_fresatura.posy);
         var posx=getScaledMeasure(lana_fresatura.posx);
 
-        console.log(lana_fresatura)
-
         var line=document.createElementNS('http://www.w3.org/2000/svg','line');
         line.setAttribute("style","stroke:#70B085;stroke-width:"+getScaledMeasure(stroke_width_lana_fresatura));
         line.setAttribute("x1",x_pannello+altezza_pannello-halt+1);
-        line.setAttribute("y1",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx-lung+(getScaledMeasure(stroke_width_lana_fresatura)/2)+1);
+        line.setAttribute("y1",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale-posx-lung+(getScaledMeasure(stroke_width_lana_fresatura)/2)+1);
         line.setAttribute("x2",x_pannello+halt-1);
-        line.setAttribute("y2",y_pannello+larghezza_lato_verticale+larghezza_lato_orrizzontale-posx-lung+(getScaledMeasure(stroke_width_lana_fresatura)/2)+1);
+        line.setAttribute("y2",y_pannello+larghezza_lato_orrizzontale+larghezza_lato_verticale-posx-lung+(getScaledMeasure(stroke_width_lana_fresatura)/2)+1);
         svg.appendChild(line);
+    }*/
+}
+async function getDrawingLamiera()
+{
+    if(pannello!=null)
+    {
+        var container=document.getElementById("drawingInnerContainer");
+        container.innerHTML="";
+
+        $(".drawing-lamiera-legenda-button").remove();
+        $(".drawing-lana-legenda-button").remove();
+        $("#messaggioRecuperoLanaButton").remove();
+
+        var svg=document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("id","drawingSvg");
+        container.appendChild(svg);
+
+        drawPannello();
+        drawRinforzi();
     }
 }
+async function getDrawingLana()
+{
+    if(pannello!=null)
+    {
+        var container=document.getElementById("drawingInnerContainer");
+        container.innerHTML="";
 
+        $(".drawing-lamiera-legenda-button").remove();
+        $(".drawing-lana-legenda-button").remove();
+        $("#messaggioRecuperoLanaButton").remove();
+
+        var svg=document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("id","drawingSvg");
+        container.appendChild(svg);
+
+        drawPannello();
+        drawRinforzi();
+        drawLana();
+    }
+}
 function getScaledMeasure(measure)
 {
     var scaleFactor1=parseFloat(scale.split(":")[0]);
@@ -741,12 +673,75 @@ function getScaledMeasure(measure)
 
     return (measure*scaleFactor1)/scaleFactor2;
 }
+function getUnscaledMeasure(measure)
+{
+    var scaleFactor1=parseFloat(scale.split(":")[0]);
+    var scaleFactor2=parseFloat(scale.split(":")[1]);
+
+    return (measure*scaleFactor2)/scaleFactor1;
+}
 function roundQuoteValue(value)
 {
     if(value.toString().split(".").length>1)
         return value.toFixed(1);
     else
         return value;
+}
+function getLineLenght(x1, x2, y1, y2)
+{
+    return Math.sqrt( (x2-=x1)*x2 + (y2-=y1)*y2 );
+}
+function eliminaPannello()
+{
+    if(pannello!=null)
+    {
+        Swal.fire
+        ({
+            icon: 'warning',
+            title: "Vuoi eliminare il pannello?",
+            width:550,
+            showCancelButton: true,
+            background:"#404040",
+            showConfirmButton: true,
+            cancelButtonText: `Annulla`,
+            confirmButtonText: `Elimina pannello`,
+            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="#ddd";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";document.getElementsByClassName("swal2-confirm")[0].style.fontSize="14px";document.getElementsByClassName("swal2-cancel")[0].style.fontSize="14px";document.getElementsByClassName("swal2-close")[0].style.outline="none";}
+        }).then((result) =>
+        {
+            if (result.value)
+            {
+                $.post("eliminaPannello.php",{id_distinta:pannello.id_distinta},
+                function(response, status)
+                {
+                    if(status=="success")
+                    {
+                        if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+                        {
+                            Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                            console.log(response);
+                        }
+                        else
+                        {
+                            //let timerInterval;
+                            Swal.fire
+                            ({
+                                icon:"success",
+                                title: "Pannello eliminato",
+                                background:"#404040",
+                                showCloseButton:false,
+                                showConfirmButton:false,
+                                allowOutsideClick:false,
+                                timer: 5000,
+                                timerProgressBar: true,
+                                onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="white";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";document.getElementsByClassName("swal2-close")[0].style.outline="none";},
+                                //onClose: () => {clearInterval(timerInterval)}
+                            })
+                        }
+                    }
+                });
+            }
+        });
+    }
 }
 //------------------------------------------------------3D------------------------------------------------------------
 
@@ -785,7 +780,7 @@ var lato_orrizzontale = new Zdog.Rect
 ({
     addTo: drawing3DObj,
     width: altezza_pannello,
-    height: larghezza_lato_orrizzontale,
+    height: larghezza_lato_verticale,
     stroke: 2,
     translate:
     {
@@ -797,20 +792,20 @@ var lato_orrizzontale = new Zdog.Rect
     fill: true
 });
 
-if(larghezza_lato_verticale>0)
+if(larghezza_lato_orrizzontale>0)
 {
     console.log(drawing3DTAU);
     var lato_verticale = new Zdog.Rect
     ({
         addTo: drawing3DObj,
         width: altezza_pannello,
-        height: larghezza_lato_verticale,
+        height: larghezza_lato_orrizzontale,
         stroke: 2,
         translate: 
         {
             x:0,
-            y:0-(larghezza_lato_orrizzontale/2),
-            z:larghezza_lato_verticale/2
+            y:0-(larghezza_lato_verticale/2),
+            z:larghezza_lato_orrizzontale/2
         },
         rotate:
         {
@@ -834,7 +829,7 @@ pannello.rinforzi.forEach(rinforzo =>
     var larghezza_rinforzo=getScaledMeasure(rinforzo.largezza);
     if(rinforzo.vh=="VER")
     {
-        if(posx<larghezza_lato_orrizzontale)
+        if(posx<larghezza_lato_verticale)
         {
             //il rinforzo verticale si trova sul lato orrizzontale
             var rinforzo_verticale = new Zdog.Rect
@@ -846,7 +841,7 @@ pannello.rinforzi.forEach(rinforzo =>
                 translate: 
                 {
                     x:(altezza_pannello/2)-(lunghezza/2)-posy,
-                    y:(larghezza_lato_orrizzontale/2)-(posx/2)-(larghezza_rinforzo/2),
+                    y:(larghezza_lato_verticale/2)-(posx/2)-(larghezza_rinforzo/2),
                     z:2
                 },
                 color: '#DA6969',

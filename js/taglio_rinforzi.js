@@ -23,6 +23,8 @@ window.addEventListener("load", async function(event)
 
     stazione=getFirstObjByPropValue(stazioni,"nome",nome_stazione);
 
+    svuotaLogoutStazione(stazione.id_stazione);
+
     document.getElementById("infoStazioneContainer").innerHTML=stazione.label;
     document.getElementById("infoStazioneContainer").setAttribute("nome",stazione.nome);
     document.getElementById("infoStazioneContainer").setAttribute("id_stazione",stazione.id_stazione);
@@ -30,12 +32,16 @@ window.addEventListener("load", async function(event)
     var username=await getSessionValue("username");
     document.getElementById("usernameContainer").innerHTML=username+'<i class="fad fa-user" style="margin-left:10px"></i>';
 
+    currentDrawing="rinforzi";
+
     displayPannello();
     
     interval = setInterval(intervalFunctions, frequenza_aggiornamento_dati_linea);
 });
 async function displayPannello()
 {
+    if(drawingFullscreen)
+        toggleDrawingFullscreen();
     document.getElementById("pdfContainer").innerHTML='<div class="inner-container-spinner"><i class="fad fa-spinner fa-spin"></i><span>Caricamento in corso...</span></div>';
     document.getElementById("drawingInnerContainer").innerHTML='<div class="inner-container-spinner"><i class="fad fa-spinner fa-spin"></i><span>Caricamento in corso...</span></div>';
     pannello=await getPannello();
@@ -58,9 +64,11 @@ async function displayPannello()
 }
 function coloraArmadioRinforzi(pannello)
 {
+    $(".luce-riquadro-rinforzi").css({"display":"none","fill":""});
     pannello.rinforzi.forEach(rinforzo =>
     {
         document.getElementById("luceRiquadroRinforzi"+rinforzo.riquadroArmadioRinforzi).style.display="block";
+        document.getElementById("luceRiquadroRinforzi"+rinforzo.riquadroArmadioRinforzi).style.fill=rinforzo.colore;
     });
 }
 function clearPannello()
@@ -121,6 +129,7 @@ function getPannello()
 function intervalFunctions()
 {
     checkPannello();
+    checkLogoutStazione(stazione.id_stazione);
 }
 async function checkPannello()
 {
@@ -433,38 +442,4 @@ function avanzaPannello()
             }
         });
     }
-}
-function eliminaPannello()
-{
-    /*if(pannello!=null)
-    {
-        Swal.fire
-        ({
-            width:"100%",
-            background:"transparent",
-            title:"Caricamento in corso...",
-            html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
-            allowOutsideClick:false,
-            showCloseButton:false,
-            showConfirmButton:false,
-            allowEscapeKey:false,
-            showCancelButton:false,
-            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
-        });
-
-        $.get("eliminaPannello.php",
-        function(response, status)
-        {
-            if(status=="success")
-            {
-                if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
-                {
-                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
-                    console.log(response);
-                }
-                else
-                    Swal.close();
-            }
-        });
-    }*/
 }

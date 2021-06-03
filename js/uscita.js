@@ -7,6 +7,7 @@ var stazioni;
 var intervalOverflowPdf1;
 var intervalOverflowPdf2;
 var pannello;
+var bancale;
 
 window.addEventListener("load", async function(event)
 {
@@ -32,12 +33,104 @@ window.addEventListener("load", async function(event)
     var username=await getSessionValue("username");
     document.getElementById("usernameContainer").innerHTML=username+'<i class="fad fa-user" style="margin-left:10px"></i>';
 
-    currentDrawing="rinforzi";
+    currentDrawing="lana";
+    document.getElementById("labelToggleDrawing").innerHTML="LANA";
 
     displayPannello();
+
+    displayBancale();
     
     interval = setInterval(intervalFunctions, frequenza_aggiornamento_dati_linea);
 });
+async function displayBancale()
+{
+    bancale=await getBancaleAperto();
+    console.log(bancale);
+    document.getElementById("labelBancaleAperto").innerHTML="BANCALE : <b>#"+bancale.id_bancale+"</b>";
+
+    if(bancale.pannelli.length>0)
+    {
+        var comandiUscitaTableContainer=document.getElementById("comandiUscitaTableContainer");
+        comandiUscitaTableContainer.innerHTML="";
+
+        var table=document.createElement("table");
+        table.setAttribute("id","tablePannelliBancale");
+
+        var thead=document.createElement("thead");
+
+        var tr=document.createElement("tr");
+        var th=document.createElement("th");
+        th.innerHTML="ODP";
+        tr.appendChild(th);
+        var th=document.createElement("th");
+        th.innerHTML="CABINA";
+        tr.appendChild(th);
+        var th=document.createElement("th");
+        th.innerHTML="PANNELLO";
+        tr.appendChild(th);
+        var th=document.createElement("th");
+        th.innerHTML="#";
+        tr.appendChild(th);
+        thead.appendChild(tr);
+
+        table.appendChild(thead);
+
+        var tbody=document.createElement("tbody");
+
+        bancale.pannelli.forEach(pannello =>
+        {
+            var tr=document.createElement("tr");
+            var td=document.createElement("td");
+            td.innerHTML=pannello.ordine_di_produzione;
+            tr.appendChild(td);
+            var td=document.createElement("td");
+            td.innerHTML=pannello.numero_cabina;
+            tr.appendChild(td);
+            var td=document.createElement("td");
+            td.innerHTML=pannello.codice_pannello;
+            tr.appendChild(td);
+            var td=document.createElement("td");
+            td.innerHTML=pannello.id_distinta;
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
+
+        comandiUscitaTableContainer.appendChild(table);
+    }
+}
+function getBancaleAperto()
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.get("getBancaleAperto.php",
+        function(response, status)
+        {
+            if(status=="success")
+            {
+                if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+                {
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    console.log(response);
+                }
+                else
+                {
+                    try
+                    {
+                        resolve(JSON.parse(response));
+                    }
+                    catch (error)
+                    {
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        console.log(response);
+                        resolve(null);
+                    }
+                }
+            }
+        });
+    });
+}
 async function displayPannello()
 {
     if(drawingFullscreen)
@@ -53,9 +146,10 @@ async function displayPannello()
         document.getElementById("labelIdDistinta").innerHTML="# : <b>"+pannello.id_distinta+" ("+pannello.faccia+")</b>";
         document.getElementById("labelIdIncollaggio").innerHTML="ID INCOLLAGGIO : <b>"+pannello.id_incollaggio+"</b>";
 
-        console.log(pannello)
+        currentDrawing="lana";
+        document.getElementById("labelToggleDrawing").innerHTML="LANA";
 
-        getDrawingLamiera();
+        getDrawingLana();
         getPdf(pannello.codice_pannello);
     }
     else
@@ -88,7 +182,7 @@ function getPannello()
 {
     return new Promise(function (resolve, reject) 
     {
-        $.get("getPannelloIncollaggioRinforzi.php",
+        $.get("getPannelloUscita.php",
         function(response, status)
         {
             if(status=="success")
@@ -125,7 +219,15 @@ async function checkPannello()
 {
     var pannelloCheck=await getPannello();
     if(pannelloCheck==null)
+    {
+        if(pannello!=null)
+        {
+            var response=await scaricaPannello();
+            if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+                console.log(response);
+        }
         clearPannello();
+    }
     else
     {
         if(pannello==null)
@@ -133,38 +235,29 @@ async function checkPannello()
         else
         {
             if(pannelloCheck.id_incollaggio != pannello.id_incollaggio)
+            {
+                var response=await scaricaPannello();
+                if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+                    console.log(response);
                 displayPannello();
+            }
         }
     }
 }
-function getPannelloTaglioRinforzi()
+function scaricaPannello()
 {
     return new Promise(function (resolve, reject) 
     {
-        $.get("getPannelloTaglioRinforzi.php",
+        $.get("scaricaPannello.php",
+        {
+            id_distinta:pannello.id_distinta,
+            faccia:pannello.faccia
+        },
         function(response, status)
         {
             if(status=="success")
             {
-                if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
-                {
-                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
-                    console.log(response);
-                }
-                else
-                {
-                    try
-                    {
-                        var responseObj=JSON.parse(response);
-                        resolve(responseObj);
-                    }
-                    catch (error)
-                    {
-                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
-                        console.log(response);
-                        resolve(null);
-                    }
-                }
+                resolve(response);
             }
         });
     });
@@ -190,6 +283,21 @@ window.addEventListener("keydown", async function(event)
         default:break;
     }
 });
+function toggleDrawing()
+{
+    if(currentDrawing=='lana')
+    {
+        document.getElementById("labelToggleDrawing").innerHTML="LAMIERA";
+        getDrawingLamiera();
+        currentDrawing="lamiera";
+    }
+    else
+    {
+        document.getElementById("labelToggleDrawing").innerHTML="LANA";
+        getDrawingLana();
+        currentDrawing="lana";
+    }
+}
 async function getPdf(fileName)
 {
     var container=document.getElementById("pdfContainer");
@@ -447,7 +555,7 @@ function avanzaPannello()
                     onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
                 });
 
-                $.get("avanzaPannelloIncollaggioRinforzi.php",
+                $.get("avanzaPannelloUscita.php",
                 function(response, status)
                 {
                     if(status=="success")

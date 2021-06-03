@@ -7,7 +7,6 @@ var stazioni;
 var intervalOverflowPdf1;
 var intervalOverflowPdf2;
 var pannello;
-var currentDrawing;
 
 window.addEventListener("load", async function(event)
 {
@@ -23,6 +22,8 @@ window.addEventListener("load", async function(event)
     var stazioni=await getAnagraficaStazioni();
 
     stazione=getFirstObjByPropValue(stazioni,"nome",nome_stazione);
+
+    svuotaLogoutStazione(stazione.id_stazione);
 
     document.getElementById("infoStazioneContainer").innerHTML=stazione.label;
     document.getElementById("infoStazioneContainer").setAttribute("nome",stazione.nome);
@@ -40,6 +41,8 @@ window.addEventListener("load", async function(event)
 });
 async function displayPannello()
 {
+    if(drawingFullscreen)
+        toggleDrawingFullscreen();
     document.getElementById("pdfContainer").innerHTML='<div class="inner-container-spinner"><i class="fad fa-spinner fa-spin"></i><span>Caricamento in corso...</span></div>';
     document.getElementById("drawingInnerContainer").innerHTML='<div class="inner-container-spinner"><i class="fad fa-spinner fa-spin"></i><span>Caricamento in corso...</span></div>';
     pannello=await getPannello();
@@ -50,6 +53,9 @@ async function displayPannello()
         document.getElementById("labelNumeroCabina").innerHTML="CABINA : <b>"+pannello.numero_cabina+"</b>";
         document.getElementById("labelIdDistinta").innerHTML="# : <b>"+pannello.id_distinta+" ("+pannello.faccia+")</b>";
         document.getElementById("labelIdIncollaggio").innerHTML="ID INCOLLAGGIO : <b>"+pannello.id_incollaggio+"</b>";
+
+        currentDrawing="lana";
+        document.getElementById("labelToggleDrawing").innerHTML="LANA";
 
         getDrawingLana();
         getPdf(pannello.codice_pannello);
@@ -115,6 +121,7 @@ function getPannello()
 function intervalFunctions()
 {
     checkPannello();
+    checkLogoutStazione(stazione.id_stazione);
 }
 async function checkPannello()
 {
@@ -442,38 +449,4 @@ function avanzaPannello()
             }
         });
     }
-}
-function eliminaPannello()
-{
-    /*if(pannello!=null)
-    {
-        Swal.fire
-        ({
-            width:"100%",
-            background:"transparent",
-            title:"Caricamento in corso...",
-            html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
-            allowOutsideClick:false,
-            showCloseButton:false,
-            showConfirmButton:false,
-            allowEscapeKey:false,
-            showCancelButton:false,
-            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
-        });
-
-        $.get("eliminaPannello.php",
-        function(response, status)
-        {
-            if(status=="success")
-            {
-                if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
-                {
-                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
-                    console.log(response);
-                }
-                else
-                    Swal.close();
-            }
-        });
-    }*/
 }

@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Incollaggio Rinforzi</title>
+        <title>Uscita</title>
 
         <script type="text/javascript" src="libs/js/jquery.min.js"></script>
         <link href="libs/css/fontawesome6/pro/css/all.css" rel="stylesheet">
@@ -13,8 +13,8 @@
 
         <script src="js/global.js"></script>
         <link href="css/global.css" rel="stylesheet">
-        <script src="js/incollaggio_rinforzi.js"></script>
-        <link href="css/incollaggio_rinforzi.css" rel="stylesheet">
+        <script src="js/uscita.js"></script>
+        <link href="css/uscita.css" rel="stylesheet">
         <link href="css/fonts.css" rel="stylesheet">
     </head>
     <body>
@@ -57,18 +57,32 @@
                 <div id="drawingInnerContainer"></div>
                 <div class="drawing-actions-container">
                     <button class="action-button" id="toggleDrawingFullscreenButton" onclick="toggleDrawingFullscreen()"><i class="far fa-expand-alt"></i></button>
+                    <button class="text-action-button" id="toggleDrawingButton" onclick="toggleDrawing()">
+                        <span id="labelToggleDrawing">LANA</span>
+                        <i class="far fa-sync"></i>
+                    </button>
                 </div>
             </div>
-            <div class="pdf-outer-container">
-                <div id="pdfContainer"></div>
-                <div class="pdf-actions-container">
-                    <button class="action-button" onclick="pdfZoomout()"><i class="far fa-minus"></i></button>
-                    <button class="action-button" onclick="pdfZoomin()"><i class="far fa-plus"></i></button>
-                    <button class="action-button" onclick="pdfScrollleft()"><i class="far fa-angle-left"></i></button>
-                    <button class="action-button" onclick="pdfScrolltop()"><i class="far fa-angle-up"></i></button>
-                    <button class="action-button" onclick="pdfScrolldown()"><i class="far fa-angle-down"></i></button>
-                    <button class="action-button" onclick="pdfScrollright()"><i class="far fa-angle-right"></i></button>
-                    <button class="action-button" style="margin-left:auto;margin-right: 5px;" onclick="resetPdfZoom()"><i class="far fa-expand"></i></button>
+            <div class="right-section-outer-container">
+                <div class="comandi-uscita-outer-container">
+                    <div class="comandi-uscita-actions-container">
+                        <span class="comandi-uscita-label" id="labelBancaleAperto">BANCALE :</span>
+                        <button class="comandi-uscita-action-button" id="comandiUscitaButtonChiudiBancale" style="margin-left: auto;" onclick="chiudiBancale()"><span>CHIUDI BANCALE</span><i class="fad fa-print"></i></button>
+                        <button class="comandi-uscita-action-button" id="comandiUscitaButtonCambiaBancale" onclick="cambiaBancale()"><span>CAMBIA BANCALE</span><i class="fad fa-sync-alt"></i></button>
+                    </div>
+                    <div class="comandi-uscita-table-container" id="comandiUscitaTableContainer"></div>
+                </div>
+                <div class="pdf-outer-container">
+                    <div id="pdfContainer"></div>
+                    <div class="pdf-actions-container">
+                        <button class="action-button" onclick="pdfZoomout()"><i class="far fa-minus"></i></button>
+                        <button class="action-button" onclick="pdfZoomin()"><i class="far fa-plus"></i></button>
+                        <button class="action-button" onclick="pdfScrollleft()"><i class="far fa-angle-left"></i></button>
+                        <button class="action-button" onclick="pdfScrolltop()"><i class="far fa-angle-up"></i></button>
+                        <button class="action-button" onclick="pdfScrolldown()"><i class="far fa-angle-down"></i></button>
+                        <button class="action-button" onclick="pdfScrollright()"><i class="far fa-angle-right"></i></button>
+                        <button class="action-button" style="margin-left:auto;margin-right: 5px;" onclick="resetPdfZoom()"><i class="far fa-expand"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
