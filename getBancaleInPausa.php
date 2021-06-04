@@ -2,7 +2,9 @@
 
     include "connessione.php";
 
-    $query2="SELECT * FROM dbo.anagrafica_bancali WHERE stato='aperto'";	
+    $bancale=null;
+
+    $query2="SELECT * FROM dbo.anagrafica_bancali WHERE stato='in_pausa'";	
     $result2=sqlsrv_query($conn,$query2);
     if($result2==TRUE)
     {

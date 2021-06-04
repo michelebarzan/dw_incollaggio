@@ -45,14 +45,13 @@ window.addEventListener("load", async function(event)
 async function displayBancale()
 {
     bancale=await getBancaleAperto();
-    console.log(bancale);
     document.getElementById("labelBancaleAperto").innerHTML="BANCALE : <b>#"+bancale.id_bancale+"</b>";
+
+    var comandiUscitaTableContainer=document.getElementById("comandiUscitaTableContainer");
+    comandiUscitaTableContainer.innerHTML="";
 
     if(bancale.pannelli.length>0)
     {
-        var comandiUscitaTableContainer=document.getElementById("comandiUscitaTableContainer");
-        comandiUscitaTableContainer.innerHTML="";
-
         var table=document.createElement("table");
         table.setAttribute("id","tablePannelliBancale");
 
@@ -67,6 +66,9 @@ async function displayBancale()
         tr.appendChild(th);
         var th=document.createElement("th");
         th.innerHTML="PANNELLO";
+        tr.appendChild(th);
+        var th=document.createElement("th");
+        th.innerHTML="ELETTRIFICATO";
         tr.appendChild(th);
         var th=document.createElement("th");
         th.innerHTML="#";
@@ -88,6 +90,14 @@ async function displayBancale()
             tr.appendChild(td);
             var td=document.createElement("td");
             td.innerHTML=pannello.codice_pannello;
+            tr.appendChild(td);
+            var td=document.createElement("td");
+            if(pannello.elettrificato=="true")
+            {
+                var icon=document.createElement("i");
+                icon.setAttribute("class","fas fa-bolt");
+                td.appendChild(icon);
+            }
             tr.appendChild(td);
             var td=document.createElement("td");
             td.innerHTML=pannello.id_distinta;
@@ -225,6 +235,7 @@ async function checkPannello()
             var response=await scaricaPannello();
             if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                 console.log(response);
+            displayBancale();
         }
         clearPannello();
     }
@@ -239,6 +250,7 @@ async function checkPannello()
                 var response=await scaricaPannello();
                 if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                     console.log(response);
+                displayBancale();
                 displayPannello();
             }
         }
@@ -566,10 +578,194 @@ function avanzaPannello()
                             console.log(response);
                         }
                         else
+                        {
+                            displayBancale();
                             Swal.close();
+                        }
                     }
                 });
             }
         });
     }
+}
+async function chiudiBancale()
+{
+    var bancale_in_pausa=await getBancaleInPausa();
+
+    $.get("chiudiBancale.php",{id_bancale:bancale.id_bancale,id_utente},
+    function(response, status)
+    {
+        if(status=="success")
+        {
+            if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+            {
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+            }
+            else
+            {
+                stampaEtichettaBancale(bancale.id_bancale);
+                if(bancale_in_pausa==null)
+                    creaNuovoBancale();
+                else
+                {
+                    Swal.fire
+                    ({
+                        background:"#404040",
+                        icon:"success",
+                        title:"Bancale #"+bancale.id_bancale+" chiuso",
+                        text:"Il bancale #"+bancale_in_pausa.id_bancale+" è in pausa",
+                        width:"600px",
+                        allowOutsideClick:false,
+                        //position:"top",
+                        showCloseButton:false,
+                        showConfirmButton:true,
+                        allowEscapeKey:false,
+                        showCancelButton:true,
+                        confirmButtonText:"CREA NUOVO BANCALE",
+                        cancelButtonText:"RIAPRI IL BANCALE #"+bancale_in_pausa.id_bancale,
+                        onOpen : function()
+                                {
+                                    document.getElementsByClassName("swal2-title")[0].style.fontWeight="normal";
+                                    document.getElementsByClassName("swal2-title")[0].style.color="#ebebeb";
+                                    document.getElementsByClassName("swal2-title")[0].style.fontSize="20px";
+
+                                    document.getElementById("swal2-content").style.marginTop="15px";
+                                    document.getElementById("swal2-content").style.color="#ccc";
+                                    document.getElementById("swal2-content").style.fontSize="14px";
+
+                                    document.getElementsByClassName("swal2-popup")[0].style.boxShadow="0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)";
+                                    document.getElementsByClassName("swal2-popup")[0].style.border="2px solid black";
+                                }
+                    }).then((result) =>
+                    {
+                        if (result.value)
+                            creaNuovoBancale();
+                        else
+                            riapriBancale(bancale_in_pausa.id_bancale);
+                    });
+                }
+            }
+        }
+    });
+}
+function riapriBancale(id_bancale)
+{
+    $.post("riapriBancale.php",{id_bancale},
+    function(response, status)
+    {
+        if(status=="success")
+        {
+            if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+            {
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+            }
+            else
+                displayBancale();
+        }
+    });
+}
+function creaNuovoBancale()
+{
+    $.post("creaNuovoBancale.php",{id_utente},
+    function(response, status)
+    {
+        if(status=="success")
+        {
+            if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+            {
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+            }
+            else
+                displayBancale();
+        }
+    });
+}
+function getBancaleInPausa()
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.get("getBancaleInPausa.php",
+        function(response, status)
+        {
+            if(status=="success")
+            {
+                if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+                {
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    console.log(response);
+                }
+                else
+                {
+                    try
+                    {
+                        resolve(JSON.parse(response));
+                    }
+                    catch (error)
+                    {
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        console.log(response);
+                        resolve(null);
+                    }
+                }
+            }
+        });
+    });
+}
+async function cambiaBancale()
+{
+    $.get("cambiaBancale.php",{id_bancale:bancale.id_bancale,id_utente},
+    function(response, status)
+    {
+        if(status=="success")
+        {
+            if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+            {
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+            }
+            else
+            {
+                displayBancale();
+            }
+        }
+    });
+}
+async function stampaEtichettaBancale(id_bancale_chiuso)
+{
+    var bancale_chiuso=await getBancale(id_bancale_chiuso);
+    console.log(bancale_chiuso);
+}
+function getBancale(id_bancale)
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.get("getBancale.php",{id_bancale},
+        function(response, status)
+        {
+            if(status=="success")
+            {
+                if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+                {
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    console.log(response);
+                }
+                else
+                {
+                    try
+                    {
+                        resolve(JSON.parse(response));
+                    }
+                    catch (error)
+                    {
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        console.log(response);
+                        resolve(null);
+                    }
+                }
+            }
+        });
+    });
 }

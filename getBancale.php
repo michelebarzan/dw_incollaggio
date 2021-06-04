@@ -2,7 +2,11 @@
 
     include "connessione.php";
 
-    $query2="SELECT * FROM dbo.anagrafica_bancali WHERE stato='aperto'";	
+    $id_bancale=$_REQUEST["id_bancale"];
+
+    $bancale=null;
+
+    $query2="SELECT * FROM dbo.anagrafica_bancali WHERE id_bancale=$id_bancale";	
     $result2=sqlsrv_query($conn,$query2);
     if($result2==TRUE)
     {
@@ -25,7 +29,7 @@ FROM            dbo.pannelli_prodotti INNER JOIN
             db_tecnico.dbo.pannelli ON dw_produzione.dbo.distinta_ordini_di_produzione.pannello = db_tecnico.dbo.pannelli.id_pannello INNER JOIN
             dw_produzione.dbo.filtro_pannelli ON db_tecnico.dbo.pannelli.codice_pannello = dw_produzione.dbo.filtro_pannelli.CODPAS
             WHERE (dbo.pannelli_prodotti.bancale = ".$row2['id_bancale'].")
-                        ORDER BY dbo.pannelli_prodotti.id_pannello_prodotto DESC";
+                    ORDER BY dbo.pannelli_prodotti.id_pannello_prodotto DESC";
             $result=sqlsrv_query($conn,$query);
             if($result==TRUE)
             {
