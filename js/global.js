@@ -636,7 +636,7 @@ async function getDrawingLamiera()
 
         $(".drawing-lamiera-legenda-button").remove();
         $(".drawing-lana-legenda-button").remove();
-        $("#messaggioRecuperoLanaButton").remove();
+        //$("#messaggioRecuperoLanaButton").remove();
 
         var svg=document.createElementNS("http://www.w3.org/2000/svg", "svg");
         svg.setAttribute("id","drawingSvg");
@@ -655,7 +655,7 @@ async function getDrawingLana()
 
         $(".drawing-lamiera-legenda-button").remove();
         $(".drawing-lana-legenda-button").remove();
-        $("#messaggioRecuperoLanaButton").remove();
+        //$("#messaggioRecuperoLanaButton").remove();
 
         var svg=document.createElementNS("http://www.w3.org/2000/svg", "svg");
         svg.setAttribute("id","drawingSvg");

@@ -76,6 +76,9 @@ function clearPannello()
     document.getElementById("pdfContainer").innerHTML="";
     iframe=null;
 
+    $(".drawing-lamiera-legenda-button").remove();
+    $(".drawing-lana-legenda-button").remove();
+
     var div=document.createElement("div");
     div.setAttribute("class","container-message-clear-pannello");
     var span=document.createElement("span");
