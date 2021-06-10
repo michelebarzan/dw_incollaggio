@@ -53,13 +53,41 @@ async function displayPannello()
         document.getElementById("labelIdDistinta").innerHTML="# : <b>"+pannello.id_distinta+" ("+pannello.faccia+")</b>";
         document.getElementById("labelIdIncollaggio").innerHTML="ID INCOLLAGGIO : <b>"+pannello.id_incollaggio+"</b>";
 
-        console.log(pannello)
-
+        getFileProiettoreLaser(pannello.codice_pannello);
         getDrawingLamiera();
         getPdf(pannello.codice_pannello);
     }
     else
         clearPannello();
+}
+function getFileProiettoreLaser()
+{
+    var JSONpannello=JSON.stringify(pannello);
+    $.get("getFileProiettoreLaser.php",{JSONpannello},
+    function(response, status)
+    {
+        if(status=="success")
+        {
+            if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+            {
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+            }
+            else
+            {
+                try
+                {
+                    var array_testo_programma=JSON.parse(response);
+                    //console.log(array_testo_programma);
+                } 
+                catch (error)
+                {
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    console.log(response);
+                }
+            }
+        }
+    });
 }
 function clearPannello()
 {

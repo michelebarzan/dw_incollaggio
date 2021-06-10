@@ -197,8 +197,6 @@ function drawPannello()
 
     var svg=document.getElementById("drawingSvg");
 
-    console.log(pannello);
-
     //pannello
     var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
     rect.setAttribute("style","fill:gray;stroke:black;stroke-width:1;");
@@ -322,7 +320,6 @@ function drawRinforzi()
     var quote_orrizzontali_rappresentate=[];
     pannello.rinforzi.forEach(rinforzo =>
     {
-        console.log(rinforzo);
         switch (rinforzo.codice_materia_prima)
         {
             case "R1":
