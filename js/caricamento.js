@@ -293,7 +293,7 @@ async function getListPannelli()
             item.setAttribute("style","margin-bottom:10px");
         item.setAttribute("class","pannelli-item");
         item.setAttribute("id","pannelliItem"+pannello.id_distinta);
-        item.setAttribute("onclick","selectPannello("+pannello.id_distinta+","+pannello.id_pannello+",'"+pannello.codice_pannello+"','"+pannello.configurazione+"')");
+        item.setAttribute("onclick","checkPannelloPrecedente("+pannello.id_distinta+","+pannello.id_pannello+",'"+pannello.codice_pannello+"','"+pannello.configurazione+"')");
 
         var textContainer=document.createElement("div");
         textContainer.setAttribute("class","pannelli-item-text-container");
@@ -343,6 +343,72 @@ async function getListPannelli()
         const element = elements[index];
         element.style.width=(max+5)+"px";
     }
+}
+async function checkPannelloPrecedente(id_distinta,id_pannello,codice_pannello,configurazione)
+{
+    var pannelloObj=getFirstObjByPropValue(pannelli,"id_distinta",id_distinta);
+    var pannelloPrecedente=await getPannelloPrecedente();
+    if(pannelloPrecedente.elettrificato==pannelloObj.elettrificato)
+        selectPannello(id_distinta,id_pannello,codice_pannello,configurazione);
+    else
+    {
+        if(pannelloPrecedente.elettrificato=="true")
+            var title="Il pannello precedente era elettrificato";
+        else
+            var title="Il pannello precedente non era elettrificato";
+
+        Swal.fire
+        ({
+            icon: 'warning',
+            title,
+            width:550,
+            showCancelButton: true,
+            background:"#404040",
+            showConfirmButton: true,
+            cancelButtonText: `Annulla`,
+            confirmButtonText: `Prosegui`,
+            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="#ddd";document.getElementsByClassName("swal2-title")[0].style.fontSize="16px";document.getElementsByClassName("swal2-confirm")[0].style.fontSize="16px";document.getElementsByClassName("swal2-cancel")[0].style.fontSize="16px";document.getElementsByClassName("swal2-close")[0].style.outline="none";}
+        }).then((result) =>
+        {
+            if (result.value)
+                selectPannello(id_distinta,id_pannello,codice_pannello,configurazione);
+        });
+    }
+}
+function getPannelloPrecedente()
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.post("getPannelloPrecedenteCaricamento.php",
+        function(response, status)
+        {
+            if(status=="success")
+            {
+                if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+                {
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    console.log(response);
+                    resolve({});
+                }
+                else
+                {
+                    try {
+                        resolve(JSON.parse(response));
+                    } catch (error) {
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        console.log(response);
+                        resolve({});
+                    }
+                }
+            }
+            else
+            {
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+                resolve({});
+            }
+        });
+    });
 }
 function selectPannello(id_distinta,id_pannello,codice_pannello,configurazione)
 {
@@ -599,7 +665,7 @@ function checkCodicePannello(value)
 
         if(check)
         {
-            selectPannello(id_distinta,id_pannello,codice_pannello,configurazione);
+            checkPannelloPrecedente(id_distinta,id_pannello,codice_pannello,configurazione);
             document.getElementById("messageCodicePannello").innerHTML="";
         }
         else
@@ -989,7 +1055,6 @@ async function selezionaDima()
     if(pannelloSelezionato!=null)
     {
         var pannelloObj=getFirstObjByPropValue(pannelli,"id_distinta",pannelloSelezionato);
-        console.log(pannelloObj);
 
         if(pannelloObj.ang==0)
             confermaSelectPannello(0);
@@ -1172,7 +1237,7 @@ function getPopupRiavviaLinea()
 		showConfirmButton: true,
 		cancelButtonText: `Annulla`,
 		confirmButtonText: `Riavvia linea`,
-		onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="#ddd";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";document.getElementsByClassName("swal2-confirm")[0].style.fontSize="14px";document.getElementsByClassName("swal2-cancel")[0].style.fontSize="14px";document.getElementsByClassName("swal2-close")[0].style.outline="none";}
+        onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="#ddd";document.getElementsByClassName("swal2-title")[0].style.fontSize="16px";document.getElementsByClassName("swal2-confirm")[0].style.fontSize="16px";document.getElementsByClassName("swal2-cancel")[0].style.fontSize="16px";document.getElementsByClassName("swal2-close")[0].style.outline="none";}
 	}).then((result) =>
 	{
 		if (result.value)
