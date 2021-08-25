@@ -12,6 +12,7 @@ var facciaPannelloSelezionato;
 var pannelli=[];
 var intervalOverflowPdf1;
 var intervalOverflowPdf2;
+var popupErroriPlc=false;
 
 window.addEventListener("load", async function(event)
 {
@@ -46,6 +47,63 @@ window.addEventListener("load", async function(event)
 function intervalFunctions()
 {
     checkLogoutStazione(stazione.id_stazione);
+	checkErroriPlc();
+}
+function checkErroriPlc()
+{
+	$.get("checkErroriPlc.php",
+	function(response, status)
+	{
+		if(status=="success")
+		{
+			if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+			{
+				console.log(response);
+			}
+			else
+			{
+				try
+				{
+					var error_message=JSON.parse(response);
+					if(error_message.Stringa.indexOf("000")===-1)
+					{
+						if(!popupErroriPlc)
+						{
+							popupErroriPlc=true;
+							Swal.fire
+							({
+								icon: 'error',
+								title: "ERRORE PLC",
+								text:error_message.Stringa,
+								width:550,
+								showCancelButton: false,
+								showCloseButton:true,
+								background:"#404040",
+								showConfirmButton: false,
+								onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="#ddd";document.getElementsByClassName("swal2-title")[0].style.fontSize="16px";document.getElementsByClassName("swal2-confirm")[0].style.fontSize="16px";document.getElementsByClassName("swal2-cancel")[0].style.fontSize="16px";document.getElementsByClassName("swal2-close")[0].style.outline="none";}
+							}).then((result) =>
+							{
+								popupErroriPlc=false;
+							});
+						}
+					}
+					else
+					{
+						if(popupErroriPlc)
+						{
+							Swal.close();
+							popupErroriPlc=false;
+						}
+					}
+				}
+				catch (error)
+				{
+					console.log(response);
+					console.log(error);
+				}
+			}
+		}
+	});
 }
 window.addEventListener("keydown", async function(event)
 {
@@ -428,7 +486,7 @@ function selectPannello(id_distinta,id_pannello,codice_pannello,configurazione)
 
     getPdf(codice_pannello);
 
-    stampaEtichettaPannello(id_distinta);
+    //stampaEtichettaPannello(id_distinta);
 }
 async function stampaEtichettaPannello(id_distinta)
 {
@@ -1256,6 +1314,132 @@ function getPopupRiavviaLinea()
             });
 		}
 	});
+}
+function getPannelliLinea()
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.post("getPannelliLinea.php",
+        function(response, status)
+        {
+            if(status=="success")
+            {
+                if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+                {
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    console.log(response);
+                    resolve([]);
+                }
+                else
+                {
+                    try {
+                        resolve(JSON.parse(response));
+                    } catch (error) {
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        console.log(response);
+                        resolve({});
+                    }
+                }
+            }
+            else
+            {
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+                resolve({});
+            }
+        });
+    });
+}
+async function getPopupEliminaPannelli()
+{
+    Swal.fire
+    ({
+        width:"100%",
+        background:"transparent",
+        title:"Caricamento in corso...",
+        html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+        allowOutsideClick:false,
+        showCloseButton:false,
+        showConfirmButton:false,
+        allowEscapeKey:false,
+        showCancelButton:false,
+        onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+    });
+
+    var pannelli_linea=await getPannelliLinea();
+    if(pannelli_linea.length==0)
+    {
+        Swal.fire
+        ({
+            icon: 'warning',
+            title: "NESSUN PANNELLO IN LINEA",
+            showCancelButton: false,
+            showCloseButton:true,
+            background:"#404040",
+            showConfirmButton: false,
+            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="#ddd";document.getElementsByClassName("swal2-title")[0].style.fontSize="16px";document.getElementsByClassName("swal2-confirm")[0].style.fontSize="16px";document.getElementsByClassName("swal2-cancel")[0].style.fontSize="16px";document.getElementsByClassName("swal2-close")[0].style.outline="none";}
+        });
+    }
+    else
+    {
+        var outerContainer=document.createElement("div");
+        outerContainer.setAttribute("class","popup-elimina-pannelli-outer-container");
+    
+        var i=0;
+        pannelli_linea.forEach(pannello => 
+        {
+            var pannelloItem=document.createElement("button");
+            pannelloItem.setAttribute("class","popup-elimina-pannelli-item");
+            pannelloItem.setAttribute("onclick","eliminaPannello("+pannello.id_distinta+")");
+            if(i==0)
+                pannelloItem.setAttribute("style","margin-top:0px");
+    
+            var span=document.createElement("span");
+            span.innerHTML=pannello.codice_pannello;
+            pannelloItem.appendChild(span);
+    
+            var span=document.createElement("span");
+            span.setAttribute("style","color:#4C91CB;font-weight:bold;margin-left:auto");
+            span.innerHTML=pannello.id_distinta;
+            pannelloItem.appendChild(span);
+            
+            outerContainer.appendChild(pannelloItem);
+            i++;
+        });
+    
+        Swal.fire
+        ({
+            background:"#404040",
+            title:"CLICCA SU UN PANNELLO PER ELIMINARLO",
+            html:outerContainer.outerHTML,
+            allowOutsideClick:true,
+            showCloseButton:true,
+            showConfirmButton:true,
+            allowEscapeKey:true,
+            showCancelButton:false,
+            onOpen : function()
+                    {
+                        document.getElementsByClassName("swal2-title")[0].style.fontWeight="normal";
+                        document.getElementsByClassName("swal2-title")[0].style.fontSize="12px";
+                        document.getElementsByClassName("swal2-title")[0].style.color="#ddd";
+                        document.getElementsByClassName("swal2-title")[0].style.width="100%";
+                        document.getElementsByClassName("swal2-close")[0].style.width="40px";
+                        document.getElementsByClassName("swal2-close")[0].style.height="40px";
+                        document.getElementsByClassName("swal2-title")[0].style.margin="0px";
+                        document.getElementsByClassName("swal2-title")[0].style.marginTop="5px";
+                        document.getElementsByClassName("swal2-title")[0].style.fontFamily="'Montserrat',sans-serif";
+                        document.getElementsByClassName("swal2-title")[0].style.textAlign="left";
+                        document.getElementsByClassName("swal2-confirm")[0].style.display="none";
+                        document.getElementsByClassName("swal2-popup")[0].style.paddingBottom="0px";
+                        document.getElementsByClassName("swal2-popup")[0].style.paddingRight="0px";
+                        document.getElementsByClassName("swal2-popup")[0].style.paddingLeft="0px";
+                        document.getElementsByClassName("swal2-popup")[0].style.paddingTop="10px";
+                        document.getElementsByClassName("swal2-header")[0].style.paddingLeft="20px";
+                        document.getElementsByClassName("swal2-content")[0].style.padding="0px";
+                        document.getElementsByClassName("swal2-actions")[0].style.margin="0px";
+                    }
+        });
+    }
 }
 function setLogoutStazioni(id_stazioni)
 {

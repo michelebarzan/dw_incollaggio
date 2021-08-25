@@ -43,7 +43,7 @@
         }
     }
     else
-        die("error");
+        die("error\n".$query2);
 
     echo json_encode($data);
 

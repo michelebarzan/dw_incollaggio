@@ -688,9 +688,9 @@ function getLineLenght(x1, x2, y1, y2)
 {
     return Math.sqrt( (x2-=x1)*x2 + (y2-=y1)*y2 );
 }
-function eliminaPannello()
+function eliminaPannello(id_distinta)
 {
-    if(pannello!=null)
+    if(id_distinta!=null)
     {
         Swal.fire
         ({
@@ -707,7 +707,7 @@ function eliminaPannello()
         {
             if (result.value)
             {
-                $.post("eliminaPannello.php",{id_distinta:pannello.id_distinta},
+                $.post("eliminaPannello.php",{id_distinta},
                 function(response, status)
                 {
                     if(status=="success")
