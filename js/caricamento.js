@@ -410,27 +410,32 @@ async function checkPannelloPrecedente(id_distinta,id_pannello,codice_pannello,c
         selectPannello(id_distinta,id_pannello,codice_pannello,configurazione);
     else
     {
-        if(pannelloPrecedente.elettrificato=="true")
-            var title="Il pannello precedente era elettrificato";
-        else
-            var title="Il pannello precedente non era elettrificato";
+		if(pannelloPrecedente.elettrificato!=undefined)
+		{
+			if(pannelloPrecedente.elettrificato=="true")
+				var title="Il pannello precedente era elettrificato";
+			else
+				var title="Il pannello precedente non era elettrificato";
 
-        Swal.fire
-        ({
-            icon: 'warning',
-            title,
-            width:550,
-            showCancelButton: true,
-            background:"#404040",
-            showConfirmButton: true,
-            cancelButtonText: `Annulla`,
-            confirmButtonText: `Prosegui`,
-            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="#ddd";document.getElementsByClassName("swal2-title")[0].style.fontSize="16px";document.getElementsByClassName("swal2-confirm")[0].style.fontSize="16px";document.getElementsByClassName("swal2-cancel")[0].style.fontSize="16px";document.getElementsByClassName("swal2-close")[0].style.outline="none";}
-        }).then((result) =>
-        {
-            if (result.value)
-                selectPannello(id_distinta,id_pannello,codice_pannello,configurazione);
-        });
+			Swal.fire
+			({
+				icon: 'warning',
+				title,
+				width:550,
+				showCancelButton: true,
+				background:"#404040",
+				showConfirmButton: true,
+				cancelButtonText: `Annulla`,
+				confirmButtonText: `Prosegui`,
+				onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="#ddd";document.getElementsByClassName("swal2-title")[0].style.fontSize="16px";document.getElementsByClassName("swal2-confirm")[0].style.fontSize="16px";document.getElementsByClassName("swal2-cancel")[0].style.fontSize="16px";document.getElementsByClassName("swal2-close")[0].style.outline="none";}
+			}).then((result) =>
+			{
+				if (result.value)
+					selectPannello(id_distinta,id_pannello,codice_pannello,configurazione);
+			});
+		}
+		else
+			selectPannello(id_distinta,id_pannello,codice_pannello,configurazione);
     }
 }
 function getPannelloPrecedente()
@@ -1112,7 +1117,83 @@ async function selezionaDima()
 {
     if(pannelloSelezionato!=null)
     {
-        var pannelloObj=getFirstObjByPropValue(pannelli,"id_distinta",pannelloSelezionato);
+		Swal.fire
+		({
+			width:"100%",
+			background:"transparent",
+			title:"Caricamento in corso...",
+			html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+			allowOutsideClick:false,
+			showCloseButton:false,
+			showConfirmButton:false,
+			allowEscapeKey:false,
+			showCancelButton:false,
+			onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+		});
+
+		var anagrafica_dime=await getAnagraficaDime();
+
+		var outerContainer=document.createElement("div");
+		outerContainer.setAttribute("class","popup-dime-outer-container");
+
+		var i=0;
+		anagrafica_dime.forEach(dimaObj => 
+		{
+			if(!dimaObj.hidden)
+			{
+				var dimeItem=document.createElement("button");
+				dimeItem.setAttribute("class","popup-dime-item");
+				dimeItem.setAttribute("onclick","Swal.close();confermaSelectPannello("+dimaObj.NumeroDima+")");
+				if(i==0)
+					dimeItem.setAttribute("style","margin-top:0px");
+
+				var span=document.createElement("span");
+				span.innerHTML=dimaObj.descrizione;
+				dimeItem.appendChild(span);
+
+				var span=document.createElement("span");
+				span.setAttribute("style","color:#4C91CB;font-weight:bold;margin-left:auto");
+				span.innerHTML=dimaObj.NumeroDima;
+				dimeItem.appendChild(span);
+				
+				outerContainer.appendChild(dimeItem);
+				i++;
+			}
+		});
+
+		Swal.fire
+		({
+			background:"#404040",
+			title:"SCEGLI UNA DIMA",
+			html:outerContainer.outerHTML,
+			allowOutsideClick:true,
+			showCloseButton:true,
+			showConfirmButton:true,
+			allowEscapeKey:true,
+			showCancelButton:false,
+			onOpen : function()
+					{
+						document.getElementsByClassName("swal2-title")[0].style.fontWeight="normal";
+						document.getElementsByClassName("swal2-title")[0].style.fontSize="12px";
+						document.getElementsByClassName("swal2-title")[0].style.color="#ddd";
+						document.getElementsByClassName("swal2-title")[0].style.width="100%";
+						document.getElementsByClassName("swal2-close")[0].style.width="40px";
+						document.getElementsByClassName("swal2-close")[0].style.height="40px";
+						document.getElementsByClassName("swal2-title")[0].style.margin="0px";
+						document.getElementsByClassName("swal2-title")[0].style.marginTop="5px";
+						document.getElementsByClassName("swal2-title")[0].style.fontFamily="'Montserrat',sans-serif";
+						document.getElementsByClassName("swal2-title")[0].style.textAlign="left";
+						document.getElementsByClassName("swal2-confirm")[0].style.display="none";
+						document.getElementsByClassName("swal2-popup")[0].style.paddingBottom="0px";
+						document.getElementsByClassName("swal2-popup")[0].style.paddingRight="0px";
+						document.getElementsByClassName("swal2-popup")[0].style.paddingLeft="0px";
+						document.getElementsByClassName("swal2-popup")[0].style.paddingTop="10px";
+						document.getElementsByClassName("swal2-header")[0].style.paddingLeft="20px";
+						document.getElementsByClassName("swal2-content")[0].style.padding="0px";
+						document.getElementsByClassName("swal2-actions")[0].style.margin="0px";
+					}
+		});
+        /*var pannelloObj=getFirstObjByPropValue(pannelli,"id_distinta",pannelloSelezionato);
 
         if(pannelloObj.ang==0)
             confermaSelectPannello(0);
@@ -1204,7 +1285,7 @@ async function selezionaDima()
                             }
                 });
             }
-        }
+        }*/
     }
 }
 function confermaSelectPannello(NumeroDima)

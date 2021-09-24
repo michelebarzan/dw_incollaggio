@@ -11,7 +11,7 @@
         while($row2=sqlsrv_fetch_array($result2))
         {
             $dima["id_dima"]=$row2['id_dima'];
-            $dima["nome"]=$row2['nome'];
+            $dima["nome"]=utf8_encode($row2['nome']);
             $dima["OffsetPianoPannelloDeltaX"]=$row2['OffsetPianoPannelloDeltaX'];
             $dima["OffsetPianoPannelloDeltaY"]=$row2['OffsetPianoPannelloDeltaY'];
             $dima["OffsetPianoPannelloDeltaZ"]=$row2['OffsetPianoPannelloDeltaZ'];
@@ -25,7 +25,7 @@
             $dima["1OffsetPianoPannelloDeltaAlpha"]=$row2['1OffsetPianoPannelloDeltaAlpha'];
             $dima["1OffsetPianoPannelloDeltaBeta"]=$row2['1OffsetPianoPannelloDeltaBeta'];
             $dima["1OffsetPianoPannelloDeltaGamma"]=$row2['1OffsetPianoPannelloDeltaGamma'];
-            $dima["descrizione"]=$row2['descrizione'];
+            $dima["descrizione"]=utf8_encode($row2['descrizione']);
             $dima["hidden"] = $row2['hidden'] === 'true'? true: false;
 
             array_push($dime,$dima);
