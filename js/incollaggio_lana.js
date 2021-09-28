@@ -59,6 +59,7 @@ async function displayPannello()
 
         getDrawingLana();
         getPdf(pannello.codice_pannello);
+		stampaEtichettaPannello(pannello.id_distinta);
     }
     else
         clearPannello();

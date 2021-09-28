@@ -740,6 +740,50 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
 {
     var bancale_chiuso=await getBancale(id_bancale_chiuso);
     console.log(bancale_chiuso);
+	
+	
+    var server_adress=await getServerValue("SERVER_ADDR");
+    var server_port=await getServerValue("SERVER_PORT");
+
+    //var data=await getDataEtichettaBancale(id_bancale_chiuso);
+
+    var eight = 28;
+    var width = 19;
+
+    var printWindow = window.open('', '_blank', 'height=100,width=100');
+	//printWindow.resizeTo(0,0);
+	//printWindow.moveTo(100000,100000);
+
+    //printWindow.document.body.setAttribute("onload","setTimeout(function(){window.print();}, 5000);");
+    printWindow.document.body.setAttribute("onafterprint","window.close();");
+
+    printWindow.document.body.style.backgroundColor="white";
+    printWindow.document.body.style.overflow="hidden";
+
+    /*var link=document.createElement("link");
+    link.setAttribute("href","http://"+server_adress+":"+server_port+"/dw_incollaggio/css/caricamento.css");
+    link.setAttribute("rel","stylesheet");
+    printWindow.document.head.appendChild(link);*/
+	
+	
+	var style=document.createElement("script");
+	style.innerHTML="@media print {.pagebreak { page-break-before: always; }}";
+    printWindow.document.head.appendChild(style);
+
+    var link=document.createElement("link");
+    link.setAttribute("href","http://"+server_adress+":"+server_port+"/dw_incollaggio/css/fonts.css");
+    link.setAttribute("rel","stylesheet");
+    printWindow.document.head.appendChild(link);
+
+    var outerContainer=document.createElement("div");
+    outerContainer.setAttribute("id","printContainer");
+    outerContainer.setAttribute("style","display: flex;flex-direction: row;align-items: flex-start;justify-content: flex-start;height: "+eight+"cm;width: "+width+"cm;border:.5mm solid black;box-sizing:border-box;margin:5mm");
+
+	var script=document.createElement("script");
+	script.innerHTML="setTimeout(function(){window.print();}, 200);";
+    outerContainer.appendChild(script);
+
+    printWindow.document.body.appendChild(outerContainer);
 }
 function getBancale(id_bancale)
 {
