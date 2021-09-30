@@ -637,6 +637,7 @@ async function getDrawingLamiera()
 
         var svg=document.createElementNS("http://www.w3.org/2000/svg", "svg");
         svg.setAttribute("id","drawingSvg");
+        svg.setAttribute("style","transform:rotate(180deg)");
         container.appendChild(svg);
 
         drawPannello();
@@ -656,6 +657,7 @@ async function getDrawingLana()
 
         var svg=document.createElementNS("http://www.w3.org/2000/svg", "svg");
         svg.setAttribute("id","drawingSvg");
+        svg.setAttribute("style","transform:rotate(180deg)");
         container.appendChild(svg);
 
         drawPannello();
