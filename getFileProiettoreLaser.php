@@ -150,132 +150,39 @@
     {
         if($rinforzo['vh']=="HOR")
         {
-            $istruzione="PU".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($pannello['lung1']+$pannello['lung2']-$rinforzo['posx']).";";
+            $istruzione="PU".($rinforzo['posy']-($rinforzo['hrin']/2))." ".(-$rinforzo['posx']).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($pannello['lung1']+$pannello['lung2']-$rinforzo['posx']-$rinforzo['lunghezza']).";";
+            $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".(-$rinforzo['posx']-$rinforzo['lunghezza']).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".($pannello['lung1']+$pannello['lung2']-$rinforzo['posx']-$rinforzo['lunghezza']).";";
+            $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".(-$rinforzo['posx']-$rinforzo['lunghezza']).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".($pannello['lung1']+$pannello['lung2']-$rinforzo['posx']).";";
+            $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".(-$rinforzo['posx']).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($pannello['lung1']+$pannello['lung2']-$rinforzo['posx']).";";
+            $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".(-$rinforzo['posx']).";";
             array_push($array_testo_programma,$istruzione);
         }
         else
         {
-            $istruzione="PU".($rinforzo['posy'])." ".($pannello['lung1']+$pannello['lung2']-$rinforzo['posx']+($rinforzo['hrin']/2)).";";
+            $istruzione="PU".($rinforzo['posy'])." ".(-$rinforzo['posx']+($rinforzo['hrin']/2)).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".$rinforzo['posy']." ".($pannello['lung1']+$pannello['lung2']-$rinforzo['posx']-($rinforzo['hrin']/2)).";";
+            $istruzione="PD".$rinforzo['posy']." ".(-$rinforzo['posx']-($rinforzo['hrin']/2)).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".($pannello['lung1']+$pannello['lung2']-$rinforzo['posx']-($rinforzo['hrin']/2)).";";
+            $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".(-$rinforzo['posx']-($rinforzo['hrin']/2)).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".($pannello['lung1']+$pannello['lung2']-$rinforzo['posx']+($rinforzo['hrin']/2)).";";
+            $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".(-$rinforzo['posx']+($rinforzo['hrin']/2)).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy'])." ".($pannello['lung1']+$pannello['lung2']-$rinforzo['posx']+($rinforzo['hrin']/2)).";";
+            $istruzione="PD".($rinforzo['posy'])." ".(-$rinforzo['posx']+($rinforzo['hrin']/2)).";";
             array_push($array_testo_programma,$istruzione);
         }
     }
-
-    /*
-    $rinforzi_t=[];
-    $rinforzi_p=[];
-
-    $query5="SELECT * FROM Drinforzi_laser";
-    $result5=sqlsrv_query($conn,$query5);
-    if($result5==FALSE)
-        die("error");
-    else
-    {
-        while($row5=sqlsrv_fetch_array($result5))
-        {
-            if($row5["POSY1"]!=0)
-                array_push($rinforzi_t,$row5["POSY1"]);
-            if($row5["POSY2"]!=0)                    
-                array_push($rinforzi_t,$row5["POSY2"]);
-            if($row5["POSY3"]!=0)
-                array_push($rinforzi_t,$row5["POSY3"]);
-            if($row5["POSY4"]!=0)
-                array_push($rinforzi_t,$row5["POSY4"]);
-            if($row5["POSY5"]!=0)
-                array_push($rinforzi_t,$row5["POSY5"]);
-
-            if($row5["POSY1P"]!=0)
-                array_push($rinforzi_p,$row5["POSY1P"]);
-            if($row5["POSY2P"]!=0)
-                array_push($rinforzi_p,$row5["POSY2P"]);
-            if($row5["POSY3P"]!=0)
-                array_push($rinforzi_p,$row5["POSY3P"]);
-            if($row5["POSY4P"]!=0)
-                array_push($rinforzi_p,$row5["POSY4P"]);
-            if($row5["POSY5P"]!=0)
-                array_push($rinforzi_p,$row5["POSY5P"]);
-
-            $id_produzione=$row5["id_produzione"];
-            $LUNG1=$row5["LUNG1"];
-        }
-    }
-
-    foreach ($rinforzi_t as $posy)
-    {
-        foreach ($linea_continua_file_proiettore as $riga)
-        {
-            $istruzione=$riga.";";
-            array_push($array_testo_programma,$istruzione);
-        }
-
-        $istruzione="PU".$posy." ".$LUNG1.";";
-        array_push($array_testo_programma,$istruzione);
-
-        $istruzione="PD".$posy." 0;";
-        array_push($array_testo_programma,$istruzione);
-    }
-
-    $k=0;
-    foreach ($rinforzi_p as $posy)
-    {
-        $numero_spazi_file_proiettore=$numero_tratti_file_proiettore-1;
-        $lunghezza_totale_spazi_file_proiettore=$numero_spazi_file_proiettore*$spazio_tratti_file_proiettore;
-        $lunghezza_totale_tratti_file_proiettore=$LUNG1-$lunghezza_totale_spazi_file_proiettore;
-        $lunghezza_tratto_file_proiettore=$lunghezza_totale_tratti_file_proiettore/$numero_tratti_file_proiettore;
-
-        $help=$LUNG1;
-        for ($j=0; $j < $numero_tratti_file_proiettore; $j++)
-        { 
-            foreach ($linea_continua_file_proiettore as $riga)
-            {
-                $istruzione=$riga.";";
-                array_push($array_testo_programma,$istruzione);
-            }
-
-            $istruzione="PU".$posy." ".round($help).";";
-            array_push($array_testo_programma,$istruzione);
-
-            $help=$help-$lunghezza_tratto_file_proiettore;
-
-            if($j == ($numero_tratti_file_proiettore-1))
-            {
-                $istruzione="PD".$posy." 0;";
-                array_push($array_testo_programma,$istruzione);
-            }
-            else
-            {
-                $istruzione="PD".$posy." ".round($help).";";
-                array_push($array_testo_programma,$istruzione);
-            }
-
-            $help=$help-$spazio_tratti_file_proiettore;
-        }
-        $k++;
-    }
-    */
 
     foreach ($fine_file_proiettore as $riga)
     {
