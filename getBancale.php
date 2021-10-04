@@ -51,12 +51,6 @@
                     $pannello["descrizione"]=utf8_encode($row['descrizione']);
 
                     array_push($bancale["pannelli"],$pannello);
-                    /*array_push($bancale["pannelli"],$pannello);
-                    array_push($bancale["pannelli"],$pannello);
-                    array_push($bancale["pannelli"],$pannello);
-                    array_push($bancale["pannelli"],$pannello);
-                    array_push($bancale["pannelli"],$pannello);
-                    array_push($bancale["pannelli"],$pannello);*/
                     
                 }
             }

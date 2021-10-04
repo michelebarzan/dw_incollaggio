@@ -762,12 +762,12 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
     var server_adress=await getServerValue("SERVER_ADDR");
     var server_port=await getServerValue("SERVER_PORT");
 
-    var eight = 28;
+    var eight = 28.5;
     var width = 19;
 
     var printWindow = window.open('', '_blank', 'height=100,width=100');
 
-    //printWindow.document.body.setAttribute("onafterprint","window.close();");
+    printWindow.document.body.setAttribute("onafterprint","window.close();");
 
     printWindow.document.body.style.backgroundColor="white";
     printWindow.document.body.style.overflow="hidden";
@@ -791,11 +791,11 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
     var div=document.createElement("div");
     div.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis;overflow:hidden;min-width:50%;max-width:50%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
     var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:2cm;max-width:2cm;width:2cm;white-space: nowrap;overflow: hidden;text-overflow: clip; ");
+    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:2.8cm;max-width:2.8cm;width:2.8cm;white-space: nowrap;overflow: hidden;text-overflow: clip; ");
     span.innerHTML="<b>Costruzione: </b>";
     div.appendChild(span);
     var span=document.createElement("span");
-    span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 2cm);max-width:calc(100% - 2cm);width:calc(100% - 2cm);");
+    span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 2.8cm);max-width:calc(100% - 2.8cm);width:calc(100% - 2.8cm);");
     span.innerHTML=costruzione;
     div.appendChild(span);
     row.appendChild(div);
@@ -805,11 +805,11 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
     var div=document.createElement("div");
     div.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis;overflow:hidden;min-width:40%;max-width:40%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
     var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:1cm;max-width:1cm;width:1cm;white-space: nowrap;overflow: hidden;text-overflow: clip;");
+    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:1.3cm;max-width:1.3cm;width:1.3cm;white-space: nowrap;overflow: hidden;text-overflow: clip;");
     span.innerHTML="<b>Lotto: </b>";
     div.appendChild(span);
     var span=document.createElement("span");
-    span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 2cm);max-width:calc(100% - 2cm);width:calc(100% - 2cm);");
+    span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 1.3cm);max-width:calc(100% - 1.3cm);width:calc(100% - 1.3cm);");
     span.innerHTML=lotto;
     div.appendChild(span);
     row.appendChild(div);
@@ -827,11 +827,11 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
     var div=document.createElement("div");
     div.setAttribute("style","min-width:100%;width:100%;min-height:100%;max-height:100%;height:100%;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
     var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:2cm;max-width:2cm;width:2cm;white-space: nowraptext-overflow: clip;");
+    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:4.8cm;max-width:4.8cm;width:4.8cm;white-space: nowraptext-overflow: clip;");
     span.innerHTML="<b>Ordine di produzione: </b>";
     div.appendChild(span);
     var span=document.createElement("span");
-    span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 3cm);max-width:calc(100% - 2cm);width:calc(100% - 2cm);");
+    span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 4.8cm);max-width:calc(100% - 4.8cm);width:calc(100% - 4.8cm);");
     span.innerHTML=odp;
     div.appendChild(span);
     row.appendChild(div);
@@ -841,9 +841,9 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
     var row=document.createElement("div");
     row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:5%;max-height:5%;height:5%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
     var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
+    div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:50%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
     var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
+    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
     span.innerHTML="<b>Orario di apertura: </b>"+bancale_chiuso.dataOraAperturaString;
     div.appendChild(span);
     row.appendChild(div);
@@ -851,179 +851,100 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
 
     //---------Orario chiusura
     var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:100%;min-height:100%;max-height:100%;height:100%;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
+    div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:50%;min-height:100%;max-height:100%;height:100%;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
     var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
+    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
     span.innerHTML="<b>Orario di chiusura: </b>"+bancale_chiuso.dataOraChiusuraString;
     div.appendChild(span);
     row.appendChild(div);
     outerContainer.appendChild(row);
 
     //---------Contenitore tabelle pannelli
-    var tableContainer = document.createElement("div");
-    tableContainer.setAttribute("style", "display: flex; flex-direction: row; align-items: flex-start;justify-content: center;height: 100%; width: 100%;");
+    var tablesContainer=document.createElement("div");
+    tablesContainer.setAttribute("style","min-height:85%;max-height:85%;height:85%;width: 100%;min-width:100%;max-width:100%;overflow:hidden;display:flex;flex-direction:row;align-items:flex-start;justify-content:flex-start");
+    var table1Container = document.createElement("div");
+    table1Container.setAttribute("style", "min-height:100%;max-height:100%;height:100%;width: 50%;min-width:50%;max-width:50%;overflow:hidden");
+    var table1=document.createElement("table");
+    table1.setAttribute("style","max-height:100%;width: 100%;min-width:100%;max-width:100%;overflow:hidden");
+    table1Container.appendChild(table1);
+    tablesContainer.appendChild(table1Container);
 
-    //---------Intestazione pannelli colonna 1
-    var row1=document.createElement("div");
-    row1.setAttribute("style","min-width:50%;max-width:50%;width:100%;min-height:5%;max-height:13%;height:10%;display: flex;flex-direction: row; flex-wrap: wrap; align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-    var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:8%;max-width:8%;width:100%;min-height:100%;max-height:100%;height:100%;display:flex;border-right:.5mm solid black;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>N: </b>"
-    div.appendChild(span);
-    row1.appendChild(div);
-    var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:23%;max-width:23%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>Pannello: </b>"
-    div.appendChild(span);
-    row1.appendChild(div);
-    var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:23%;max-width:23%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>#: </b>"
-    div.appendChild(span);
-    row1.appendChild(div);
-    var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:23%;max-width:23%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>Elett.: </b>"
-    div.appendChild(span);
-    row1.appendChild(div);
-    var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:23%;max-width:23%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.9mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>Cabina: </b>"
-    div.appendChild(span);
-    row1.appendChild(div);
-    tableContainer.appendChild(row1);
+    var table2Container = document.createElement("div");
+    table2Container.setAttribute("style", "min-height:100%;max-height:100%;height:100%;width: 50%;min-width:50%;max-width:50%;overflow:hidden");
+    var table2=document.createElement("table");
+    table2.setAttribute("style","max-height:100%;width: 100%;min-width:100%;max-width:100%;overflow:hidden");
+    table2Container.appendChild(table2);
+    if(bancale_chiuso.pannelli.length>40)
+        tablesContainer.appendChild(table2Container);
 
-    //---------Intestazione pannelli colonna 2
-    var row2=document.createElement("div");
-    row2.setAttribute("style","min-width:50%;max-width:50%;width:100%;min-height:5%;max-height:13%;height:10%;display: flex;flex-direction: row; flex-wrap: wrap;align-items: center;justify-content: flex-end;border-bottom:.5mm solid black;box-sizing:border-box");
-    var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:25%;max-width:25%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>Pannello: </b>"
-    div.appendChild(span);
-    row2.appendChild(div);
-    var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:25%;max-width:25%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>#: </b>"
-    div.appendChild(span);
-    row2.appendChild(div);
-    var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:25%;max-width:25%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>Elett.: </b>"
-    div.appendChild(span);
-    row2.appendChild(div);
-    var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:25%;max-width:25%;width:100%;min-height:100%;max-height:100%;height:100%;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>Cabina: </b>"
-    div.appendChild(span);
-    row2.appendChild(div);
-    tableContainer.appendChild(row2);
-    outerContainer.appendChild(tableContainer);
+    outerContainer.appendChild(tablesContainer);
 
-    //---------Popolo tabelle
-    var i = 1;
+    var nRows=41;
+    var trHeight=((85*eight)/100)/nRows;
+    var tr=document.createElement("tr");
+    var th=document.createElement("th");
+    th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+    th.innerHTML="N.";
+    tr.appendChild(th);
+    var th=document.createElement("th");
+    th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+    th.innerHTML="Pannello";
+    tr.appendChild(th);
+    var th=document.createElement("th");
+    th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+    th.innerHTML="#";
+    tr.appendChild(th);
+    var th=document.createElement("th");
+    th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+    th.innerHTML="Elettr.";
+    tr.appendChild(th);
+    var th=document.createElement("th");
+    th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+    th.innerHTML="Numero cabina";
+    tr.appendChild(th);
+    table1.appendChild(tr);
+    table2.appendChild(tr.cloneNode(true));
+
+    var i=1;
     bancale_chiuso.pannelli.forEach(pannello =>
     {
-        if(i<=25)
-        {
-            var row=document.createElement("div");
-            row.setAttribute("style","min-width:8%;max-width:8%;width:100%;min-height:5%;max-height:20%;height:100%;display: flex; flex-direction: column;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-            var span=document.createElement("span");
-            span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-            span.innerHTML=i;
-            row.appendChild(span);
-            row1.appendChild(row);
-            var row=document.createElement("div");
-            row.setAttribute("style","min-width:23%;max-width:23%;width:100%;min-height:5%;max-height:20%;height:100%;display: flex; flex-direction: column;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-            var span=document.createElement("span");
-            span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-            span.innerHTML=pannello.codice_pannello;
-            row.appendChild(span);
-            row1.appendChild(row);
-            var row=document.createElement("div");
-            row.setAttribute("style","min-width:23%;max-width:23%;width:100%;min-height:5%;max-height:20%;height:100%;display: flex; flex-direction: column;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-            var span=document.createElement("span");
-            span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-            span.innerHTML=pannello.id_distinta;
-            row.appendChild(span);
-            row1.appendChild(row);
-            var row=document.createElement("div");
-            row.setAttribute("style","min-width:23%;max-width:23%;width:100%;min-height:5%;max-height:20%;height:100%;display: flex; flex-direction: column;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-            var span=document.createElement("span");
-            span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-            span.innerHTML=pannello.elettrificato;
-            row.appendChild(span);
-            row1.appendChild(row);
-            var row=document.createElement("div");
-            row.setAttribute("style","min-width:22%;max-width:23%;width:100%;min-height:5%;max-height:20%;height:100%;display: flex; flex-direction: column;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black; border-right:.9mm solid black;box-sizing:border-box");
-            var span=document.createElement("span");
-            span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-            span.innerHTML=pannello.numero_cabina;
-            row.appendChild(span);
-            row1.appendChild(row);
-        }
+        var tr=document.createElement("tr");
+        var td=document.createElement("td");
+        td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+        td.innerHTML=i;
+        tr.appendChild(td);
+        var td=document.createElement("td");
+        td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+        td.innerHTML=pannello.codice_pannello;
+        tr.appendChild(td);
+        var td=document.createElement("td");
+        td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+        td.innerHTML=pannello.id_distinta;
+        tr.appendChild(td);
+        var td=document.createElement("td");
+        td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+        if(pannello.elettrificato=="true")
+            td.innerHTML="V";
         else
-        {
-            var row=document.createElement("div");
-            row.setAttribute("style","min-width:8%;max-width:8%;width:100%;min-height:5%;max-height:20%;height:100%;display: flex; flex-direction: column;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-            var span=document.createElement("span");
-            span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-            span.innerHTML=i;
-            row.appendChild(span);
-            row2.appendChild(row);
-            var row=document.createElement("div");
-            row.setAttribute("style","min-width:23%;max-width:23%;width:100%;min-height:5%;max-height:20%;height:100%;display: flex; flex-direction: column;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-            var span=document.createElement("span");
-            span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-            span.innerHTML=pannello.codice_pannello;
-            row.appendChild(span);
-            row2.appendChild(row);
-            var row=document.createElement("div");
-            row.setAttribute("style","min-width:23%;max-width:23%;width:100%;min-height:5%;max-height:20%;height:100%;display: flex; flex-direction: column;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-            var span=document.createElement("span");
-            span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-            span.innerHTML=pannello.id_distinta;
-            row.appendChild(span);
-            row2.appendChild(row);
-            var row=document.createElement("div");
-            row.setAttribute("style","min-width:23%;max-width:23%;width:100%;min-height:5%;max-height:20%;height:100%;display: flex; flex-direction: column;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-            var span=document.createElement("span");
-            span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-            span.innerHTML=pannello.elettrificato;
-            row.appendChild(span);
-            row2.appendChild(row);
-            var row=document.createElement("div");
-            row.setAttribute("style","min-width:22%;max-width:23%;width:100%;min-height:5%;max-height:20%;height:100%;display: flex; flex-direction: column;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black; box-sizing:border-box");
-            var span=document.createElement("span");
-            span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-            span.innerHTML=pannello.numero_cabina;
-            row.appendChild(span);
-            row2.appendChild(row);
-        }
+            td.innerHTML="X";
+        tr.appendChild(td);
+        var td=document.createElement("td");
+        td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+        td.innerHTML=pannello.numero_cabina;
+        tr.appendChild(td);
+
+        if(i<nRows)
+            table1.appendChild(tr);
+        else
+            table2.appendChild(tr);
+
         i++;
     });
 
     //---------
 
 	var script=document.createElement("script");
-	//script.innerHTML="setTimeout(function(){window.print();}, 200);";
+	script.innerHTML="setTimeout(function(){window.print();}, 200);";
     outerContainer.appendChild(script);
  
     printWindow.document.body.appendChild(outerContainer);
