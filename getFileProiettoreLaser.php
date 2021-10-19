@@ -150,36 +150,36 @@
     {
         if($rinforzo['vh']=="HOR")
         {
-            $istruzione="PU".($rinforzo['posy']-($rinforzo['hrin']/2))." ".(-$rinforzo['posx']).";";
+            $istruzione="PU".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($rinforzo['posx']).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".(-$rinforzo['posx']-$rinforzo['lunghezza']).";";
+            $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($rinforzo['posx']+$rinforzo['lunghezza']).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".(-$rinforzo['posx']-$rinforzo['lunghezza']).";";
+            $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".($rinforzo['posx']+$rinforzo['lunghezza']).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".(-$rinforzo['posx']).";";
+            $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".($rinforzo['posx']).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".(-$rinforzo['posx']).";";
+            $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($rinforzo['posx']).";";
             array_push($array_testo_programma,$istruzione);
         }
         else
         {
-            $istruzione="PU".($rinforzo['posy'])." ".(-$rinforzo['posx']+($rinforzo['hrin']/2)).";";
+            $istruzione="PU".($rinforzo['posy'])." ".($rinforzo['posx']+($rinforzo['hrin']/2)).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".$rinforzo['posy']." ".(-$rinforzo['posx']-($rinforzo['hrin']/2)).";";
+            $istruzione="PD".$rinforzo['posy']." ".($rinforzo['posx']-($rinforzo['hrin']/2)).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".(-$rinforzo['posx']-($rinforzo['hrin']/2)).";";
+            $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".($rinforzo['posx']+($rinforzo['hrin']/2)).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".(-$rinforzo['posx']+($rinforzo['hrin']/2)).";";
+            $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".($rinforzo['posx']-($rinforzo['hrin']/2)).";";
             array_push($array_testo_programma,$istruzione);
     
-            $istruzione="PD".($rinforzo['posy'])." ".(-$rinforzo['posx']+($rinforzo['hrin']/2)).";";
+            $istruzione="PD".($rinforzo['posy'])." ".($rinforzo['posx']-($rinforzo['hrin']/2)).";";
             array_push($array_testo_programma,$istruzione);
         }
     }
