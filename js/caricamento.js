@@ -13,6 +13,7 @@ var pannelli=[];
 var intervalOverflowPdf1;
 var intervalOverflowPdf2;
 var popupErroriPlc=false;
+var ordini_di_produzione;
 
 window.addEventListener("load", async function(event)
 {
@@ -135,8 +136,24 @@ async function getListOrdiniDiProduzione()
 {
     view="odp";
 
+    document.getElementById("labelCabinaSelezionata").parentElement.style.display="none";
+
     var container=document.getElementById("listInnerContainer");
-    container.innerHTML='<div id="listInnerContainerSpinner"><i class="fad fa-spinner fa-spin"></i><span>Caricamento in corso...</span></div>'
+    container.innerHTML='<div id="listInnerContainerSpinner"><i class="fad fa-spinner fa-spin"></i></div>';
+
+    Swal.fire
+    ({
+        width:"100%",
+        background:"transparent",
+        title:"Caricamento in corso...",
+        html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+        allowOutsideClick:false,
+        showCloseButton:false,
+        showConfirmButton:false,
+        allowEscapeKey:false,
+        showCancelButton:false,
+        onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+    });
 
     odpSelezionato=null;
     document.getElementById("labelLottoSelezionato").innerHTML="ODP :";
@@ -156,7 +173,7 @@ async function getListOrdiniDiProduzione()
     document.getElementById("messageCodicePannello").innerHTML="";
     document.getElementById("inputSearchCodicePannello").value="";
 
-    var ordini_di_produzione=await getOrdiniDiProduzione();
+    ordini_di_produzione=await getOrdiniDiProduzione();
 
     document.getElementById("containerNItems").innerHTML="<span><b style='letter-spacing:1px'>"+ordini_di_produzione.length+"</b> righe</span>";
 
@@ -171,7 +188,7 @@ async function getListOrdiniDiProduzione()
             item.setAttribute("style","margin-bottom:10px");
         item.setAttribute("class","odp-item");
         item.setAttribute("id","odpItem"+ordine_di_produzione.id_ordine_di_produzione);
-        item.setAttribute("onclick","selectOdp("+ordine_di_produzione.id_ordine_di_produzione+",'"+ordine_di_produzione.ordine_di_produzione+"')");
+        item.setAttribute("onclick","selectOdp("+ordine_di_produzione.id_ordine_di_produzione+")");
 
         var textContainer=document.createElement("div");
         textContainer.setAttribute("class","odp-item-text-container");
@@ -225,20 +242,47 @@ async function getListOrdiniDiProduzione()
         const element = elements[index];
         element.style.width=(max+5)+"px";
     }
+
+    Swal.close();
 }
-function selectOdp(id_ordine_di_produzione,ordine_di_produzione)
+function selectOdp(id_ordine_di_produzione)
 {
     odpSelezionato=id_ordine_di_produzione;
-    document.getElementById("labelLottoSelezionato").innerHTML="ODP : <b>"+ordine_di_produzione+"</b>";
+    var ordine_di_produzioneObj=getFirstObjByPropValue(ordini_di_produzione,"id_ordine_di_produzione",odpSelezionato);
 
-    getListCabine();
+    document.getElementById("labelLottoSelezionato").innerHTML="ODP : <b>"+ordine_di_produzioneObj.ordine_di_produzione+"</b>";
+
+    if(ordine_di_produzioneObj.produzione_per_cabina)
+    {
+        document.getElementById("labelCabinaSelezionata").parentElement.style.display="flex";
+        getListCabine();
+    }
+    else
+    {
+        document.getElementById("labelCabinaSelezionata").parentElement.style.display="none";
+        getListPannelli();
+    }
 }
 async function getListCabine()
 {
     view="cabine";
 
     var container=document.getElementById("listInnerContainer");
-    container.innerHTML='<div id="listInnerContainerSpinner"><i class="fad fa-spinner fa-spin"></i><span>Caricamento in corso...</span></div>'
+    container.innerHTML='<div id="listInnerContainerSpinner"><i class="fad fa-spinner fa-spin"></i></div>';
+
+    Swal.fire
+    ({
+        width:"100%",
+        background:"transparent",
+        title:"Caricamento in corso...",
+        html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+        allowOutsideClick:false,
+        showCloseButton:false,
+        showConfirmButton:false,
+        allowEscapeKey:false,
+        showCancelButton:false,
+        onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+    });
 
     cabinaSelezionata=null;
     document.getElementById("labelCabinaSelezionata").innerHTML="CABINA :";
@@ -307,6 +351,8 @@ async function getListCabine()
 
         i++;
     });
+
+    Swal.close();
 }
 function selectCabina(cabina)
 {
@@ -320,7 +366,21 @@ async function getListPannelli()
     view="pannelli";
 
     var container=document.getElementById("listInnerContainer");
-    container.innerHTML='<div id="listInnerContainerSpinner"><i class="fad fa-spinner fa-spin"></i><span>Caricamento in corso...</span></div>'
+    container.innerHTML='<div id="listInnerContainerSpinner"><i class="fad fa-spinner fa-spin"></i></div>';
+
+    Swal.fire
+    ({
+        width:"100%",
+        background:"transparent",
+        title:"Caricamento in corso...",
+        html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+        allowOutsideClick:false,
+        showCloseButton:false,
+        showConfirmButton:false,
+        allowEscapeKey:false,
+        showCancelButton:false,
+        onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+    });
 
     pannelloSelezionato=null;
     facciaPannelloSelezionato=null;
@@ -401,6 +461,8 @@ async function getListPannelli()
         const element = elements[index];
         element.style.width=(max+5)+"px";
     }
+
+    Swal.close();
 }
 async function checkPannelloPrecedente(id_distinta,id_pannello,codice_pannello,configurazione)
 {
@@ -779,9 +841,11 @@ function getPannelli()
 {
     return new Promise(function (resolve, reject) 
     {
+        var ordine_di_produzioneObj=getFirstObjByPropValue(ordini_di_produzione,"id_ordine_di_produzione",odpSelezionato);
+
         $.post("getPannelliCaricamento.php",
         {
-            id_ordine_di_produzione:odpSelezionato,numero_cabina:cabinaSelezionata
+            id_ordine_di_produzione:odpSelezionato,numero_cabina:cabinaSelezionata,produzione_per_cabina:ordine_di_produzioneObj.produzione_per_cabina
         },
         function(response, status)
         {
@@ -1169,7 +1233,20 @@ function indietro()
     {
         case "odp":logout();break;
         case "cabine":getListOrdiniDiProduzione();break;
-        case "pannelli":getListCabine();break;
+        case "pannelli":
+            var ordine_di_produzioneObj=getFirstObjByPropValue(ordini_di_produzione,"id_ordine_di_produzione",odpSelezionato);
+
+            if(ordine_di_produzioneObj.produzione_per_cabina)
+            {
+                document.getElementById("labelCabinaSelezionata").parentElement.style.display="flex";
+                getListCabine();
+            }
+            else
+            {
+                document.getElementById("labelCabinaSelezionata").parentElement.style.display="none";
+                getListOrdiniDiProduzione();
+            }
+        break;
     }
 }
 function logout()
