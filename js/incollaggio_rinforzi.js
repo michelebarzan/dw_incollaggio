@@ -63,6 +63,7 @@ async function displayPannello()
 function getFileProiettoreLaser()
 {
     var JSONpannello=JSON.stringify(pannello);
+    console.log(pannello);
     $.get("getFileProiettoreLaser.php",{JSONpannello},
     function(response, status)
     {

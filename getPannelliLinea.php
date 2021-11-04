@@ -12,7 +12,7 @@
         while($row2=sqlsrv_fetch_array($result2))
         {
             $pannello["id_distinta"]=$row2['id_distinta'];
-            $pannello["codice_pannello"]=$row2['codice_pannello'];
+            $pannello["codice_pannello"]=utf8_encode($row2['codice_pannello']);
 
             array_push($pannelli,$pannello);
         }

@@ -27,7 +27,7 @@
             $pannello["id_distinta"]=$row2['id_distinta'];
             $pannello["id_incollaggio"]=$row2['id_incollaggio'];
             $pannello["id_pannello"]=$row2['id_pannello'];
-            $pannello["codice_pannello"]=$row2['codice_pannello'];
+            $pannello["codice_pannello"]=utf8_encode($row2['codice_pannello']);
             $pannello["elettrificato"]=$row2['elettrificato'];
             $pannello["configurazione"]=strtoupper($row2['configurazione']);
             $pannello["profilo"]=$row2['profilo'];

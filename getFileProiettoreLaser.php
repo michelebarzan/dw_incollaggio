@@ -90,98 +90,21 @@
         array_push($array_testo_programma,$istruzione);
     }
 
-    if($disegna_pannello_file_proiettore=="true")
+    switch ($pannello["NumeroDima"])
     {
-        foreach ($linea_continua_file_proiettore as $riga)
-        {
-            $istruzione=$riga.";";
-            array_push($array_testo_programma,$istruzione);
-        }
-
-        if($pannello['lung2']>0)
-        {
-            $istruzione="PU0 0;";
-            array_push($array_testo_programma,$istruzione);
-        
-            $istruzione="PD".$pannello['halt']." 0;";
-            array_push($array_testo_programma,$istruzione);
-        
-            $istruzione="PD".$pannello['halt']." ".$pannello['lung2'].";";
-            array_push($array_testo_programma,$istruzione);
-        
-            $istruzione="PD0 ".$pannello['lung2'].";";
-            array_push($array_testo_programma,$istruzione);
-        
-            $istruzione="PD0 0;";
-            array_push($array_testo_programma,$istruzione);
-        }
-    
-        if($pannello['lung1']>0)
-        {
-            $istruzione="PU0 ".$pannello['lung2'].";";
-            array_push($array_testo_programma,$istruzione);
-        
-            $istruzione="PD".$pannello['halt']." ".$pannello['lung2'].";";
-            array_push($array_testo_programma,$istruzione);
-        
-            $istruzione="PD".$pannello['halt']." ".($pannello['lung1']+$pannello['lung2']).";";
-            array_push($array_testo_programma,$istruzione);
-        
-            $istruzione="PD0 ".($pannello['lung1']+$pannello['lung2']).";";
-            array_push($array_testo_programma,$istruzione);
-        
-            $istruzione="PD0 ".$pannello['lung2'].";";
-            array_push($array_testo_programma,$istruzione);
-        }
-    }
-    else
-    {
-        if(sizeof($pannello['rinforzi'])>0)
-        {
-            foreach ($linea_continua_file_proiettore as $riga)
-            {
-                $istruzione=$riga.";";
-                array_push($array_testo_programma,$istruzione);
-            }
-        }  
-    }
-
-    foreach ($pannello['rinforzi'] as $rinforzo)
-    {
-        if($rinforzo['vh']=="HOR")
-        {
-            $istruzione="PU".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($rinforzo['posx']).";";
-            array_push($array_testo_programma,$istruzione);
-    
-            $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($rinforzo['posx']+$rinforzo['lunghezza']).";";
-            array_push($array_testo_programma,$istruzione);
-    
-            $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".($rinforzo['posx']+$rinforzo['lunghezza']).";";
-            array_push($array_testo_programma,$istruzione);
-    
-            $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".($rinforzo['posx']).";";
-            array_push($array_testo_programma,$istruzione);
-    
-            $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($rinforzo['posx']).";";
-            array_push($array_testo_programma,$istruzione);
-        }
-        else
-        {
-            $istruzione="PU".($rinforzo['posy'])." ".($rinforzo['posx']+($rinforzo['hrin']/2)).";";
-            array_push($array_testo_programma,$istruzione);
-    
-            $istruzione="PD".$rinforzo['posy']." ".($rinforzo['posx']-($rinforzo['hrin']/2)).";";
-            array_push($array_testo_programma,$istruzione);
-    
-            $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".($rinforzo['posx']+($rinforzo['hrin']/2)).";";
-            array_push($array_testo_programma,$istruzione);
-    
-            $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".($rinforzo['posx']-($rinforzo['hrin']/2)).";";
-            array_push($array_testo_programma,$istruzione);
-    
-            $istruzione="PD".($rinforzo['posy'])." ".($rinforzo['posx']-($rinforzo['hrin']/2)).";";
-            array_push($array_testo_programma,$istruzione);
-        }
+        case 0:
+            disegnaPannello($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
+            disegnaRinforzi($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
+        break;
+        case 1:
+            disegnaLineeOrrizzontaliRinforzi($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
+        break;
+        case 2:
+            disegnaLineeOrrizzontaliRinforzi($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
+        break;
+        default:
+            disegnaX($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
+        break;
     }
 
     foreach ($fine_file_proiettore as $riga)
@@ -205,5 +128,178 @@
     fclose($file_proiettore);
     
     echo json_encode($array_testo_programma);
+
+    //--------------------------------------------------------------------------------------------------------------------
+
+    function disegnaPannello($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,&$array_testo_programma)
+    {
+        if($disegna_pannello_file_proiettore=="true")
+        {
+            foreach ($linea_continua_file_proiettore as $riga)
+            {
+                $istruzione=$riga.";";
+                array_push($array_testo_programma,$istruzione);
+            }
+    
+            if($pannello['lung2']>0)
+            {
+                $istruzione="PU0 0;";
+                array_push($array_testo_programma,$istruzione);
+            
+                $istruzione="PD".$pannello['halt']." 0;";
+                array_push($array_testo_programma,$istruzione);
+            
+                $istruzione="PD".$pannello['halt']." ".$pannello['lung2'].";";
+                array_push($array_testo_programma,$istruzione);
+            
+                $istruzione="PD0 ".$pannello['lung2'].";";
+                array_push($array_testo_programma,$istruzione);
+            
+                $istruzione="PD0 0;";
+                array_push($array_testo_programma,$istruzione);
+            }
+        
+            if($pannello['lung1']>0)
+            {
+                $istruzione="PU0 ".$pannello['lung2'].";";
+                array_push($array_testo_programma,$istruzione);
+            
+                $istruzione="PD".$pannello['halt']." ".$pannello['lung2'].";";
+                array_push($array_testo_programma,$istruzione);
+            
+                $istruzione="PD".$pannello['halt']." ".($pannello['lung1']+$pannello['lung2']).";";
+                array_push($array_testo_programma,$istruzione);
+            
+                $istruzione="PD0 ".($pannello['lung1']+$pannello['lung2']).";";
+                array_push($array_testo_programma,$istruzione);
+            
+                $istruzione="PD0 ".$pannello['lung2'].";";
+                array_push($array_testo_programma,$istruzione);
+            }
+        }
+        else
+        {
+            if(sizeof($pannello['rinforzi'])>0)
+            {
+                foreach ($linea_continua_file_proiettore as $riga)
+                {
+                    $istruzione=$riga.";";
+                    array_push($array_testo_programma,$istruzione);
+                }
+            }  
+        }
+    }
+
+    function disegnaRinforzi($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,&$array_testo_programma)
+    {
+        foreach ($pannello['rinforzi'] as $rinforzo)
+        {
+            if($rinforzo['vh']=="HOR")
+            {
+                $istruzione="PU".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($rinforzo['posx']).";";
+                array_push($array_testo_programma,$istruzione);
+        
+                $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($rinforzo['posx']+$rinforzo['lunghezza']).";";
+                array_push($array_testo_programma,$istruzione);
+        
+                $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".($rinforzo['posx']+$rinforzo['lunghezza']).";";
+                array_push($array_testo_programma,$istruzione);
+        
+                $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".($rinforzo['posx']).";";
+                array_push($array_testo_programma,$istruzione);
+        
+                $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($rinforzo['posx']).";";
+                array_push($array_testo_programma,$istruzione);
+            }
+            else
+            {
+                $istruzione="PU".($rinforzo['posy'])." ".($rinforzo['posx']+($rinforzo['hrin']/2)).";";
+                array_push($array_testo_programma,$istruzione);
+        
+                $istruzione="PD".$rinforzo['posy']." ".($rinforzo['posx']-($rinforzo['hrin']/2)).";";
+                array_push($array_testo_programma,$istruzione);
+        
+                $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".($rinforzo['posx']+($rinforzo['hrin']/2)).";";
+                array_push($array_testo_programma,$istruzione);
+        
+                $istruzione="PD".($rinforzo['posy']+$rinforzo['lunghezza'])." ".($rinforzo['posx']-($rinforzo['hrin']/2)).";";
+                array_push($array_testo_programma,$istruzione);
+        
+                $istruzione="PD".($rinforzo['posy'])." ".($rinforzo['posx']-($rinforzo['hrin']/2)).";";
+                array_push($array_testo_programma,$istruzione);
+            }
+        }
+    }
+
+    function disegnaLineeOrrizzontaliRinforzi($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,&$array_testo_programma)
+    {
+        if(sizeof($pannello['rinforzi'])>0)
+        {
+            foreach ($linea_continua_file_proiettore as $riga)
+            {
+                $istruzione=$riga.";";
+                array_push($array_testo_programma,$istruzione);
+            }
+        }
+        foreach ($pannello['rinforzi'] as $rinforzo)
+        {
+            if($rinforzo['vh']=="HOR")
+            {
+                $istruzione="PU".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($rinforzo['posx']).";";
+                array_push($array_testo_programma,$istruzione);
+        
+                $istruzione="PD".($rinforzo['posy']-($rinforzo['hrin']/2))." ".($rinforzo['posx']+$rinforzo['lunghezza']).";";
+                array_push($array_testo_programma,$istruzione);
+        
+                $istruzione="PU".($rinforzo['posy']+($rinforzo['hrin']/2))." ".($rinforzo['posx']+$rinforzo['lunghezza']).";";
+                array_push($array_testo_programma,$istruzione);
+        
+                $istruzione="PD".($rinforzo['posy']+($rinforzo['hrin']/2))." ".($rinforzo['posx']).";";
+                array_push($array_testo_programma,$istruzione);
+            }
+        }
+    }
+
+    function disegnaX($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,&$array_testo_programma)
+    {
+        if(sizeof($pannello['rinforzi'])>0)
+        {
+            foreach ($linea_continua_file_proiettore as $riga)
+            {
+                $istruzione=$riga.";";
+                array_push($array_testo_programma,$istruzione);
+            }
+        }
+        
+        if($pannello['lung2']>0)
+        {
+            $istruzione="PU0 0;";
+            array_push($array_testo_programma,$istruzione);
+        
+            $istruzione="PD".$pannello['halt']." ".$pannello['lung2'].";";
+            array_push($array_testo_programma,$istruzione);
+
+            $istruzione="PU0 ".$pannello['lung2'].";";
+            array_push($array_testo_programma,$istruzione);
+        
+            $istruzione="PD".$pannello['halt']." 0;";
+            array_push($array_testo_programma,$istruzione);
+        }
+    
+        if($pannello['lung1']>0)
+        {
+            $istruzione="PU0 ".$pannello['lung2'].";";
+            array_push($array_testo_programma,$istruzione);
+        
+            $istruzione="PD".$pannello['halt']." ".($pannello['lung1']+$pannello['lung2']).";";
+            array_push($array_testo_programma,$istruzione);
+        
+            $istruzione="PU0 ".($pannello['lung1']+$pannello['lung2']).";";
+            array_push($array_testo_programma,$istruzione);
+        
+            $istruzione="PD".$pannello['halt']." 0;";
+            array_push($array_testo_programma,$istruzione);
+        }
+    }
 
 ?>

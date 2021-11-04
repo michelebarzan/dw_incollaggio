@@ -26,10 +26,10 @@
             $pannello["id_incollaggio"]=$row2['id_incollaggio'];
             $pannello["id_distinta"]=$row2['id_distinta'];
             $pannello["id_pannello"]=$row2['id_pannello'];
-            $pannello["codice_pannello"]=$row2['codice_pannello'];
+            $pannello["codice_pannello"]=utf8_encode($row2['codice_pannello']);
             $pannello["id_ordine_di_produzione"]=$row2['id_ordine_di_produzione'];
-            $pannello["nome_ordine_di_produzione"]=$row2['nome_ordine_di_produzione'];
-            $pannello["numero_cabina"]=$row2['numero_cabina'];
+            $pannello["nome_ordine_di_produzione"]=utf8_encode($row2['nome_ordine_di_produzione']);
+            $pannello["numero_cabina"]=utf8_encode($row2['numero_cabina']);
             $pannello["profilo"]=$row2['profilo'];
             $pannello["lung1"]=$row2['lung1'];
             $pannello["lung2"]=$row2['lung2'];
@@ -55,13 +55,13 @@
                 while($row=sqlsrv_fetch_array($result))
                 {
                     $rinforzo["id_rinforzo"]=$row['id_rinforzo'];
-                    $rinforzo["codice_rinforzo"]=$row['codice_rinforzo'];
-                    $rinforzo["descrizione_rinforzo"]=$row['descrizione_rinforzo'];
+                    $rinforzo["codice_rinforzo"]=utf8_encode($row['codice_rinforzo']);
+                    $rinforzo["descrizione_rinforzo"]=utf8_encode($row['descrizione_rinforzo']);
                     $rinforzo["posx"]=$row['posx'];
                     $rinforzo["posy"]=$row['posy'];
                     $rinforzo["id_materia_prima"]=$row['id_materia_prima'];
-                    $rinforzo["codice_materia_prima"]=$row['codice_materia_prima'];
-                    $rinforzo["descrizione_materiale"]=$row['descrizione_materiale'];
+                    $rinforzo["codice_materia_prima"]=utf8_encode($row['codice_materia_prima']);
+                    $rinforzo["descrizione_materiale"]=utf8_encode($row['descrizione_materiale']);
                     $rinforzo["lunghezza"]=$row['lunghezza'];
                     $rinforzo["vh"]=$row['vh'];
                     $rinforzo["hrin"]=$row['hrin'];
@@ -87,13 +87,13 @@
                 while($row3=sqlsrv_fetch_array($result3))
                 {
                     $lana["id_lana"]=$row3['id_lana'];
-                    $lana["codice_lana"]=$row3['codice_lana'];
-                    $lana["descrizione_lana"]=$row3['descrizione_lana'];
+                    $lana["codice_lana"]=utf8_encode($row3['codice_lana']);
+                    $lana["descrizione_lana"]=utf8_encode($row3['descrizione_lana']);
                     $lana["posx"]=$row3['posx'];
                     $lana["posy"]=$row3['posy'];
                     $lana["id_materia_prima"]=$row3['id_materia_prima'];
-                    $lana["codice_materia_prima"]=$row3['codice_materia_prima'];
-                    $lana["descrizione_materiale"]=$row3['descrizione'];
+                    $lana["codice_materia_prima"]=utf8_encode($row3['codice_materia_prima']);
+                    $lana["descrizione_materiale"]=utf8_encode($row3['descrizione']);
                     $lana["lung"]=$row3['lung'];
                     $lana["halt"]=$row3['halt'];
                     $lana["spess"]=$row3['spess'];
