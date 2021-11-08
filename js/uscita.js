@@ -765,7 +765,7 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
     var eight = 28.5;
     var width = 19;
 
-    var printWindow = window.open('', '_blank', 'height=100,width=100');
+    var printWindow = window.open('', '_blank', 'height=1080,width=1920');
 
     printWindow.document.body.setAttribute("onafterprint","window.close();");
 
