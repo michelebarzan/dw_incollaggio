@@ -752,7 +752,7 @@ async function stampaEtichettaPannello(id_distinta)
     var eight = 6;
     var width = 10;
 
-    var printWindow = window.open('', '_blank', 'height=100,width=100');
+    var printWindow = window.open('', '_blank', 'height=1080,width=1920');
 	//printWindow.resizeTo(0,0);
 	//printWindow.moveTo(100000,100000);
 

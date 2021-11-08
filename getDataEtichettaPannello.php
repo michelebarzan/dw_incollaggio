@@ -26,20 +26,20 @@ WHERE        (dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta = $id_
     {
         while($row2=sqlsrv_fetch_array($result2))
         {
-            $data["commessa"]=$row2['commessa'];
-            $data["descrizione_commessa"]=$row2['descrizione_commessa'];
+            $data["commessa"]=utf8_encode($row2['commessa']);
+            $data["descrizione_commessa"]=utf8_encode($row2['descrizione_commessa']);
             $data["year"]=$row2['year'];
-            $data["codice_pannello"]=$row2['codice_pannello'];
-            $data["xside"]=$row2['xside'];
-            $data["yside"]=$row2['yside'];
+            $data["codice_pannello"]=utf8_encode($row2['codice_pannello']);
+            $data["xside"]=utf8_encode($row2['xside']);
+            $data["yside"]=utf8_encode($row2['yside']);
             $data["larghezza"]=$row2['larghezza'];
             $data["altezza"]=$row2['altezza'];
-            $data["finitura_lato_x"]=$row2['finitura_lato_x'];
-            $data["finitura_lato_y"]=$row2['finitura_lato_y'];
-            $data["codice_certificato"]=$row2['codice_certificato'];
-            $data["classe"]=$row2['classe'];
-            $data["id_materiale"]=$row2['id_materiale'];
-            $data["lotto"]=$row2['lotto'];
+            $data["finitura_lato_x"]=utf8_encode($row2['finitura_lato_x']);
+            $data["finitura_lato_y"]=utf8_encode($row2['finitura_lato_y']);
+            $data["codice_certificato"]=utf8_encode($row2['codice_certificato']);
+            $data["classe"]=utf8_encode($row2['classe']);
+            $data["id_materiale"]=utf8_encode($row2['id_materiale']);
+            $data["lotto"]=utf8_encode($row2['lotto']);
         }
     }
     else

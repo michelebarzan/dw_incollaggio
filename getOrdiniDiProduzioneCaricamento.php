@@ -32,14 +32,14 @@ ORDER BY terminato, dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzio
         while($row2=sqlsrv_fetch_array($result2))
         {
             $ordine_di_produzione["id_ordine_di_produzione"]=$row2['id_ordine_di_produzione'];
-            $ordine_di_produzione["ordine_di_produzione"]=$row2['ordine_di_produzione'];
+            $ordine_di_produzione["ordine_di_produzione"]=utf8_encode($row2['ordine_di_produzione']);
             $ordine_di_produzione["id_lotto"]=$row2['id_lotto'];
             $ordine_di_produzione["lotto"]=$row2['lotto'];
             $ordine_di_produzione["totale_pannelli"]=$row2['totale_pannelli'];
             $ordine_di_produzione["pannelli_caricati"]=$row2['pannelli_caricati'];
             $ordine_di_produzione["terminato"]=$row2['terminato'];
             $ordine_di_produzione["produzione_per_cabina"]=filter_var($row2['produzione_per_cabina'], FILTER_VALIDATE_BOOLEAN);
-            $ordine_di_produzione["assembly_id"]=$row2['assembly_id'];
+            $ordine_di_produzione["assembly_id"]=utf8_encode($row2['assembly_id']);
 
             array_push($ordini_di_produzione,$ordine_di_produzione);
         }
