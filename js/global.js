@@ -927,7 +927,7 @@ async function stampaEtichettaPannello(id_distinta)
     outerContainer.appendChild(img);
 	
 	var script=document.createElement("script");
-	script.innerHTML="setTimeout(function(){window.print();}, 200);";
+	script.innerHTML="setTimeout(function(){window.print();}, 500);";
     outerContainer.appendChild(script);
 
     printWindow.document.body.appendChild(outerContainer);
