@@ -398,10 +398,15 @@ body
     color:#70B085;
     border:1px solid #70B085;
 }
-#titleButtonAnnulla
+#titleButtonAnnulla 
 {
     color:#DA6969;
     border:1px solid #DA6969;
+}
+#titleButtonStampa
+{
+    color:rgb(76, 145, 203);
+    border:1px solid rgb(76, 145, 203);
 }
 #titleButtonConferma:active
 {
@@ -413,6 +418,12 @@ body
 {
     background-color:#DA6969;
     border:1px solid #DA6969;
+    color:white;
+}
+#titleButtonStampa:active
+{
+    background-color:rgb(76, 145, 203);
+    border:1px solid rgb(76, 145, 203);
     color:white;
 }
 #labelPannelloSelezionato,#labelId_distintaSelezionata
