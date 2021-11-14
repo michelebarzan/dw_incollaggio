@@ -346,6 +346,11 @@ body
     color:#E9A93A;
     border:1px solid #E9A93A;
 }
+.comandi-uscita-action-button:disabled,#comandiUscitaButtonChiudiBancale:disabled,#comandiUscitaButtonCambiaBancale:disabled
+{
+    color:gray;
+    border:1px solid gray;
+}
 #comandiUscitaButtonChiudiBancale:active
 {
     background-color:rgb(76, 145, 203);
