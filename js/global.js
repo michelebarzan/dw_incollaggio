@@ -641,7 +641,8 @@ async function getDrawingLamiera()
         container.appendChild(svg);
 
         drawPannello();
-        drawRinforzi();
+        if(pannello.faccia == "fronte")
+            drawRinforzi();
     }
 }
 async function getDrawingLana()
@@ -661,8 +662,11 @@ async function getDrawingLana()
         container.appendChild(svg);
 
         drawPannello();
-        drawRinforzi();
-        drawLana();
+        if(pannello.faccia == "fronte")
+        {
+            drawRinforzi();
+            drawLana();
+        }
     }
 }
 function getScaledMeasure(measure)
