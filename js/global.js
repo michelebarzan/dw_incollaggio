@@ -299,6 +299,124 @@ function drawPannello()
         document.getElementById("drawingQuotaLung1").setAttribute("y",y_pannello+larghezza_lato_orrizzontale+(larghezza_lato_verticale/2)+((document.getElementById("drawingQuotaLung1").getBBox().height-svgDefaultTextPadding)/2));
     }
 }
+
+function drawPannelloRetro()
+{
+    var lung1=getScaledMeasure(pannello.lung1_r);
+    var lung2=getScaledMeasure(pannello.lung2_r);
+    var halt=getScaledMeasure(pannello.halt_r);
+
+    var altezza_pannello=halt;
+    var larghezza_lato_verticale=lung2;
+    var larghezza_lato_orrizzontale=lung1;
+    
+    var x_pannello=(svg_width/2)-(altezza_pannello/2);
+    var y_pannello=(svg_height/2)-((larghezza_lato_orrizzontale+larghezza_lato_verticale)/2);
+
+    var svg=document.getElementById("drawingSvg");
+
+    //pannello
+    var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute("style","fill:gray;stroke:black;stroke-width:1;");
+    rect.setAttribute("x",x_pannello);
+    rect.setAttribute("y",y_pannello);
+    rect.setAttribute("width",altezza_pannello);
+    rect.setAttribute("height",larghezza_lato_orrizzontale);
+    svg.appendChild(rect);
+
+    var rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute("style","fill:gray;stroke:black;stroke-width:1;");
+    rect.setAttribute("x",x_pannello);
+    rect.setAttribute("y",y_pannello+larghezza_lato_orrizzontale);
+    rect.setAttribute("width",altezza_pannello);
+    rect.setAttribute("height",larghezza_lato_verticale);
+    svg.appendChild(rect);
+
+    //quota altezza pannello
+    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute("style","stroke:white;stroke-width:1;");
+    line.setAttribute("x1",x_pannello);
+    line.setAttribute("y1",y_pannello-distanza_quota_pannello);
+    line.setAttribute("x2",x_pannello+altezza_pannello);
+    line.setAttribute("y2",y_pannello-distanza_quota_pannello);
+    svg.appendChild(line);
+
+    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute("style","stroke:white;stroke-width:1;");
+    line.setAttribute("x1",x_pannello);
+    line.setAttribute("y1",y_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
+    line.setAttribute("x2",x_pannello);
+    line.setAttribute("y2",y_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
+    svg.appendChild(line);
+
+    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute("style","stroke:white;stroke-width:1;");
+    line.setAttribute("x1",x_pannello+altezza_pannello);
+    line.setAttribute("y1",y_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
+    line.setAttribute("x2",x_pannello+altezza_pannello);
+    line.setAttribute("y2",y_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
+    svg.appendChild(line);
+
+    var text=document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute("style","fill:white");
+    text.setAttribute("id","drawingQuotaHalt");
+    text.setAttribute("y",y_pannello-distanza_quota_pannello-distanza_testo_linea_quota);
+    text.innerHTML=roundQuoteValue(pannello.halt);
+    svg.appendChild(text);
+    document.getElementById("drawingQuotaHalt").setAttribute("x",x_pannello+(altezza_pannello/2)-((document.getElementById("drawingQuotaHalt").getBBox().width)/2));
+
+    //quote larghezza pannello
+    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute("style","stroke:white;stroke-width:1;");
+    line.setAttribute("x1",x_pannello-distanza_quota_pannello);
+    line.setAttribute("y1",y_pannello);
+    line.setAttribute("x2",x_pannello-distanza_quota_pannello);
+    line.setAttribute("y2",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale));
+    svg.appendChild(line);
+
+    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute("style","stroke:white;stroke-width:1;");
+    line.setAttribute("x1",x_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
+    line.setAttribute("y1",y_pannello);
+    line.setAttribute("x2",x_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
+    line.setAttribute("y2",y_pannello);
+    svg.appendChild(line);
+
+    var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute("style","stroke:white;stroke-width:1;");
+    line.setAttribute("x1",x_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
+    line.setAttribute("y1",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale));
+    line.setAttribute("x2",x_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
+    line.setAttribute("y2",y_pannello+(larghezza_lato_verticale+larghezza_lato_orrizzontale));
+    svg.appendChild(line);
+
+    var text=document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute("style","fill:white;");
+    text.setAttribute("id","drawingQuotaLung2");
+    text.innerHTML=roundQuoteValue(pannello.lung1);
+    svg.appendChild(text);
+    document.getElementById("drawingQuotaLung2").setAttribute("x",x_pannello-distanza_quota_pannello-distanza_testo_linea_quota-(document.getElementById("drawingQuotaLung2").getBBox().width));
+    document.getElementById("drawingQuotaLung2").setAttribute("y",y_pannello+(larghezza_lato_orrizzontale)/2+((document.getElementById("drawingQuotaLung2").getBBox().height-svgDefaultTextPadding)/2));
+
+    if(larghezza_lato_verticale>0)
+    {
+        var line=document.createElementNS('http://www.w3.org/2000/svg','line');
+        line.setAttribute("style","stroke:white;stroke-width:1;");
+        line.setAttribute("x1",x_pannello-distanza_quota_pannello-(lunghezza_trattino_quote/2));
+        line.setAttribute("y1",y_pannello+larghezza_lato_orrizzontale);
+        line.setAttribute("x2",x_pannello-distanza_quota_pannello+(lunghezza_trattino_quote/2));
+        line.setAttribute("y2",y_pannello+larghezza_lato_orrizzontale);
+        svg.appendChild(line);
+
+        var text=document.createElementNS('http://www.w3.org/2000/svg','text');
+        text.setAttribute("style","fill:white;");
+        text.setAttribute("id","drawingQuotaLung1");
+        text.innerHTML=roundQuoteValue(pannello.lung2);
+        svg.appendChild(text);
+        document.getElementById("drawingQuotaLung1").setAttribute("x",x_pannello-distanza_quota_pannello-distanza_testo_linea_quota-(document.getElementById("drawingQuotaLung1").getBBox().width));
+        document.getElementById("drawingQuotaLung1").setAttribute("y",y_pannello+larghezza_lato_orrizzontale+(larghezza_lato_verticale/2)+((document.getElementById("drawingQuotaLung1").getBBox().height-svgDefaultTextPadding)/2));
+    }
+}
 function drawRinforzi()
 {
     var lung1=getScaledMeasure(pannello.lung1);
@@ -546,7 +664,6 @@ function drawLana()
     var i=0;
     pannello.lane.forEach(lana =>
     {
-        console.log(lana);
         switch (lana.spess)
         {
             case 15:
@@ -640,8 +757,13 @@ async function getDrawingLamiera()
         svg.setAttribute("style","transform:rotate(180deg)");
         container.appendChild(svg);
 
-        drawPannello();
-        drawRinforzi();
+        if(pannello.faccia == "fronte")
+        {
+            drawPannello();
+            drawRinforzi();
+        }
+        else
+            drawPannelloRetro();
     }
 }
 async function getDrawingLana()
@@ -660,9 +782,14 @@ async function getDrawingLana()
         svg.setAttribute("style","transform:rotate(180deg)");
         container.appendChild(svg);
 
-        drawPannello();
-        drawRinforzi();
-        drawLana();
+        if(pannello.faccia == "fronte")
+        {
+            drawPannello();
+            drawRinforzi();
+            drawLana();
+        }
+        else
+            drawPannelloRetro();
     }
 }
 function getScaledMeasure(measure)
@@ -727,14 +854,14 @@ function eliminaPannello(id_distinta)
                                 icon:"success",
                                 title: "Pannello eliminato",
                                 background:"#404040",
-                                showCloseButton:false,
+                                showCloseButton:true,
                                 showConfirmButton:false,
-                                allowOutsideClick:false,
-                                timer: 5000,
+                                allowOutsideClick:true,
+                                timer: 2500,
                                 timerProgressBar: true,
                                 onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="white";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";document.getElementsByClassName("swal2-close")[0].style.outline="none";},
                                 //onClose: () => {clearInterval(timerInterval)}
-                            })
+                            });
                         }
                     }
                 });
