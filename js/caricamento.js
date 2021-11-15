@@ -9,6 +9,7 @@ var odpSelezionato;
 var cabinaSelezionata;
 var pannelloSelezionato;
 var facciaPannelloSelezionato;
+var NumeroDimaPannelloSelezionato;
 var pannelli=[];
 var intervalOverflowPdf1;
 var intervalOverflowPdf2;
@@ -161,6 +162,7 @@ async function getListOrdiniDiProduzione()
     document.getElementById("labelCabinaSelezionata").innerHTML="CABINA :";
     pannelloSelezionato=null;
     facciaPannelloSelezionato=null;
+    NumeroDimaPannelloSelezionato=null;
     document.getElementById("labelId_distintaSelezionata").innerHTML="# :";
     document.getElementById("labelPannelloSelezionato").innerHTML="PANNELLO :";
     cleanPannelliItem();
@@ -288,6 +290,7 @@ async function getListCabine()
     document.getElementById("labelCabinaSelezionata").innerHTML="CABINA :";
     pannelloSelezionato=null;
     facciaPannelloSelezionato=null;
+    NumeroDimaPannelloSelezionato=null;
     document.getElementById("labelId_distintaSelezionata").innerHTML="# :";
     document.getElementById("labelPannelloSelezionato").innerHTML="PANNELLO :";
     cleanPannelliItem();
@@ -384,6 +387,7 @@ async function getListPannelli()
 
     pannelloSelezionato=null;
     facciaPannelloSelezionato=null;
+    NumeroDimaPannelloSelezionato=null;
     document.getElementById("labelId_distintaSelezionata").innerHTML="# :";
     document.getElementById("labelPannelloSelezionato").innerHTML="PANNELLO :";
     cleanPannelliItem();
@@ -948,6 +952,7 @@ function cancelSelectPannello()
 {
     pannelloSelezionato=null;
     facciaPannelloSelezionato=null;
+    NumeroDimaPannelloSelezionato=null;
     document.getElementById("labelId_distintaSelezionata").innerHTML="# :";
     document.getElementById("labelPannelloSelezionato").innerHTML="PANNELLO :";
     cleanPannelliItem();
@@ -1168,64 +1173,92 @@ async function selezionaDima()
         }*/
     }
 }
-function confermaSelectPannello(NumeroDima)
+async function confermaSelectPannello(NumeroDima)
 {
     if(pannelloSelezionato!=null)
     {
+        NumeroDimaPannelloSelezionato = NumeroDima;
         var pannelloObj=getFirstObjByPropValue(pannelli,"id_distinta",pannelloSelezionato);
 
+        var responseCaricaPannello = await caricaPannello(pannelloSelezionato,facciaPannelloSelezionato,id_utente,stazione.id_stazione,NumeroDimaPannelloSelezionato);
+        if(responseCaricaPannello.toLowerCase().indexOf("error")>-1 || responseCaricaPannello.toLowerCase().indexOf("notice")>-1 || responseCaricaPannello.toLowerCase().indexOf("warning")>-1)
+        {
+            Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+            console.log(responseCaricaPannello);
+        }
+        else
+        {
+            if(pannelloObj.configurazione=="BF" && facciaPannelloSelezionato=="fronte")
+            {
+                Swal.fire
+                ({
+                    icon:"warning",
+                    title: `PANNELLO FRONTE CARICATO`,
+                    text: "CARICA LA FACCIA POSTERIORE DEL PANNELLO " + pannelloObj.codice_pannello,
+                    background:"#404040",
+                    showCloseButton:false,
+                    showConfirmButton:true,
+                    allowOutsideClick:false,
+                    confirmButtonText: `CARICA PANNELLO RETRO`,
+                    onOpen : function()
+                            {
+                                document.getElementsByClassName("swal2-title")[0].style.color="#71B085";
+                                document.getElementsByClassName("swal2-title")[0].style.fontSize="18px";
+                                document.getElementsByClassName("swal2-title")[0].style.marginBottom="20px";
+                                document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";
+                                document.getElementsByClassName("swal2-title")[0].style.letterSpacing="1px";
+
+                                document.getElementsByClassName("swal2-close")[0].style.outline="none";
+                            },
+                }).then(async (result) =>
+                {
+                    if (result.value)
+                    {
+                        var responseCaricaPannello = await caricaPannello(pannelloSelezionato,`retro`,id_utente,stazione.id_stazione,NumeroDimaPannelloSelezionato);
+                        if(responseCaricaPannello.toLowerCase().indexOf("error")>-1 || responseCaricaPannello.toLowerCase().indexOf("notice")>-1 || responseCaricaPannello.toLowerCase().indexOf("warning")>-1)
+                        {
+                            Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                            console.log(responseCaricaPannello);
+                        }
+                        else
+                            successCaricaPannello();
+                    }
+                });
+            }
+            else
+                successCaricaPannello();
+        }
+    }
+}
+function successCaricaPannello()
+{
+    document.getElementById("pannelliItem"+pannelloSelezionato).remove();
+    var index=0;
+    pannelli.forEach(pannello =>
+    {
+        if(pannello.id_distinta==pannelloSelezionato)
+            pannelli.splice(index, 1);
+        index++;
+    });
+    document.getElementById("containerNItems").innerHTML="<span><b style='letter-spacing:1px'>"+pannelli.length+"</b> righe</span>";
+    if(pannelli.length>0)
+        document.getElementsByClassName("pannelli-item")[document.getElementsByClassName("pannelli-item").length-1].style.marginBottom="0px";
+    cancelSelectPannello();
+}
+function caricaPannello(id_distinta,faccia,id_utente,stazione,NumeroDima)
+{
+    return new Promise(function (resolve, reject) 
+    {
         $.post("caricaPannello.php",
         {
-            id_distinta:pannelloSelezionato,
-            faccia:facciaPannelloSelezionato,
-            id_utente,
-            stazione:stazione.id_stazione,
-            NumeroDima
+            id_distinta,faccia,id_utente,stazione,NumeroDima
         },
         function(response, status)
         {
             if(status=="success")
-            {
-                console.log(response);
-                if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
-                {
-                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
-                    console.log(response);
-                }
-                else
-                {
-                    if(pannelloObj.configurazione=="BF" && facciaPannelloSelezionato=="fronte")
-                    {
-                        Swal.fire
-                        ({
-                            icon:"success",
-                            title: "Configurazione non supportata",
-                            background:"#404040",
-                            showCloseButton:false,
-                            showConfirmButton:false,
-                            allowOutsideClick:false,
-                            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="white";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";document.getElementsByClassName("swal2-close")[0].style.outline="none";},
-                        });
-                    }
-                    else
-                    {
-                        document.getElementById("pannelliItem"+pannelloSelezionato).remove();
-                        var index=0;
-                        pannelli.forEach(pannello =>
-                        {
-                            if(pannello.id_distinta==pannelloSelezionato)
-                                pannelli.splice(index, 1);
-                            index++;
-                        });
-                        document.getElementById("containerNItems").innerHTML="<span><b style='letter-spacing:1px'>"+pannelli.length+"</b> righe</span>";
-                        if(pannelli.length>0)
-                            document.getElementsByClassName("pannelli-item")[document.getElementsByClassName("pannelli-item").length-1].style.marginBottom="0px";
-                        cancelSelectPannello();
-                    }
-                }
-            }
+                resolve(response);
         });
-    }
+    });
 }
 function indietro()
 {

@@ -46,6 +46,7 @@ async function displayBancale()
 {
     bancale=await getBancaleAperto();
     document.getElementById("labelBancaleAperto").innerHTML="BANCALE : <b>#"+bancale.id_bancale+"</b>";
+    document.getElementById("labelPannelliBancaleAperto").innerHTML="PANNELLI : <b>"+bancale.pannelli.length+"</b>";
 
     var comandiUscitaTableContainer=document.getElementById("comandiUscitaTableContainer");
     comandiUscitaTableContainer.innerHTML="";
@@ -114,7 +115,7 @@ function getBancaleAperto()
 {
     return new Promise(function (resolve, reject) 
     {
-        $.get("getBancaleAperto.php",
+        $.get("getBancaleAperto.php",{id_utente},
         function(response, status)
         {
             if(status=="success")
@@ -235,6 +236,8 @@ async function checkPannello()
     {
         if(pannello!=null)
         {
+            clearInterval(interval);
+            //console.log("1")
             var response=await scaricaPannello();
             if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                 console.log(response);
@@ -250,6 +253,8 @@ async function checkPannello()
         {
             if(pannelloCheck.id_incollaggio != pannello.id_incollaggio)
             {
+                clearInterval(interval);
+                //console.log("2")
                 var response=await scaricaPannello();
                 if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                     console.log(response);
@@ -263,15 +268,20 @@ function scaricaPannello()
 {
     return new Promise(function (resolve, reject) 
     {
+        //console.log("scarico",pannello.faccia,pannello.id_distinta)
         $.get("scaricaPannello.php",
         {
             id_distinta:pannello.id_distinta,
-            faccia:pannello.faccia
+            faccia:pannello.faccia,
+            configurazione:pannello.configurazione
         },
         function(response, status)
         {
             if(status=="success")
             {
+                setTimeout(() => {
+                    interval = setInterval(intervalFunctions, frequenza_aggiornamento_dati_linea);
+                }, frequenza_aggiornamento_dati_linea);
                 resolve(response);
             }
         });
@@ -523,6 +533,7 @@ function logout()
 }
 function avanzaPannello()
 {
+    //console.clear();
     if(pannello!=null)
     {
         Swal.fire
@@ -593,6 +604,9 @@ function avanzaPannello()
 }
 async function chiudiBancale()
 {
+    document.getElementById("comandiUscitaButtonChiudiBancale").disabled = true;
+    document.getElementById("comandiUscitaButtonCambiaBancale").disabled = true;
+
     var bancale_in_pausa=await getBancaleInPausa();
 
     $.get("chiudiBancale.php",{id_bancale:bancale.id_bancale,id_utente},
@@ -648,6 +662,10 @@ async function chiudiBancale()
                             riapriBancale(bancale_in_pausa.id_bancale);
                     });
                 }
+                setTimeout(() => {
+                    document.getElementById("comandiUscitaButtonChiudiBancale").disabled = false;
+                    document.getElementById("comandiUscitaButtonCambiaBancale").disabled = false;
+                }, 3000);
             }
         }
     });
@@ -719,6 +737,9 @@ function getBancaleInPausa()
 }
 async function cambiaBancale()
 {
+    document.getElementById("comandiUscitaButtonCambiaBancale").disabled = true;
+    document.getElementById("comandiUscitaButtonChiudiBancale").disabled = true;
+
     $.get("cambiaBancale.php",{id_bancale:bancale.id_bancale,id_utente},
     function(response, status)
     {
@@ -732,6 +753,10 @@ async function cambiaBancale()
             else
             {
                 displayBancale();
+                setTimeout(() => {
+                    document.getElementById("comandiUscitaButtonCambiaBancale").disabled = false;
+                    document.getElementById("comandiUscitaButtonChiudiBancale").disabled = false;
+                }, 3000);
             }
         }
     });
@@ -739,215 +764,217 @@ async function cambiaBancale()
 async function stampaEtichettaBancale(id_bancale_chiuso)
 {
     var bancale_chiuso=await getBancale(id_bancale_chiuso);
-
-    var costruzione = [];
-	var lotto = [];
-	var odp = [];
-    bancale_chiuso.pannelli.forEach(element =>
+    if(bancale_chiuso.pannelli.length >0)
     {
-        costruzione.push(element.descrizione);
-    });
-    bancale_chiuso.pannelli.forEach(element =>
-    {
-        lotto.push(element.lotto);
-    });
-    bancale_chiuso.pannelli.forEach(element =>
-    {
-        odp.push(element.ordine_di_produzione);
-    });
-    costruzione = [...new Set(costruzione)];
-    lotto = [...new Set(lotto)];
-    odp = [...new Set(odp)];
-
-    var server_adress=await getServerValue("SERVER_ADDR");
-    var server_port=await getServerValue("SERVER_PORT");
-
-    var eight = 28.5;
-    var width = 19;
-
-    var printWindow = window.open('', '_blank', 'height=1080,width=1920');
-
-    printWindow.document.body.setAttribute("onafterprint","window.close();");
-
-    printWindow.document.body.style.backgroundColor="white";
-    printWindow.document.body.style.overflow="hidden";
-
-	var style=document.createElement("script");
-	style.innerHTML="@media print {.pagebreak { page-break-before: always; }}";
-    printWindow.document.head.appendChild(style);
-
-    var link=document.createElement("link");
-    link.setAttribute("href","http://"+server_adress+":"+server_port+"/dw_incollaggio/css/fonts.css");
-    link.setAttribute("rel","stylesheet");
-    printWindow.document.head.appendChild(link);
-
-    var outerContainer=document.createElement("div");
-    outerContainer.setAttribute("id","printContainer");
-    outerContainer.setAttribute("style","display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;height: "+eight+"cm;width: "+width+"cm;border:.5mm solid black;box-sizing:border-box;margin:5mm");
+        var costruzione = [];
+        var lotto = [];
+        var odp = [];
+        bancale_chiuso.pannelli.forEach(element =>
+        {
+            costruzione.push(element.descrizione);
+        });
+        bancale_chiuso.pannelli.forEach(element =>
+        {
+            lotto.push(element.lotto);
+        });
+        bancale_chiuso.pannelli.forEach(element =>
+        {
+            odp.push(element.ordine_di_produzione);
+        });
+        costruzione = [...new Set(costruzione)];
+        lotto = [...new Set(lotto)];
+        odp = [...new Set(odp)];
     
-    //---------Costruzione
-    var row=document.createElement("div");
-    row.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width:100%;max-width:100%;width:100%;min-height:5%;max-height:5%;height:5%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-    var div=document.createElement("div");
-    div.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis;overflow:hidden;min-width:50%;max-width:50%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:2.8cm;max-width:2.8cm;width:2.8cm;white-space: nowrap;overflow: hidden;text-overflow: clip; ");
-    span.innerHTML="<b>Costruzione: </b>";
-    div.appendChild(span);
-    var span=document.createElement("span");
-    span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 2.8cm);max-width:calc(100% - 2.8cm);width:calc(100% - 2.8cm);");
-    span.innerHTML=costruzione;
-    div.appendChild(span);
-    row.appendChild(div);
-    outerContainer.appendChild(row);
-
-    //---------Lotto
-    var div=document.createElement("div");
-    div.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis;overflow:hidden;min-width:40%;max-width:40%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:1.3cm;max-width:1.3cm;width:1.3cm;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>Lotto: </b>";
-    div.appendChild(span);
-    var span=document.createElement("span");
-    span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 1.3cm);max-width:calc(100% - 1.3cm);width:calc(100% - 1.3cm);");
-    span.innerHTML=lotto;
-    div.appendChild(span);
-    row.appendChild(div);
-    outerContainer.appendChild(row);
+        var server_adress=await getServerValue("SERVER_ADDR");
+        var server_port=await getServerValue("SERVER_PORT");
     
-    //---------Logo
-    var img=document.createElement("img");
-    img.setAttribute("style","min-width:10%;max-width:10%;width:10%;min-height:100%;max-height:100%;height:100%;box-sizing:border-box");
-    img.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_incollaggio/images/logo_bw.png");
-    row.appendChild(img);
-
-    //---------Ordine di produzione
-    var row=document.createElement("div");
-    row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:5%;max-height:5%;height:5%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box;padding-left:10px;padding-right:10px");
-    var div=document.createElement("div");
-    div.setAttribute("style","min-width:100%;width:100%;min-height:100%;max-height:100%;height:100%;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:4.8cm;max-width:4.8cm;width:4.8cm;white-space: nowraptext-overflow: clip;");
-    span.innerHTML="<b>Ordine di produzione: </b>";
-    div.appendChild(span);
-    var span=document.createElement("span");
-    span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 4.8cm);max-width:calc(100% - 4.8cm);width:calc(100% - 4.8cm);");
-    span.innerHTML=odp;
-    div.appendChild(span);
-    row.appendChild(div);
-    outerContainer.appendChild(row);
-
-    //---------Orario apertura
-    var row=document.createElement("div");
-    row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:5%;max-height:5%;height:5%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-    var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:50%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>Orario di apertura: </b>"+bancale_chiuso.dataOraAperturaString;
-    div.appendChild(span);
-    row.appendChild(div);
-    outerContainer.appendChild(row);
-
-    //---------Orario chiusura
-    var div=document.createElement("div");
-    div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:50%;min-height:100%;max-height:100%;height:100%;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
-    var span=document.createElement("span");
-    span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
-    span.innerHTML="<b>Orario di chiusura: </b>"+bancale_chiuso.dataOraChiusuraString;
-    div.appendChild(span);
-    row.appendChild(div);
-    outerContainer.appendChild(row);
-
-    //---------Contenitore tabelle pannelli
-    var tablesContainer=document.createElement("div");
-    tablesContainer.setAttribute("style","min-height:85%;max-height:85%;height:85%;width: 100%;min-width:100%;max-width:100%;overflow:hidden;display:flex;flex-direction:row;align-items:flex-start;justify-content:flex-start");
-    var table1Container = document.createElement("div");
-    table1Container.setAttribute("style", "min-height:100%;max-height:100%;height:100%;width: 50%;min-width:50%;max-width:50%;overflow:hidden");
-    var table1=document.createElement("table");
-    table1.setAttribute("style","max-height:100%;width: 100%;min-width:100%;max-width:100%;overflow:hidden");
-    table1Container.appendChild(table1);
-    tablesContainer.appendChild(table1Container);
-
-    var table2Container = document.createElement("div");
-    table2Container.setAttribute("style", "min-height:100%;max-height:100%;height:100%;width: 50%;min-width:50%;max-width:50%;overflow:hidden");
-    var table2=document.createElement("table");
-    table2.setAttribute("style","max-height:100%;width: 100%;min-width:100%;max-width:100%;overflow:hidden");
-    table2Container.appendChild(table2);
-    if(bancale_chiuso.pannelli.length>40)
-        tablesContainer.appendChild(table2Container);
-
-    outerContainer.appendChild(tablesContainer);
-
-    var nRows=41;
-    var trHeight=((85*eight)/100)/nRows;
-    var tr=document.createElement("tr");
-    var th=document.createElement("th");
-    th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
-    th.innerHTML="N.";
-    tr.appendChild(th);
-    var th=document.createElement("th");
-    th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
-    th.innerHTML="Pannello";
-    tr.appendChild(th);
-    var th=document.createElement("th");
-    th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
-    th.innerHTML="#";
-    tr.appendChild(th);
-    var th=document.createElement("th");
-    th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
-    th.innerHTML="Elettr.";
-    tr.appendChild(th);
-    var th=document.createElement("th");
-    th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
-    th.innerHTML="Numero cabina";
-    tr.appendChild(th);
-    table1.appendChild(tr);
-    table2.appendChild(tr.cloneNode(true));
-
-    var i=1;
-    bancale_chiuso.pannelli.forEach(pannello =>
-    {
+        var eight = 28.5;
+        var width = 19;
+    
+        var printWindow = window.open('', '_blank', 'height=1080,width=1920');
+    
+        printWindow.document.body.setAttribute("onafterprint","window.close();");
+    
+        printWindow.document.body.style.backgroundColor="white";
+        printWindow.document.body.style.overflow="hidden";
+    
+        var style=document.createElement("script");
+        style.innerHTML="@media print {.pagebreak { page-break-before: always; }}";
+        printWindow.document.head.appendChild(style);
+    
+        var link=document.createElement("link");
+        link.setAttribute("href","http://"+server_adress+":"+server_port+"/dw_incollaggio/css/fonts.css");
+        link.setAttribute("rel","stylesheet");
+        printWindow.document.head.appendChild(link);
+    
+        var outerContainer=document.createElement("div");
+        outerContainer.setAttribute("id","printContainer");
+        outerContainer.setAttribute("style","display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;height: "+eight+"cm;width: "+width+"cm;border:.5mm solid black;box-sizing:border-box;margin:5mm");
+        
+        //---------Costruzione
+        var row=document.createElement("div");
+        row.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis;min-width:100%;max-width:100%;width:100%;min-height:5%;max-height:5%;height:5%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
+        var div=document.createElement("div");
+        div.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis;overflow:hidden;min-width:50%;max-width:50%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
+        var span=document.createElement("span");
+        span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:2.8cm;max-width:2.8cm;width:2.8cm;white-space: nowrap;overflow: hidden;text-overflow: clip; ");
+        span.innerHTML="<b>Costruzione: </b>";
+        div.appendChild(span);
+        var span=document.createElement("span");
+        span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 2.8cm);max-width:calc(100% - 2.8cm);width:calc(100% - 2.8cm);");
+        span.innerHTML=costruzione;
+        div.appendChild(span);
+        row.appendChild(div);
+        outerContainer.appendChild(row);
+    
+        //---------Lotto
+        var div=document.createElement("div");
+        div.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis;overflow:hidden;min-width:40%;max-width:40%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
+        var span=document.createElement("span");
+        span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:1.3cm;max-width:1.3cm;width:1.3cm;white-space: nowrap;overflow: hidden;text-overflow: clip;");
+        span.innerHTML="<b>Lotto: </b>";
+        div.appendChild(span);
+        var span=document.createElement("span");
+        span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 1.3cm);max-width:calc(100% - 1.3cm);width:calc(100% - 1.3cm);");
+        span.innerHTML=lotto;
+        div.appendChild(span);
+        row.appendChild(div);
+        outerContainer.appendChild(row);
+        
+        //---------Logo
+        var img=document.createElement("img");
+        img.setAttribute("style","min-width:10%;max-width:10%;width:10%;min-height:100%;max-height:100%;height:100%;box-sizing:border-box");
+        img.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_incollaggio/images/logo_bw.png");
+        row.appendChild(img);
+    
+        //---------Ordine di produzione
+        var row=document.createElement("div");
+        row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:5%;max-height:5%;height:5%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box;padding-left:10px;padding-right:10px");
+        var div=document.createElement("div");
+        div.setAttribute("style","min-width:100%;width:100%;min-height:100%;max-height:100%;height:100%;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
+        var span=document.createElement("span");
+        span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:4.8cm;max-width:4.8cm;width:4.8cm;white-space: nowraptext-overflow: clip;");
+        span.innerHTML="<b>Ordine di produzione: </b>";
+        div.appendChild(span);
+        var span=document.createElement("span");
+        span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 4.8cm);max-width:calc(100% - 4.8cm);width:calc(100% - 4.8cm);");
+        span.innerHTML=odp;
+        div.appendChild(span);
+        row.appendChild(div);
+        outerContainer.appendChild(row);
+    
+        //---------Orario apertura
+        var row=document.createElement("div");
+        row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:5%;max-height:5%;height:5%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
+        var div=document.createElement("div");
+        div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:50%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
+        var span=document.createElement("span");
+        span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
+        span.innerHTML="<b>Orario di apertura: </b>"+bancale_chiuso.dataOraAperturaString;
+        div.appendChild(span);
+        row.appendChild(div);
+        outerContainer.appendChild(row);
+    
+        //---------Orario chiusura
+        var div=document.createElement("div");
+        div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:50%;min-height:100%;max-height:100%;height:100%;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
+        var span=document.createElement("span");
+        span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
+        span.innerHTML="<b>Orario di chiusura: </b>"+bancale_chiuso.dataOraChiusuraString;
+        div.appendChild(span);
+        row.appendChild(div);
+        outerContainer.appendChild(row);
+    
+        //---------Contenitore tabelle pannelli
+        var tablesContainer=document.createElement("div");
+        tablesContainer.setAttribute("style","min-height:85%;max-height:85%;height:85%;width: 100%;min-width:100%;max-width:100%;overflow:hidden;display:flex;flex-direction:row;align-items:flex-start;justify-content:flex-start");
+        var table1Container = document.createElement("div");
+        table1Container.setAttribute("style", "min-height:100%;max-height:100%;height:100%;width: 50%;min-width:50%;max-width:50%;overflow:hidden");
+        var table1=document.createElement("table");
+        table1.setAttribute("style","max-height:100%;width: 100%;min-width:100%;max-width:100%;overflow:hidden");
+        table1Container.appendChild(table1);
+        tablesContainer.appendChild(table1Container);
+    
+        var table2Container = document.createElement("div");
+        table2Container.setAttribute("style", "min-height:100%;max-height:100%;height:100%;width: 50%;min-width:50%;max-width:50%;overflow:hidden");
+        var table2=document.createElement("table");
+        table2.setAttribute("style","max-height:100%;width: 100%;min-width:100%;max-width:100%;overflow:hidden");
+        table2Container.appendChild(table2);
+        if(bancale_chiuso.pannelli.length>40)
+            tablesContainer.appendChild(table2Container);
+    
+        outerContainer.appendChild(tablesContainer);
+    
+        var nRows=41;
+        var trHeight=((85*eight)/100)/nRows;
         var tr=document.createElement("tr");
-        var td=document.createElement("td");
-        td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
-        td.innerHTML=i;
-        tr.appendChild(td);
-        var td=document.createElement("td");
-        td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
-        td.innerHTML=pannello.codice_pannello;
-        tr.appendChild(td);
-        var td=document.createElement("td");
-        td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
-        td.innerHTML=pannello.id_distinta;
-        tr.appendChild(td);
-        var td=document.createElement("td");
-        td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
-        if(pannello.elettrificato=="true")
-            td.innerHTML="V";
-        else
-            td.innerHTML="X";
-        tr.appendChild(td);
-        var td=document.createElement("td");
-        td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
-        td.innerHTML=pannello.numero_cabina;
-        tr.appendChild(td);
-
-        if(i<nRows)
-            table1.appendChild(tr);
-        else
-            table2.appendChild(tr);
-
-        i++;
-    });
-
-    //---------
-
-	var script=document.createElement("script");
-	script.innerHTML="setTimeout(function(){window.print();}, 500);";
-    outerContainer.appendChild(script);
- 
-    printWindow.document.body.appendChild(outerContainer);
+        var th=document.createElement("th");
+        th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+        th.innerHTML="N.";
+        tr.appendChild(th);
+        var th=document.createElement("th");
+        th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+        th.innerHTML="Pannello";
+        tr.appendChild(th);
+        var th=document.createElement("th");
+        th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+        th.innerHTML="#";
+        tr.appendChild(th);
+        var th=document.createElement("th");
+        th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+        th.innerHTML="Elettr.";
+        tr.appendChild(th);
+        var th=document.createElement("th");
+        th.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;font-weight:bold;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+        th.innerHTML="Numero cabina";
+        tr.appendChild(th);
+        table1.appendChild(tr);
+        table2.appendChild(tr.cloneNode(true));
+    
+        var i=1;
+        bancale_chiuso.pannelli.forEach(pannello =>
+        {
+            var tr=document.createElement("tr");
+            var td=document.createElement("td");
+            td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+            td.innerHTML=i;
+            tr.appendChild(td);
+            var td=document.createElement("td");
+            td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+            td.innerHTML=pannello.codice_pannello;
+            tr.appendChild(td);
+            var td=document.createElement("td");
+            td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+            td.innerHTML=pannello.id_distinta;
+            tr.appendChild(td);
+            var td=document.createElement("td");
+            td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+            if(pannello.elettrificato=="true")
+                td.innerHTML="V";
+            else
+                td.innerHTML="X";
+            tr.appendChild(td);
+            var td=document.createElement("td");
+            td.setAttribute("style","min-height:"+trHeight+"px;max-height:"+trHeight+"px;height:"+trHeight+"px;white-space: nowrap;overflow: hidden;text-overflow: clip;font-family: 'Questrial', sans-serif;font-size:3.5mm;border:.5mm solid black;box-sizing:border-box;padding-left:5px;padding-right:5px");
+            td.innerHTML=pannello.numero_cabina;
+            tr.appendChild(td);
+    
+            if(i<nRows)
+                table1.appendChild(tr);
+            else
+                table2.appendChild(tr);
+    
+            i++;
+        });
+    
+        //---------
+    
+        var script=document.createElement("script");
+        script.innerHTML="setTimeout(function(){window.print();}, 500);";
+        outerContainer.appendChild(script);
+     
+        printWindow.document.body.appendChild(outerContainer);
+    }
 }
 function getBancale(id_bancale)
 {

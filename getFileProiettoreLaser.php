@@ -90,21 +90,24 @@
         array_push($array_testo_programma,$istruzione);
     }
 
-    switch ($pannello["NumeroDima"])
+    if($pannello["faccia"] == "fronte")
     {
-        case 0:
-            disegnaPannello($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
-            disegnaRinforzi($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
-        break;
-        case 1:
-            disegnaLineeOrrizzontaliRinforzi($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
-        break;
-        case 2:
-            disegnaLineeOrrizzontaliRinforzi($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
-        break;
-        default:
-            disegnaX($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
-        break;
+        switch ($pannello["NumeroDima"])
+        {
+            case 0:
+                disegnaPannello($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
+                disegnaRinforzi($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
+            break;
+            case 1:
+                disegnaLineeOrrizzontaliRinforzi($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
+            break;
+            case 2:
+                disegnaLineeOrrizzontaliRinforzi($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
+            break;
+            default:
+                disegnaX($pannello,$disegna_pannello_file_proiettore,$inizio_file_proiettore,$linea_continua_file_proiettore,$fine_file_proiettore,$percorso_file_proiettore,$numero_tratti_file_proiettore,$spazio_tratti_file_proiettore,$array_testo_programma);
+            break;
+        }
     }
 
     foreach ($fine_file_proiettore as $riga)
