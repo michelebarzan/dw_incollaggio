@@ -26,16 +26,21 @@
             $bancale["stato"]=$row2['stato'];
             $bancale["pannelli"]=[];
 
-            $query="SELECT DISTINCT TOP (100) PERCENT dw_produzione.dbo.ordini_di_produzione.nome AS ordine_di_produzione, dw_produzione.dbo.distinta_ordini_di_produzione.numero_cabina, db_tecnico.dbo.pannelli.codice_pannello, dbo.pannelli_prodotti.id_distinta, dbo.pannelli_prodotti.id_pannello_prodotto, dw_produzione.dbo.filtro_pannelli.elettrificato, dw_produzione.dbo.lotti.lotto, dw_produzione.dbo.commesse.commessa, dw_produzione.dbo.commesse.descrizione
+            $query="SELECT DISTINCT 
+                                TOP (100) PERCENT dw_produzione.dbo.ordini_di_produzione.nome AS ordine_di_produzione, dw_produzione.dbo.distinta_ordini_di_produzione.numero_cabina, db_tecnico.dbo.pannelli.codice_pannello, 
+                                dbo.pannelli_prodotti.id_distinta, MIN(dbo.pannelli_prodotti.id_pannello_prodotto) AS id_pannello_prodotto, dw_produzione.dbo.filtro_pannelli.elettrificato, dw_produzione.dbo.lotti.lotto, 
+                                dw_produzione.dbo.commesse.commessa, dw_produzione.dbo.commesse.descrizione
                     FROM dbo.pannelli_prodotti INNER JOIN
-                                    dw_produzione.dbo.distinta_ordini_di_produzione ON dbo.pannelli_prodotti.id_distinta = dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta INNER JOIN
-                                    dw_produzione.dbo.ordini_di_produzione ON dw_produzione.dbo.distinta_ordini_di_produzione.ordine_di_produzione = dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione INNER JOIN
-                                    db_tecnico.dbo.pannelli ON dw_produzione.dbo.distinta_ordini_di_produzione.pannello = db_tecnico.dbo.pannelli.id_pannello INNER JOIN
-                                    dw_produzione.dbo.filtro_pannelli ON db_tecnico.dbo.pannelli.codice_pannello = dw_produzione.dbo.filtro_pannelli.CODPAS INNER JOIN
-                                    dw_produzione.dbo.lotti ON dw_produzione.dbo.ordini_di_produzione.lotto = dw_produzione.dbo.lotti.id_lotto INNER JOIN
-                                    dw_produzione.dbo.commesse ON dw_produzione.dbo.lotti.commessa = dw_produzione.dbo.commesse.id_commessa
-                    WHERE  (dbo.pannelli_prodotti.bancale = $id_bancale)
-                    ORDER BY dbo.pannelli_prodotti.id_pannello_prodotto DESC";
+                                dw_produzione.dbo.distinta_ordini_di_produzione ON dbo.pannelli_prodotti.id_distinta = dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta INNER JOIN
+                                dw_produzione.dbo.ordini_di_produzione ON dw_produzione.dbo.distinta_ordini_di_produzione.ordine_di_produzione = dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione INNER JOIN
+                                db_tecnico.dbo.pannelli ON dw_produzione.dbo.distinta_ordini_di_produzione.pannello = db_tecnico.dbo.pannelli.id_pannello INNER JOIN
+                                dw_produzione.dbo.filtro_pannelli ON db_tecnico.dbo.pannelli.codice_pannello = dw_produzione.dbo.filtro_pannelli.CODPAS INNER JOIN
+                                dw_produzione.dbo.lotti ON dw_produzione.dbo.ordini_di_produzione.lotto = dw_produzione.dbo.lotti.id_lotto INNER JOIN
+                                dw_produzione.dbo.commesse ON dw_produzione.dbo.lotti.commessa = dw_produzione.dbo.commesse.id_commessa
+                    WHERE (dbo.pannelli_prodotti.bancale =  $id_bancale)
+                    GROUP BY dw_produzione.dbo.ordini_di_produzione.nome, dw_produzione.dbo.distinta_ordini_di_produzione.numero_cabina, db_tecnico.dbo.pannelli.codice_pannello, dbo.pannelli_prodotti.id_distinta, 
+                                dw_produzione.dbo.filtro_pannelli.elettrificato, dw_produzione.dbo.lotti.lotto, dw_produzione.dbo.commesse.commessa, dw_produzione.dbo.commesse.descrizione
+                    ORDER BY MIN(dbo.pannelli_prodotti.id_pannello_prodotto) DESC";
             $result=sqlsrv_query($conn,$query);
             if($result==TRUE)
             {

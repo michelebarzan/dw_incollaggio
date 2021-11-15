@@ -664,7 +664,6 @@ function drawLana()
     var i=0;
     pannello.lane.forEach(lana =>
     {
-        console.log(lana);
         switch (lana.spess)
         {
             case 15:
@@ -855,14 +854,14 @@ function eliminaPannello(id_distinta)
                                 icon:"success",
                                 title: "Pannello eliminato",
                                 background:"#404040",
-                                showCloseButton:false,
+                                showCloseButton:true,
                                 showConfirmButton:false,
-                                allowOutsideClick:false,
-                                timer: 5000,
+                                allowOutsideClick:true,
+                                timer: 2500,
                                 timerProgressBar: true,
                                 onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="white";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";document.getElementsByClassName("swal2-close")[0].style.outline="none";},
                                 //onClose: () => {clearInterval(timerInterval)}
-                            })
+                            });
                         }
                     }
                 });

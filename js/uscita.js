@@ -236,6 +236,8 @@ async function checkPannello()
     {
         if(pannello!=null)
         {
+            clearInterval(interval);
+            //console.log("1")
             var response=await scaricaPannello();
             if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                 console.log(response);
@@ -251,6 +253,8 @@ async function checkPannello()
         {
             if(pannelloCheck.id_incollaggio != pannello.id_incollaggio)
             {
+                clearInterval(interval);
+                //console.log("2")
                 var response=await scaricaPannello();
                 if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                     console.log(response);
@@ -264,15 +268,20 @@ function scaricaPannello()
 {
     return new Promise(function (resolve, reject) 
     {
+        //console.log("scarico",pannello.faccia,pannello.id_distinta)
         $.get("scaricaPannello.php",
         {
             id_distinta:pannello.id_distinta,
-            faccia:pannello.faccia
+            faccia:pannello.faccia,
+            configurazione:pannello.configurazione
         },
         function(response, status)
         {
             if(status=="success")
             {
+                setTimeout(() => {
+                    interval = setInterval(intervalFunctions, frequenza_aggiornamento_dati_linea);
+                }, frequenza_aggiornamento_dati_linea);
                 resolve(response);
             }
         });
@@ -524,6 +533,7 @@ function logout()
 }
 function avanzaPannello()
 {
+    //console.clear();
     if(pannello!=null)
     {
         Swal.fire
@@ -594,7 +604,6 @@ function avanzaPannello()
 }
 async function chiudiBancale()
 {
-    console.log(`clicked`)
     document.getElementById("comandiUscitaButtonChiudiBancale").disabled = true;
     document.getElementById("comandiUscitaButtonCambiaBancale").disabled = true;
 
