@@ -6,7 +6,7 @@
 
     $query2="SELECT        dw_produzione.dbo.commesse.commessa, dw_produzione.dbo.commesse.descrizione AS descrizione_commessa, DATEPART(yy, GETDATE()) AS year, db_tecnico.dbo.pannelli.codice_pannello, 
                          db_tecnico.dbo.sviluppi.codice_sviluppo AS xside, ISNULL(db_tecnico.dbo.sviluppi_r.codice_sviluppo, '') AS yside, CASE WHEN lamiere.lung2 = 0 THEN CONVERT(varchar(MAX), lamiere.lung1) ELSE CONVERT(varchar(MAX), 
-                         lamiere.lung1) + '+' + CONVERT(varchar(MAX), lamiere.lung2) END AS larghezza, db_tecnico.dbo.lamiere.halt AS altezza, ISNULL(dw_produzione.dbo.finiture_cabine.finitura, '') AS finitura_lato_x, '' AS finitura_lato_y, 
+                         lamiere.lung1) + '+' + CONVERT(varchar(MAX), lamiere.lung2) END AS larghezza, db_tecnico.dbo.lamiere.tipo,db_tecnico.dbo.lamiere.halt AS altezza, ISNULL(dw_produzione.dbo.finiture_cabine.finitura, '') AS finitura_lato_x, '' AS finitura_lato_y, 
                          db_tecnico.dbo.pannelli.descrizionetec AS codice_certificato, db_tecnico.dbo.pannelli.resis AS classe, dw_produzione.dbo.lotti.id_materiale, dw_produzione.dbo.lotti.lotto
 FROM            dw_produzione.dbo.distinta_ordini_di_produzione INNER JOIN
                          dw_produzione.dbo.ordini_di_produzione ON dw_produzione.dbo.distinta_ordini_di_produzione.ordine_di_produzione = dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione INNER JOIN
@@ -40,6 +40,7 @@ WHERE        (dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta = $id_
             $data["classe"]=utf8_encode($row2['classe']);
             $data["id_materiale"]=utf8_encode($row2['id_materiale']);
             $data["lotto"]=utf8_encode($row2['lotto']);
+            $data["tipo"]=utf8_encode($row2['tipo']);
         }
     }
     else
