@@ -965,8 +965,8 @@ async function stampaEtichettaPannello(id_distinta)
 		var descrizione_pannello_array = data.descrizione_pannello.split(' ');
 		descrizione_pannello_array.shift();
 		descrizione_pannello_array.shift();
-		var descrizione_pannello = descrizione_pannello_array.join(" ");
-		span.innerHTML="<b style='margin-right:10px'>"+descrizione_pannello+"</b><b style='margin-left:10px'>"+data.codice_pannello+"</b>";
+		var descrizione_pannello = descrizione_pannello_array.join("-").replace(" ","-");
+		span.innerHTML="<b>"+descrizione_pannello+"-"+data.codice_pannello+"</b>";
 		div.appendChild(span);
 		var span=document.createElement("span");
 		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:4.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
