@@ -22,25 +22,30 @@
                 WHERE (dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = $id_ordine_di_produzione) AND (dw_produzione.dbo.distinta_ordini_di_produzione.numero_cabina = '$numero_cabina') AND 
                     (dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta NOT IN
                         (SELECT id_distinta
-                        FROM dbo.pannelli_caricati))
+                        FROM dbo.pannelli_caricati)) AND (dw_produzione.dbo.distinta_ordini_di_produzione.stazione =
+                             (SELECT        id_stazione
+                               FROM            dw_produzione.dbo.stazioni
+                               WHERE        (nome = 'incollaggio')))
                 ORDER BY db_tecnico.dbo.pannelli.codice_pannello";
     }
     else
     {
         $query2="SELECT DISTINCT 
-                    TOP (100) PERCENT dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta, db_tecnico.dbo.pannelli.id_pannello, db_tecnico.dbo.pannelli.codice_pannello, 
-                    dw_produzione.dbo.distinta_ordini_di_produzione.numero_cabina, dw_produzione.dbo.distinta_ordini_di_produzione.pannello, dw_produzione.dbo.filtro_pannelli.elettrificato, db_tecnico.dbo.pannelli.profilo, 
-                    dw_produzione.dbo.filtro_pannelli.configurazione, db_tecnico.dbo.lamiere.ang, db_tecnico.dbo.lamiere.lung1, db_tecnico.dbo.lamiere.lung2, db_tecnico.dbo.lamiere.halt
-                FROM dw_produzione.dbo.ordini_di_produzione INNER JOIN
-                    dw_produzione.dbo.distinta_ordini_di_produzione ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = dw_produzione.dbo.distinta_ordini_di_produzione.ordine_di_produzione INNER JOIN
-                    db_tecnico.dbo.pannelli ON dw_produzione.dbo.distinta_ordini_di_produzione.pannello = db_tecnico.dbo.pannelli.id_pannello INNER JOIN
-                    dw_produzione.dbo.filtro_pannelli ON db_tecnico.dbo.pannelli.codice_pannello = dw_produzione.dbo.filtro_pannelli.CODPAS INNER JOIN
-                    db_tecnico.dbo.lamiere ON db_tecnico.dbo.pannelli.id_lamiera = db_tecnico.dbo.lamiere.id_lamiera
-                WHERE (dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = $id_ordine_di_produzione) AND 
-                    (dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta NOT IN
-                        (SELECT id_distinta
-                        FROM dbo.pannelli_caricati))
-                ORDER BY db_tecnico.dbo.pannelli.codice_pannello";
+										 TOP (100) PERCENT dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta, db_tecnico.dbo.pannelli.id_pannello, db_tecnico.dbo.pannelli.codice_pannello, 
+										 dw_produzione.dbo.distinta_ordini_di_produzione.numero_cabina, dw_produzione.dbo.distinta_ordini_di_produzione.pannello, dw_produzione.dbo.filtro_pannelli.elettrificato, db_tecnico.dbo.pannelli.profilo, 
+										 dw_produzione.dbo.filtro_pannelli.configurazione, db_tecnico.dbo.lamiere.ang, db_tecnico.dbo.lamiere.lung1, db_tecnico.dbo.lamiere.lung2, db_tecnico.dbo.lamiere.halt
+				FROM            dw_produzione.dbo.ordini_di_produzione INNER JOIN
+										 dw_produzione.dbo.distinta_ordini_di_produzione ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = dw_produzione.dbo.distinta_ordini_di_produzione.ordine_di_produzione INNER JOIN
+										 db_tecnico.dbo.pannelli ON dw_produzione.dbo.distinta_ordini_di_produzione.pannello = db_tecnico.dbo.pannelli.id_pannello INNER JOIN
+										 dw_produzione.dbo.filtro_pannelli ON db_tecnico.dbo.pannelli.codice_pannello = dw_produzione.dbo.filtro_pannelli.CODPAS INNER JOIN
+										 db_tecnico.dbo.lamiere ON db_tecnico.dbo.pannelli.id_lamiera = db_tecnico.dbo.lamiere.id_lamiera
+				WHERE        (dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = $id_ordine_di_produzione) AND (dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta NOT IN
+											 (SELECT        id_distinta
+											   FROM            dbo.pannelli_caricati)) AND (dw_produzione.dbo.distinta_ordini_di_produzione.stazione =
+											 (SELECT        id_stazione
+											   FROM            dw_produzione.dbo.stazioni
+											   WHERE        (nome = 'incollaggio')))
+				ORDER BY db_tecnico.dbo.pannelli.codice_pannello";
     }
     $result2=sqlsrv_query($conn,$query2);
     if($result2==TRUE)
