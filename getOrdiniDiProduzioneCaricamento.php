@@ -12,20 +12,23 @@ FROM            dw_produzione.dbo.ordini_di_produzione INNER JOIN
     dw_produzione.dbo.lotti ON dw_produzione.dbo.ordini_di_produzione.lotto = dw_produzione.dbo.lotti.id_lotto INNER JOIN
     dw_produzione.dbo.distinta_ordini_di_produzione ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = dw_produzione.dbo.distinta_ordini_di_produzione.ordine_di_produzione INNER JOIN
     dw_produzione.dbo.stazioni ON dw_produzione.dbo.distinta_ordini_di_produzione.stazione = dw_produzione.dbo.stazioni.id_stazione INNER JOIN
-        (SELECT        COUNT(db_tecnico.dbo.pannelli.id_pannello) AS totale_pannelli, ordini_di_produzione_1.id_ordine_di_produzione
-          FROM            db_tecnico.dbo.pannelli INNER JOIN
-                                    dw_produzione.dbo.distinta_ordini_di_produzione AS distinta_ordini_di_produzione_1 ON db_tecnico.dbo.pannelli.id_pannello = distinta_ordini_di_produzione_1.pannello INNER JOIN
-                                    dw_produzione.dbo.ordini_di_produzione AS ordini_di_produzione_1 ON distinta_ordini_di_produzione_1.ordine_di_produzione = ordini_di_produzione_1.id_ordine_di_produzione
-          GROUP BY ordini_di_produzione_1.id_ordine_di_produzione) AS totale_pannelli_ordini_di_produzione ON 
-    dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = totale_pannelli_ordini_di_produzione.id_ordine_di_produzione INNER JOIN
+        (SELECT        ordine_di_produzione AS id_ordine_di_produzione, COUNT(id_distinta) AS totale_pannelli
+          FROM            dw_produzione.dbo.distinta_ordini_di_produzione AS distinta_ordini_di_produzione_1
+          WHERE        (stazione =
+                                        (SELECT        id_stazione
+                                          FROM            dw_produzione.dbo.stazioni AS stazioni_1
+                                          WHERE        (nome = 'incollaggio')))
+          GROUP BY ordine_di_produzione) AS totale_pannelli_ordini_di_produzione ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = totale_pannelli_ordini_di_produzione.id_ordine_di_produzione INNER JOIN
     dw_produzione.dbo.stati_ordini_di_produzione ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = dw_produzione.dbo.stati_ordini_di_produzione.ordine_di_produzione AND 
     dw_produzione.dbo.stazioni.id_stazione = dw_produzione.dbo.stati_ordini_di_produzione.stazione LEFT OUTER JOIN
-        (SELECT        COUNT(pannelli_1.id_pannello) AS pannelli_caricati, ordini_di_produzione_2.id_ordine_di_produzione
-          FROM            db_tecnico.dbo.pannelli AS pannelli_1 INNER JOIN
-                                    dw_produzione.dbo.distinta_ordini_di_produzione AS distinta_ordini_di_produzione_2 ON pannelli_1.id_pannello = distinta_ordini_di_produzione_2.pannello INNER JOIN
-                                    dbo.pannelli_caricati AS pannelli_caricati_1 ON distinta_ordini_di_produzione_2.id_distinta = pannelli_caricati_1.id_distinta INNER JOIN
-                                    dw_produzione.dbo.ordini_di_produzione AS ordini_di_produzione_2 ON distinta_ordini_di_produzione_2.ordine_di_produzione = ordini_di_produzione_2.id_ordine_di_produzione
-          GROUP BY ordini_di_produzione_2.id_ordine_di_produzione) AS pannelli_caricati ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = pannelli_caricati.id_ordine_di_produzione
+        (SELECT        distinta_ordini_di_produzione_2.ordine_di_produzione AS id_ordine_di_produzione, COUNT(pannelli_caricati_1.id_distinta) AS pannelli_caricati, distinta_ordini_di_produzione_2.stazione
+          FROM            dw_produzione.dbo.distinta_ordini_di_produzione AS distinta_ordini_di_produzione_2 INNER JOIN
+                                    dbo.pannelli_caricati AS pannelli_caricati_1 ON distinta_ordini_di_produzione_2.id_distinta = pannelli_caricati_1.id_distinta
+          GROUP BY distinta_ordini_di_produzione_2.ordine_di_produzione, distinta_ordini_di_produzione_2.stazione
+          HAVING         (distinta_ordini_di_produzione_2.stazione =
+                                        (SELECT        id_stazione
+                                          FROM            dw_produzione.dbo.stazioni AS stazioni_2
+                                          WHERE        (nome = 'incollaggio')))) AS pannelli_caricati ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = pannelli_caricati.id_ordine_di_produzione
 WHERE        (dw_produzione.dbo.stazioni.nome = 'incollaggio') AND (dw_produzione.dbo.ordini_di_produzione.eliminato = 'false') AND (dw_produzione.dbo.stati_ordini_di_produzione.stato = 'aperto')
 ORDER BY terminato, dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione DESC";
     $result2=sqlsrv_query($conn,$query2);
