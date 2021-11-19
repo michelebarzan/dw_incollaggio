@@ -7,7 +7,7 @@
     $query2="SELECT DISTINCT 
     TOP (100) PERCENT dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione, dw_produzione.dbo.ordini_di_produzione.nome AS ordine_di_produzione, dw_produzione.dbo.lotti.id_lotto, dw_produzione.dbo.lotti.lotto, 
     totale_pannelli_ordini_di_produzione.totale_pannelli, ISNULL(pannelli_caricati.pannelli_caricati, 0) AS pannelli_caricati, CASE WHEN pannelli_caricati = totale_pannelli THEN 'true' ELSE 'false' END AS terminato, 
-    dw_produzione.dbo.ordini_di_produzione.produzione_per_cabina, dw_produzione.dbo.ordini_di_produzione.assembly_id
+    dw_produzione.dbo.ordini_di_produzione.produzione_per_cabina, dw_produzione.dbo.ordini_di_produzione.assembly_id, dw_produzione.dbo.stati_ordini_di_produzione.stato
 FROM            dw_produzione.dbo.ordini_di_produzione INNER JOIN
     dw_produzione.dbo.lotti ON dw_produzione.dbo.ordini_di_produzione.lotto = dw_produzione.dbo.lotti.id_lotto INNER JOIN
     dw_produzione.dbo.distinta_ordini_di_produzione ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = dw_produzione.dbo.distinta_ordini_di_produzione.ordine_di_produzione INNER JOIN
@@ -17,14 +17,16 @@ FROM            dw_produzione.dbo.ordini_di_produzione INNER JOIN
                                     dw_produzione.dbo.distinta_ordini_di_produzione AS distinta_ordini_di_produzione_1 ON db_tecnico.dbo.pannelli.id_pannello = distinta_ordini_di_produzione_1.pannello INNER JOIN
                                     dw_produzione.dbo.ordini_di_produzione AS ordini_di_produzione_1 ON distinta_ordini_di_produzione_1.ordine_di_produzione = ordini_di_produzione_1.id_ordine_di_produzione
           GROUP BY ordini_di_produzione_1.id_ordine_di_produzione) AS totale_pannelli_ordini_di_produzione ON 
-    dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = totale_pannelli_ordini_di_produzione.id_ordine_di_produzione LEFT OUTER JOIN
+    dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = totale_pannelli_ordini_di_produzione.id_ordine_di_produzione INNER JOIN
+    dw_produzione.dbo.stati_ordini_di_produzione ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = dw_produzione.dbo.stati_ordini_di_produzione.ordine_di_produzione AND 
+    dw_produzione.dbo.stazioni.id_stazione = dw_produzione.dbo.stati_ordini_di_produzione.stazione LEFT OUTER JOIN
         (SELECT        COUNT(pannelli_1.id_pannello) AS pannelli_caricati, ordini_di_produzione_2.id_ordine_di_produzione
           FROM            db_tecnico.dbo.pannelli AS pannelli_1 INNER JOIN
                                     dw_produzione.dbo.distinta_ordini_di_produzione AS distinta_ordini_di_produzione_2 ON pannelli_1.id_pannello = distinta_ordini_di_produzione_2.pannello INNER JOIN
                                     dbo.pannelli_caricati AS pannelli_caricati_1 ON distinta_ordini_di_produzione_2.id_distinta = pannelli_caricati_1.id_distinta INNER JOIN
                                     dw_produzione.dbo.ordini_di_produzione AS ordini_di_produzione_2 ON distinta_ordini_di_produzione_2.ordine_di_produzione = ordini_di_produzione_2.id_ordine_di_produzione
           GROUP BY ordini_di_produzione_2.id_ordine_di_produzione) AS pannelli_caricati ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = pannelli_caricati.id_ordine_di_produzione
-WHERE        (dw_produzione.dbo.stazioni.nome = 'incollaggio') AND (dw_produzione.dbo.ordini_di_produzione.eliminato = 'false')
+WHERE        (dw_produzione.dbo.stazioni.nome = 'incollaggio') AND (dw_produzione.dbo.ordini_di_produzione.eliminato = 'false') AND (dw_produzione.dbo.stati_ordini_di_produzione.stato = 'aperto')
 ORDER BY terminato, dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione DESC";
     $result2=sqlsrv_query($conn,$query2);
     if($result2==TRUE)
