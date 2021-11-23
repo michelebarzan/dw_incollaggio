@@ -2,6 +2,8 @@
 
     include "connessione.php";
 
+    set_time_limit(240);
+
     $ordini_di_produzione=[];
 
     $query2="SELECT DISTINCT 
