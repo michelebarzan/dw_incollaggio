@@ -1193,13 +1193,15 @@ async function confermaSelectPannello(NumeroDima)
                 Swal.fire
                 ({
                     icon:"warning",
-                    title: `PANNELLO FRONTE CARICATO`,
-                    text: "CARICA LA FACCIA POSTERIORE DEL PANNELLO " + pannelloObj.codice_pannello,
+                    title: `PANNELLO FRONTE ${pannelloObj.codice_pannello} CARICATO`,
                     background:"#404040",
+                    width:"700",
                     showCloseButton:false,
                     showConfirmButton:true,
+                    showCancelButton:true,
                     allowOutsideClick:false,
-                    confirmButtonText: `CARICA PANNELLO RETRO`,
+                    confirmButtonText: `CARICA RETRO`,
+                    cancelButtonText:"NON CARICARE RETRO",
                     onOpen : function()
                             {
                                 document.getElementsByClassName("swal2-title")[0].style.color="#71B085";
@@ -1223,6 +1225,8 @@ async function confermaSelectPannello(NumeroDima)
                         else
                             successCaricaPannello();
                     }
+                    else
+                        successCaricaPannello();
                 });
             }
             else
