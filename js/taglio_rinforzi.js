@@ -67,8 +67,11 @@ function coloraArmadioRinforzi(pannello)
     $(".luce-riquadro-rinforzi").css({"display":"none","fill":""});
     pannello.rinforzi.forEach(rinforzo =>
     {
-        document.getElementById("luceRiquadroRinforzi"+rinforzo.riquadroArmadioRinforzi).style.display="block";
-        document.getElementById("luceRiquadroRinforzi"+rinforzo.riquadroArmadioRinforzi).style.fill=rinforzo.colore;
+		rinforzo.riquadriArmadioRinforzi.forEach(riquadroArmadioRinforzi =>
+		{
+			document.getElementById("luceRiquadroRinforzi"+riquadroArmadioRinforzi).style.display="block";
+			document.getElementById("luceRiquadroRinforzi"+riquadroArmadioRinforzi).style.fill=rinforzo.colore;
+		});
     });
 }
 function clearPannello()
