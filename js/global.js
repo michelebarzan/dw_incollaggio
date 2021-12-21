@@ -490,7 +490,7 @@ function drawRinforzi()
             var text=document.createElementNS('http://www.w3.org/2000/svg','text');
             text.setAttribute("style","fill:black;font-weight:bold");
             text.setAttribute("id","drawingQuotaOrrizontaleCodiceRinforzo"+i);
-            text.innerHTML=rinforzo.codice_materia_prima + " (" + rinforzo.hrin + " X " + rinforzo.lunghezza + ")";
+            text.innerHTML=rinforzo.codice_materia_prima + " (" + rinforzo.lunghezza + " X " + rinforzo.hrin + ")";
             svg.appendChild(text);
             document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).setAttribute("x",x_pannello+altezza_pannello-(lunghezza/2)-posy-((document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).getBBox().width)/2));
             document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).setAttribute("y",y_pannello+posx+((document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).getBBox().height-svgDefaultTextPadding)/2));
@@ -554,7 +554,7 @@ function drawRinforzi()
             var text=document.createElementNS('http://www.w3.org/2000/svg','text');
             text.setAttribute("style","fill:black;font-weight:bold;");
             text.setAttribute("id","drawingQuotaOrrizontaleCodiceRinforzo"+i);
-            text.innerHTML=rinforzo.codice_materia_prima + " (" + rinforzo.hrin + " X " + rinforzo.lunghezza + ")";
+            text.innerHTML=rinforzo.codice_materia_prima + " (" + rinforzo.lunghezza + " X " + rinforzo.hrin + ")";
             svg.appendChild(text);
             document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).setAttribute("x",(y_pannello+posx+(lunghezza/2)-((document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).getBBox().width)/2))*-1);
             document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).setAttribute("y",x_pannello+altezza_pannello-posy-((document.getElementById("drawingQuotaOrrizontaleCodiceRinforzo"+i).getBBox().height+svgDefaultTextPadding)/2));

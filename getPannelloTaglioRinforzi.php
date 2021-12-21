@@ -70,8 +70,19 @@
                     $rinforzo["descrizione_materiale"]=utf8_encode($row['descrizione_materiale']);
                     $rinforzo["lunghezza"]=$row['lunghezza'];
                     $rinforzo["vh"]=$row['vh'];
-                    $rinforzo["riquadroArmadioRinforzi"]=rand(1,27);
                     $rinforzo["hrin"]=$row['hrin'];
+					
+					$riquadriArmadioRinforzi=[];
+					$query3="SELECT posizione FROM dw_incollaggio.dbo.scaffale_rinforzi WHERE misura_1 = ".$row['lunghezza']." AND misura_2 = ".$row['hrin']." AND rinforzo = '".$row['codice_materia_prima']."'";
+					$result3=sqlsrv_query($conn,$query3);
+					if($result3==TRUE)
+					{
+						while($row3=sqlsrv_fetch_array($result3))
+						{
+							array_push($riquadriArmadioRinforzi,$row3["posizione"]);
+						}
+					}
+                    $rinforzo["riquadriArmadioRinforzi"]=$riquadriArmadioRinforzi;
 
                     array_push($rinforzi,$rinforzo);
                 }
