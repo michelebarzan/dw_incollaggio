@@ -1,6 +1,8 @@
 <?php
 
     include "connessione.php";
+
+	set_time_limit(240);
 	
     $id_distinta= $_POST['id_distinta'];
     $id_utente= $_POST['id_utente'];
@@ -17,16 +19,16 @@
     }
     else
 	{
-		if($faccia=='fronte')
+		/*if($faccia=='fronte')
 		{
-			$q3="INSERT INTO [dbo].[table_taglio_lana] ([n],[IdProduzione],[NPannelloInLavoro],[SpessorePannello],[OffsetYSfrido],[TipoLavorazione],[CoordinataX1],[CoordinataY1],[CoordinataX2],[CoordinataY2],[ValoreL],[ValoreH],[ValoreR],[AngoloAlpha],[AngoloBeta],[AngoloGamma],[tipo])
+			$q3="INSERT INTO [dbo].[table_taglio_lana] ([faccia],[id_distinta],[n],[IdProduzione],[NPannelloInLavoro],[SpessorePannello],[OffsetYSfrido],[TipoLavorazione],[CoordinataX1],[CoordinataY1],[CoordinataX2],[CoordinataY2],[ValoreL],[ValoreH],[ValoreR],[AngoloAlpha],[AngoloBeta],[AngoloGamma],[tipo])
  				EXEC plc_taglio_lana_4 $id_distinta";
 			$r3=sqlsrv_query($conn,$q3);
 			if($r3==FALSE)
 			{
 				die("error".$q3);
 			}
-		}
+		}*/
 		if($faccia=='retro')
 		{
 			$q3="INSERT INTO [dbo].[pannelli_linea] ([id_distinta],[stazione],[utente],[dataOra],[faccia],[dima])

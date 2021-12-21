@@ -1260,7 +1260,13 @@ function caricaPannello(id_distinta,faccia,id_utente,stazione,NumeroDima)
         function(response, status)
         {
             if(status=="success")
+            {
+                if(response.toLowerCase().indexOf("error")==-1 || response.toLowerCase().indexOf("notice")==-1 || response.toLowerCase().indexOf("warning")==-1)
+                {
+                    riempiTableTaglioLana(id_distinta,faccia);
+                }
                 resolve(response);
+            }
         });
     });
 }
