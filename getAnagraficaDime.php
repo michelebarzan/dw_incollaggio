@@ -27,6 +27,7 @@
             $dima["1OffsetPianoPannelloDeltaGamma"]=$row2['1OffsetPianoPannelloDeltaGamma'];
             $dima["descrizione"]=utf8_encode($row2['descrizione']);
             $dima["hidden"] = $row2['hidden'] === 'true'? true: false;
+            $dima["auto_rotazione"] = $row2['auto_rotazione'] === 1? true: false;
 
             array_push($dime,$dima);
         }

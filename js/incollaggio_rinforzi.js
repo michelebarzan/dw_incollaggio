@@ -52,6 +52,10 @@ async function displayPannello()
         document.getElementById("labelNumeroCabina").innerHTML="CABINA : <b>"+pannello.numero_cabina+"</b>";
         document.getElementById("labelIdDistinta").innerHTML="# : <b>"+pannello.id_distinta+" ("+pannello.faccia+")</b>";
         document.getElementById("labelIdIncollaggio").innerHTML="ID INCOLLAGGIO : <b>"+pannello.id_incollaggio+"</b>";
+        if(pannello.ruotato)
+            document.getElementById("labelRuotato").innerHTML="RUOTATO : <b>SI</b>";
+        else
+            document.getElementById("labelRuotato").innerHTML="RUOTATO : <b>NO</b>";
 
         getFileProiettoreLaser(pannello.codice_pannello);
         getDrawingLamiera();
@@ -99,6 +103,7 @@ function clearPannello()
     document.getElementById("labelNumeroCabina").innerHTML="CABINA :";
     document.getElementById("labelIdDistinta").innerHTML="# :";
     document.getElementById("labelIdIncollaggio").innerHTML="ID INCOLLAGGIO :";
+    document.getElementById("labelRuotato").innerHTML="RUOTATO :";
 
     document.getElementById("drawingInnerContainer").innerHTML="";
     drawing3DObj=null;
