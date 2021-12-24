@@ -10,5 +10,12 @@
     {
         die("error");
     }
+
+    $q2="DELETE FROM fogli_lana_pannelli WHERE id_distinta=$id_distinta";
+    $r2=sqlsrv_query($conn,$q2);
+    if($r2==FALSE)
+    {
+        die("error");
+    }
     
 ?>
