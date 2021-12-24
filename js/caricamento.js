@@ -470,8 +470,25 @@ async function getListPannelli()
 }
 async function checkPannelloPrecedente(id_distinta,id_pannello,codice_pannello,configurazione)
 {
+    Swal.fire
+    ({
+        width:"100%",
+        background:"transparent",
+        title:"Caricamento in corso...",
+        html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+        allowOutsideClick:false,
+        showCloseButton:false,
+        showConfirmButton:false,
+        allowEscapeKey:false,
+        showCancelButton:false,
+        onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+    });
+
     var pannelloObj=getFirstObjByPropValue(pannelli,"id_distinta",id_distinta);
     var pannelloPrecedente=await getPannelloPrecedente();
+
+    Swal.close();
+    
     if(pannelloPrecedente.elettrificato==pannelloObj.elettrificato)
         selectPannello(id_distinta,id_pannello,codice_pannello,configurazione);
     else
@@ -1098,6 +1115,20 @@ async function confermaSelectPannello(NumeroDima,ruotato)
 {
     if(pannelloSelezionato!=null)
     {
+        Swal.fire
+        ({
+            width:"100%",
+            background:"transparent",
+            title:"Caricamento in corso...",
+            html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+            allowOutsideClick:false,
+            showCloseButton:false,
+            showConfirmButton:false,
+            allowEscapeKey:false,
+            showCancelButton:false,
+            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+        });
+
         NumeroDimaPannelloSelezionato = NumeroDima;
         var pannelloObj=getFirstObjByPropValue(pannelli,"id_distinta",pannelloSelezionato);
 
@@ -1109,6 +1140,7 @@ async function confermaSelectPannello(NumeroDima,ruotato)
         }
         else
         {
+            Swal.close();
             if(pannelloObj.configurazione=="BF" && facciaPannelloSelezionato=="fronte")
             {
                 Swal.fire
@@ -1137,6 +1169,20 @@ async function confermaSelectPannello(NumeroDima,ruotato)
                 {
                     if (result.value)
                     {
+                        Swal.fire
+                        ({
+                            width:"100%",
+                            background:"transparent",
+                            title:"Caricamento in corso...",
+                            html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+                            allowOutsideClick:false,
+                            showCloseButton:false,
+                            showConfirmButton:false,
+                            allowEscapeKey:false,
+                            showCancelButton:false,
+                            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+                        });
+
                         var responseCaricaPannello = await caricaPannello(pannelloSelezionato,`retro`,id_utente,stazione.id_stazione,NumeroDimaPannelloSelezionato,ruotato);
                         if(responseCaricaPannello.toLowerCase().indexOf("error")>-1 || responseCaricaPannello.toLowerCase().indexOf("notice")>-1 || responseCaricaPannello.toLowerCase().indexOf("warning")>-1)
                         {
@@ -1144,7 +1190,10 @@ async function confermaSelectPannello(NumeroDima,ruotato)
                             console.log(responseCaricaPannello);
                         }
                         else
+                        {
+                            Swal.close();
                             successCaricaPannello();
+                        }
                     }
                     else
                         successCaricaPannello();

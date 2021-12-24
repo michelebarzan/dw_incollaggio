@@ -46,6 +46,11 @@
                             $result5=sqlsrv_query($conn,$query5);
                             if($result5==FALSE)
                                 die("error2".$query5);
+
+                            $query15="DELETE FROM fogli_lana_pannelli WHERE id_distinta=$id_distinta AND faccia='retro'";
+                            $result15=sqlsrv_query($conn,$query15);
+                            if($result15==FALSE)
+                                die("error2".$query15);
                         }
                     }
                     else
@@ -78,6 +83,11 @@
             $result=sqlsrv_query($conn,$query);
             if($result==FALSE)
                 die("error2".$query);
+
+            $query16="DELETE FROM fogli_lana_pannelli WHERE id_distinta=$id_distinta AND faccia='$faccia'";
+            $result16=sqlsrv_query($conn,$query16);
+            if($result16==FALSE)
+                die("error2".$query16);
         }
     }
     else
