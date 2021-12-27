@@ -4,7 +4,7 @@
 
     $pannello=null;
 
-    $query2="SELECT dbo.pannelli_linea.id_incollaggio, db_tecnico.dbo.pannelli.id_pannello, db_tecnico.dbo.pannelli.codice_pannello, db_tecnico.dbo.pannelli.descrizione, db_tecnico.dbo.pannelli.profilo, 
+    $query2="SELECT dbo.pannelli_linea.id_incollaggio,dbo.pannelli_linea.ruotato, db_tecnico.dbo.pannelli.id_pannello, db_tecnico.dbo.pannelli.codice_pannello, db_tecnico.dbo.pannelli.descrizione, db_tecnico.dbo.pannelli.profilo, 
                 dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta, db_tecnico.dbo.lamiere.lung1, db_tecnico.dbo.lamiere.lung2, db_tecnico.dbo.lamiere.halt, dw_produzione.dbo.distinta_ordini_di_produzione.numero_cabina, 
                 dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione, dw_produzione.dbo.ordini_di_produzione.nome AS nome_ordine_di_produzione, db_tecnico.dbo.lamiere.ang, 
                 dw_produzione.dbo.filtro_pannelli.configurazione, dbo.pannelli_linea.faccia, db_tecnico.dbo.lamiere.tipo, dbo.anagrafica_dime.id_dima, dbo.anagrafica_dime.nome AS nome_dima, 
@@ -18,7 +18,7 @@
                 dw_produzione.dbo.filtro_pannelli ON db_tecnico.dbo.pannelli.codice_pannello = dw_produzione.dbo.filtro_pannelli.CODPAS INNER JOIN
                 dbo.anagrafica_dime ON dbo.pannelli_linea.dima = dbo.anagrafica_dime.id_dima LEFT OUTER JOIN
                 db_tecnico.dbo.lamiere_r ON db_tecnico.dbo.pannelli.id_lamiera_r = db_tecnico.dbo.lamiere_r.id_lamiera_r
-            GROUP BY dbo.pannelli_linea.id_incollaggio, db_tecnico.dbo.pannelli.id_pannello, db_tecnico.dbo.pannelli.codice_pannello, db_tecnico.dbo.pannelli.descrizione, db_tecnico.dbo.pannelli.profilo, 
+            GROUP BY dbo.pannelli_linea.id_incollaggio,dbo.pannelli_linea.ruotato, db_tecnico.dbo.pannelli.id_pannello, db_tecnico.dbo.pannelli.codice_pannello, db_tecnico.dbo.pannelli.descrizione, db_tecnico.dbo.pannelli.profilo, 
                 dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta, db_tecnico.dbo.lamiere.lung1, db_tecnico.dbo.lamiere.lung2, db_tecnico.dbo.lamiere.halt, dw_produzione.dbo.distinta_ordini_di_produzione.numero_cabina, 
                 dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione, dw_produzione.dbo.ordini_di_produzione.nome, db_tecnico.dbo.lamiere.ang, dw_produzione.dbo.filtro_pannelli.configurazione, dbo.pannelli_linea.faccia, 
                 db_tecnico.dbo.lamiere.tipo, dbo.anagrafica_dime.id_dima, dbo.anagrafica_dime.nome, dbo.anagrafica_dime.descrizione, dbo.anagrafica_dime.NumeroDima, db_tecnico.dbo.lamiere_r.lung1, db_tecnico.dbo.lamiere_r.lung2, 
@@ -29,6 +29,7 @@
         while($row2=sqlsrv_fetch_array($result2))
         {
             $pannello["id_incollaggio"]=$row2['id_incollaggio'];
+            $pannello["ruotato"]=filter_var($row2['ruotato'], FILTER_VALIDATE_BOOLEAN);
             $pannello["id_distinta"]=$row2['id_distinta'];
             $pannello["id_pannello"]=$row2['id_pannello'];
             $pannello["codice_pannello"]=utf8_encode($row2['codice_pannello']);
