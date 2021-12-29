@@ -1060,7 +1060,7 @@ async function selezionaDima()
 				span.innerHTML=dimaObj.descrizione;
 				dimeItem.appendChild(span);
 
-                if(dimaObj.auto_rotazione && pannelloObj.lung2 < pannelloObj.lung1)
+                if(dimaObj.auto_rotazione && pannelloObj.lung2 > 0 && pannelloObj.lung2 < pannelloObj.lung1)
                 {
                     dimeItem.setAttribute("onclick","Swal.close();confermaSelectPannello("+dimaObj.NumeroDima+",true)");
 
