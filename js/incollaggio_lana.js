@@ -63,7 +63,8 @@ async function displayPannello()
 
         getDrawingLana();
         getPdf(pannello.codice_pannello);
-		stampaEtichettaPannello(pannello.id_distinta);
+        if(pannello.faccia == "fronte")
+		    stampaEtichettaPannello(pannello.id_distinta);
     }
     else
         clearPannello();
