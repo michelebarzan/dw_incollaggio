@@ -532,7 +532,7 @@ function getPannelloPrecedente()
             {
                 if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                 {
-                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #1",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                     console.log(response);
                     resolve({});
                 }
@@ -541,7 +541,7 @@ function getPannelloPrecedente()
                     try {
                         resolve(JSON.parse(response));
                     } catch (error) {
-                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #2",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                         console.log(response);
                         resolve({});
                     }
@@ -549,7 +549,7 @@ function getPannelloPrecedente()
             }
             else
             {
-                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #3",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                 console.log(response);
                 resolve({});
             }
@@ -796,7 +796,7 @@ function getOrdiniDiProduzione()
             {
                 if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                 {
-                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #4",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                     console.log(response);
                     resolve([]);
                 }
@@ -805,7 +805,7 @@ function getOrdiniDiProduzione()
                     try {
                         resolve(JSON.parse(response));
                     } catch (error) {
-                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #5",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                         console.log(response);
                         resolve([]);
                     }
@@ -813,7 +813,7 @@ function getOrdiniDiProduzione()
             }
             else
             {
-                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #6",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                 console.log(response);
                 resolve([]);
             }
@@ -834,7 +834,7 @@ function getCabine()
             {
                 if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                 {
-                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #7",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                     console.log(response);
                     resolve([]);
                 }
@@ -843,7 +843,7 @@ function getCabine()
                     try {
                         resolve(JSON.parse(response));
                     } catch (error) {
-                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #8",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                         console.log(response);
                         resolve([]);
                     }
@@ -851,7 +851,7 @@ function getCabine()
             }
             else
             {
-                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #9",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                 console.log(response);
                 resolve([]);
             }
@@ -874,7 +874,7 @@ function getPannelli()
             {
                 if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                 {
-                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #10",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                     console.log(response);
                     resolve([]);
                 }
@@ -883,7 +883,7 @@ function getPannelli()
                     try {
                         resolve(JSON.parse(response));
                     } catch (error) {
-                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #11",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                         console.log(response);
                         resolve([]);
                     }
@@ -891,7 +891,7 @@ function getPannelli()
             }
             else
             {
-                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #12",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                 console.log(response);
                 resolve([]);
             }
@@ -991,7 +991,7 @@ function getAnagraficaDime()
             {
                 if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                 {
-                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #13",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                     console.log(response);
                     resolve([]);
                 }
@@ -1000,7 +1000,7 @@ function getAnagraficaDime()
                     try {
                         resolve(JSON.parse(response));
                     } catch (error) {
-                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #14",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                         console.log(response);
                         resolve([]);
                     }
@@ -1008,7 +1008,7 @@ function getAnagraficaDime()
             }
             else
             {
-                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #15",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                 console.log(response);
                 resolve([]);
             }
@@ -1135,7 +1135,7 @@ async function confermaSelectPannello(NumeroDima,ruotato)
         var responseCaricaPannello = await caricaPannello(pannelloSelezionato,facciaPannelloSelezionato,id_utente,stazione.id_stazione,NumeroDimaPannelloSelezionato,ruotato);
         if(responseCaricaPannello.toLowerCase().indexOf("error")>-1 || responseCaricaPannello.toLowerCase().indexOf("notice")>-1 || responseCaricaPannello.toLowerCase().indexOf("warning")>-1)
         {
-            Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+            Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #16",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
             console.log(responseCaricaPannello);
         }
         else
@@ -1186,7 +1186,7 @@ async function confermaSelectPannello(NumeroDima,ruotato)
                         var responseCaricaPannello = await caricaPannello(pannelloSelezionato,`retro`,id_utente,stazione.id_stazione,NumeroDimaPannelloSelezionato,ruotato);
                         if(responseCaricaPannello.toLowerCase().indexOf("error")>-1 || responseCaricaPannello.toLowerCase().indexOf("notice")>-1 || responseCaricaPannello.toLowerCase().indexOf("warning")>-1)
                         {
-                            Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                            Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #17",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                             console.log(responseCaricaPannello);
                         }
                         else
@@ -1288,7 +1288,7 @@ function getPopupRiavviaLinea()
                 {
                     if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                     {
-                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #18",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                         console.log(response);
                     }
                 }
@@ -1307,7 +1307,7 @@ function getPannelliLinea()
             {
                 if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
                 {
-                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #19",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                     console.log(response);
                     resolve([]);
                 }
@@ -1316,7 +1316,7 @@ function getPannelliLinea()
                     try {
                         resolve(JSON.parse(response));
                     } catch (error) {
-                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #20",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                         console.log(response);
                         resolve({});
                     }
@@ -1324,7 +1324,7 @@ function getPannelliLinea()
             }
             else
             {
-                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #21",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                 console.log(response);
                 resolve({});
             }
@@ -1446,7 +1446,7 @@ function setLogoutStazioni(id_stazioni)
         {
             if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
             {
-				Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+				Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #22",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                 console.log(response);
             }
         }
@@ -1461,7 +1461,7 @@ function svuotaLinea()
         {
             if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
             {
-				Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+				Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #23",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
                 console.log(response);
             }
         }
