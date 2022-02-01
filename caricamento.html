@@ -37,7 +37,7 @@
         <div class="section-container">
             <div id="listOuterContainer">
                 <div class="listTitleContainer">
-                    <div class="listTitleItem" style="max-width:280px">
+                    <div class="listTitleItem" style="max-width:calc(100% - 240px);margin-right: 10px;">
                         <div class="listTitleItemRow">
                             <span id="labelLottoSelezionato">ODP :</span>
                         </div>
@@ -47,6 +47,11 @@
                     </div>
                     <div class="listTitleItem" id="containerNItems" style="margin-left:auto;"></div>
                     <div class="listTitleItem" style="margin-left:10px">
+                        <button class="listButtonSearch" onclick="getPopupSearch()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div class="listTitleItem" style="margin-left:10px;margin-right:10px">
                         <button class="listButtonIndietro" onclick="indietro()">
                             <i class="fas fa-chevron-left"></i>
                             <span>INDIETRO</span>

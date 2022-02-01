@@ -1467,3 +1467,137 @@ function svuotaLinea()
         }
     });
 }
+function getPopupSearch()
+{
+    var outerContainer=document.createElement("div");
+    outerContainer.setAttribute("class","popup-search-outer-container");
+
+    var title=document.createElement("span");
+    title.setAttribute("class","popup-search-title");
+    title.innerHTML="Ricerca";
+    outerContainer.appendChild(title);
+
+    var inputContainer=document.createElement("div");
+    inputContainer.setAttribute("class","popup-search-input-container");
+
+    var input = document.createElement("input");
+    input.setAttribute("type","text");
+    input.setAttribute("disabled","disabled");
+    input.setAttribute("id","inputPopupSearch");
+    input.setAttribute("style","margin-left:7.5px;margin-right:7.5px");
+    inputContainer.appendChild(input);
+    
+    var button = document.createElement("button");
+    button.setAttribute("onclick","document.getElementById('inputPopupSearch').value=''");
+    button.setAttribute("style","margin-right:7.5px");
+    button.innerHTML='<i class="fas fa-times"></i>';
+    inputContainer.appendChild(button);
+
+    var button = document.createElement("button");
+    button.setAttribute("onclick","searchView()");
+    button.setAttribute("style","margin-right:7.5px");
+    button.innerHTML='<i class="fas fa-search"></i>';
+    inputContainer.appendChild(button);
+
+    outerContainer.appendChild(inputContainer);
+
+    var numpad=document.createElement("div");
+    numpad.setAttribute("class","popup-search-keypad");
+    var button=document.createElement("button");button.innerHTML="<span>1</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('1')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>2</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('2')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>3</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('3')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>4</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('4')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>5</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('5')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>6</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('6')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>7</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('7')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>8</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('8')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>9</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('9')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>0</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('0')");numpad.appendChild(button);
+
+    var button=document.createElement("button");button.innerHTML="<span>Q</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('Q')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>W</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('W')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>E</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('E')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>R</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('R')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>T</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('T')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>Y</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('Y')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>U</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('U')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>I</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('I')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>O</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('O')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>P</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('P')");numpad.appendChild(button);
+
+    var button=document.createElement("button");button.innerHTML="<span>A</span>";button.setAttribute("style","margin-left:32.5px");button.setAttribute("onclick","clickNumpadButtonPopupSearch('A')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>S</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('S')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>D</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('D')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>F</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('F')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>G</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('G')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>H</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('H')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>J</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('J')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>K</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('K')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>L</span>";button.setAttribute("style","margin-right:32.5px");button.setAttribute("onclick","clickNumpadButtonPopupSearch('L')");numpad.appendChild(button);
+
+    var button=document.createElement("button");button.innerHTML="<span>Z</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('Z')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>X</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('X')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>C</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('C')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>V</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('V')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>B</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('B')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>N</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('N')");numpad.appendChild(button);
+    var button=document.createElement("button");button.innerHTML="<span>M</span>";button.setAttribute("onclick","clickNumpadButtonPopupSearch('M')");numpad.appendChild(button);
+
+    outerContainer.appendChild(numpad);
+
+    Swal.fire
+    ({
+        html:outerContainer.outerHTML,
+        showCloseButton: true,
+        showConfirmButton:false,
+        showCancelButton:false,
+        background:"#353535",
+        onOpen : function()
+                {
+                    document.body.classList.remove("swal2-height-auto");
+                    document.getElementsByClassName("swal2-content")[0].style.padding="0px";
+                    document.getElementsByClassName("swal2-popup")[0].style.padding="0px";
+                    document.getElementsByClassName("swal2-popup")[0].style.width="665px";
+                    document.getElementsByClassName("swal2-content")[0].style.boxShadow="0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)";
+                    document.activeElement.blur()
+                },
+    }).then((result) =>
+    {
+        searchView();
+    });
+}
+function clickNumpadButtonPopupSearch(n)
+{
+    document.getElementById("inputPopupSearch").value+=n;
+}
+function searchView()
+{
+    var value = document.getElementById("inputPopupSearch").value;
+
+    Swal.close();
+
+    var items = document.getElementById("listInnerContainer").getElementsByTagName("button");
+    var count = 0;
+    for (let index = 0; index < items.length; index++)
+    {
+        const item = items[index];
+
+        if(value == "" || value == null)
+            item.style.display="";
+        else
+        {
+            if(item.textContent.toLocaleLowerCase().replaceAll(" ","").replaceAll("-","").replaceAll("_","").replaceAll("(","").replaceAll(")","").indexOf(value.toLocaleLowerCase()) > -1)
+            {
+                item.style.display="";
+                count++;
+            }
+            else
+                item.style.display="none";
+        }
+    }
+
+    if(value == "" || value == null)
+        document.getElementById("containerNItems").innerHTML="<span><b style='letter-spacing:1px'>"+items.length+"</b> righe</span>";
+    else
+        document.getElementById("containerNItems").innerHTML="<span><b style='letter-spacing:1px'>"+count+"</b> righe</span>";
+}
