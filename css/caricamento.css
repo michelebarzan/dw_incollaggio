@@ -169,23 +169,37 @@ body
     overflow: hidden;
     text-overflow: ellipsis;
 }
+#containerNItems
+{
+    width: 70px;
+    max-width: 70px;
+    min-width: 70px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 #containerNItems span
 {
     font-family: 'Questrial', sans-serif;
     font-weight: normal;
     font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .listButtonIndietro
 {
     height: 30px;
-    line-height: 30px;
+    margin: 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
     margin-top: 10px;
     margin-bottom: 10px;
-    margin-right: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding:0px;
+    width: 100px;
     box-sizing: border-box;
-    text-align: left;
     border:none;
     background-color:#313131 ;
     border-radius: 4px;
@@ -207,6 +221,31 @@ body
     margin-right: 5px;
 }
 .listButtonIndietro:active
+{
+    color:#4C91CB;
+}
+.listButtonSearch
+{
+    height: 30px;
+    width: 30px;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 0px;
+    box-sizing: border-box;
+    border:none;
+    background-color:#313131 ;
+    border-radius: 4px;
+    color:#ddd;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    outline: none;
+    cursor: pointer;
+}
+.listButtonSearch:active
 {
     color:#4C91CB;
 }
@@ -639,3 +678,115 @@ body
 	text-align: left;
     text-transform: uppercase;
 }
+/*-----------------------------------*/
+.popup-search-outer-container
+{
+    width:665px;
+    height: 100%;
+    box-sizing: border-box;
+    padding-top: 7.5px;
+    margin-top: 7.5px;
+    margin-bottom: 7.5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.popup-search-title
+{
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    font-size: 16px;
+    color:white;
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+}
+.popup-search-input-container
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    width: 665px;
+}
+.popup-search-input-container input
+{
+    width: calc(100% - 145px);
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    height:50px;
+    box-sizing: border-box;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+    border:none;
+    border-radius: 4px;
+    font-size: 20px;
+    outline:none;
+    background-color: #5a5a5a;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    color:white;
+}
+.popup-search-input-container button
+{
+    height: 50px;
+    width: 50px;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    box-sizing: border-box;
+    border:none;
+    border-radius: 4px;
+    background-color: #5a5a5a;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    color:white;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    outline: none;
+    cursor: pointer;
+}
+.popup-search-input-container button:active
+{
+    color:#4C91CB;
+}
+.popup-search-keypad
+{
+    margin-top: 12.5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 650px;
+}
+.popup-search-keypad button
+{
+    padding: 0px;
+    margin: 0px;
+    width: 50px;
+    margin: 7.5px;
+    border: none;
+    height: 50px;
+    outline: none;
+    background-color: #5a5a5a;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.popup-search-keypad button:active
+{
+    background-color: gray;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.popup-search-keypad button span
+{
+    font-family: 'Questrial', sans-serif;
+    font-weight: normal;
+    font-size: 20px;
+    color:white;
+}
+/*-------------------------------------------------------------------------------*/
