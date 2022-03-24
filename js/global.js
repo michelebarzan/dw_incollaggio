@@ -440,21 +440,23 @@ function drawRinforzi()
     {
         switch (rinforzo.codice_materia_prima)
         {
-            case "R1":
-                rinforzo.colore="#85D3D5";
-            break;
-            case "R69":
-                rinforzo.colore="#C7CEEA";
-            break;
-            case "R74":
-                rinforzo.colore="#F4F4E0";
-            break;
-            case "R7":
-                rinforzo.colore="#ADB3DB";
-            break;
-            case "R65":
-                rinforzo.colore="#8EA9D8";
-            break;
+            case "R1":rinforzo.colore="#85D3D5";break;
+			case "R69":rinforzo.colore="#FFB2A6";break;
+			case "R74":rinforzo.colore="#F4F4E0";break;
+			case "R7":rinforzo.colore="#FCFFA6";break;
+			case "R65":rinforzo.colore="#8EA9D8";break;
+			case "R12":rinforzo.colore="#C0A080";break;
+			case "R19":rinforzo.colore="#9D5353";break;
+			case "R20":rinforzo.colore="#EFDAD7";break;
+			case "R2C":rinforzo.colore="#FBF8F1";break;
+			case "RASS98DX":rinforzo.colore="#D18CE0";break;
+			case "RASS98SX":rinforzo.colore="#54BAB9";break;
+			case "RBox":rinforzo.colore="#92A9BD";break;
+			case "RC1":rinforzo.colore="#89B5AF";break;
+			case "RO70":rinforzo.colore="#BCCC9A";break;
+			case "RP1":rinforzo.colore="#D5ECC2";break;
+			case "RR72":rinforzo.colore="#E08F62";break;
+			case "RSPC":rinforzo.colore="#EB6383";break;
         }
 
         if(document.getElementById("drawingLegendaButton"+rinforzo.colore)==null)
