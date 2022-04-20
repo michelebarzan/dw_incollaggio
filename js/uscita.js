@@ -852,7 +852,7 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
         img.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_incollaggio/images/logo_bw.png");
         row.appendChild(img);
     
-        //---------Ordine di produzione
+        /*//---------Ordine di produzione
         var row=document.createElement("div");
         row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:5%;max-height:5%;height:5%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box;padding-left:10px;padding-right:10px");
         var div=document.createElement("div");
@@ -864,6 +864,28 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
         var span=document.createElement("span");
         span.setAttribute("style","white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 4.8cm);max-width:calc(100% - 4.8cm);width:calc(100% - 4.8cm);");
         span.innerHTML=odp;
+        div.appendChild(span);
+        row.appendChild(div);
+        outerContainer.appendChild(row);*/
+    
+        //---------Ordine di produzione
+        var row=document.createElement("div");
+        row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:5%;max-height:5%;height:5%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
+        var div=document.createElement("div");
+        div.setAttribute("style","overflow:hidden;min-width:60%;max-width:60%;width:60%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
+        var span=document.createElement("span");
+        span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
+        span.innerHTML="<b>Ordine di produzione: </b>"+odp;
+        div.appendChild(span);
+        row.appendChild(div);
+        outerContainer.appendChild(row);
+    
+        //---------Firma
+        var div=document.createElement("div");
+        div.setAttribute("style","overflow:hidden;min-width:40%;max-width:40%;width:40%;min-height:100%;max-height:100%;height:100%;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box;padding-left:10px;padding-right:10px");
+        var span=document.createElement("span");
+        span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);white-space: nowrap;overflow: hidden;text-overflow: clip;");
+        span.innerHTML="<b>Firma: </b>";
         div.appendChild(span);
         row.appendChild(div);
         outerContainer.appendChild(row);
