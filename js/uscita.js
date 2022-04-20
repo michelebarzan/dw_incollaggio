@@ -987,7 +987,7 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
         //---------
     
         var script=document.createElement("script");
-        //script.innerHTML="setTimeout(function(){window.print();}, 500);";
+        script.innerHTML="setTimeout(function(){window.print();}, 500);";
         outerContainer.appendChild(script);
      
         printWindow.document.body.appendChild(outerContainer);
