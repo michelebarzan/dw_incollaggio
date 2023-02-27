@@ -945,7 +945,7 @@ async function stampaEtichettaPannello(id_distinta)
 		div.setAttribute("style","overflow:hidden;min-width:75%;max-width:75%;width:75%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
 		var span=document.createElement("span");
 		span.setAttribute("style","text-align:center;font-family: 'Libre Barcode 39', cursive;font-size: 12mm;padding-top: 5mm;;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="*"+data.codice_pannello+"*";
+		span.innerHTML="*"+id_distinta+"*";
 		div.appendChild(span);
 		row.appendChild(div);
 
@@ -1046,7 +1046,7 @@ async function stampaEtichettaPannello(id_distinta)
 		div.setAttribute("style","overflow:hidden;min-width:100%;max-width:100%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;box-sizing:border-box");
 		var span=document.createElement("span");
 		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>Id materiale: </b>"+data.id_materiale;
+		span.innerHTML="<b>N. cabina: </b>"+data.numero_cabina;
 		div.appendChild(span);
 		var span=document.createElement("span");
 		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
