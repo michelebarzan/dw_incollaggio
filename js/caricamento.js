@@ -592,48 +592,88 @@ function keyUpInputCodicePannello(input)
     if(view=="pannelli")
     {
         var value=input.value;console.log(value.length);
-        if(value.length>7)
+
+        if(isNaN(value))
         {
-            input.value="";
-            checkCodicePannello(value);
+            if(value.length>7)
+            {
+                input.value="";
+                
+                if(pannelli.length>0)
+                {
+                    document.getElementById("messageCodicePannello").innerHTML="<i class='fad fa-spinner-third fa-spin' style='color:#ddd'></i>";
+    
+                    var check=false;
+                    var codice_pannello;
+                    var id_distinta;
+                    var id_pannello;
+                    pannelli.forEach(pannello =>
+                    {
+                        if(pannello.codice_pannello.toLowerCase()==value.toLowerCase())
+                        {
+                            check=true;
+                            codice_pannello=pannello.codice_pannello;
+                            id_distinta=pannello.id_distinta;
+                            id_pannello=pannello.id_pannello;
+                            configurazione=pannello.configurazione;
+                        }
+                    });
+    
+                    if(check)
+                    {
+                        checkPannelloPrecedente(id_distinta,id_pannello,codice_pannello,configurazione);
+                        document.getElementById("messageCodicePannello").innerHTML="";
+                    }
+                    else
+                    {
+                        document.getElementById("messageCodicePannello").innerHTML="<span style='color:#DA6969'>Pannello non trovato</span>";
+                    }
+                }
+            }
+        }
+        else
+        {
+            var pannelloObj = pannelli.filter(function (pannello_lcl) {return pannello_lcl.id_distinta == parseInt(value)})[0];
+            
+            if(pannelloObj != undefined)
+            {
+                input.value="";
+
+                value = pannelloObj.codice_pannello;
+                
+                document.getElementById("messageCodicePannello").innerHTML="<i class='fad fa-spinner-third fa-spin' style='color:#ddd'></i>";
+    
+                var check=false;
+                var codice_pannello;
+                var id_distinta;
+                var id_pannello;
+                pannelli.forEach(pannello =>
+                {
+                    if(pannello.codice_pannello.toLowerCase()==value.toLowerCase())
+                    {
+                        check=true;
+                        codice_pannello=pannello.codice_pannello;
+                        id_distinta=pannello.id_distinta;
+                        id_pannello=pannello.id_pannello;
+                        configurazione=pannello.configurazione;
+                    }
+                });
+
+                if(check)
+                {
+                    checkPannelloPrecedente(id_distinta,id_pannello,codice_pannello,configurazione);
+                    document.getElementById("messageCodicePannello").innerHTML="";
+                }
+                else
+                {
+                    document.getElementById("messageCodicePannello").innerHTML="<span style='color:#DA6969'>Pannello non trovato</span>";
+                }
+            }
         }
     }
     else
     {
         input.value="";
-    }
-}
-function checkCodicePannello(value)
-{
-    if(pannelli.length>0)
-    {
-        document.getElementById("messageCodicePannello").innerHTML="<i class='fad fa-spinner-third fa-spin' style='color:#ddd'></i>";
-
-        var check=false;
-        var codice_pannello;
-        var id_distinta;
-        var id_pannello;
-        pannelli.forEach(pannello =>
-        {
-            if(pannello.codice_pannello.toLowerCase()==value.toLowerCase())
-            {
-                check=true;
-                codice_pannello=pannello.codice_pannello;
-                id_distinta=pannello.id_distinta;
-                id_pannello=pannello.id_pannello;
-                configurazione=pannello.configurazione;
-            }
-        });
-
-        if(check)
-        {
-            checkPannelloPrecedente(id_distinta,id_pannello,codice_pannello,configurazione);
-            document.getElementById("messageCodicePannello").innerHTML="";
-        }
-        else
-        {
-            document.getElementById("messageCodicePannello").innerHTML="<span style='color:#DA6969'>Pannello non trovato</span>";
-        }
     }
 }
 async function getPdf(fileName)
