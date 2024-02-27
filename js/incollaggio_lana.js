@@ -196,7 +196,7 @@ async function getPdf(fileName)
     iframe.setAttribute("onload","fixPdf(this)");
     var server_adress=await getServerValue("SERVER_ADDR");
     var server_port=await getServerValue("SERVER_PORT");
-    iframe.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_incollaggio_pdf/pdf.js/web/viewer.html?file=pdf/pannelli/"+fileName+".pdf");
+    iframe.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_mes_pdf/pdf.js/web/viewer.html?file=pdf/pannelli/"+fileName+".pdf");
     container.appendChild(iframe);
 }
 function fixPdf(iframe)
@@ -384,14 +384,6 @@ function checkTime(i)
 {
     if (i < 10) {i = "0" + i};
         return i;
-}
-function logout()
-{
-    $.get("logout.php",
-    function(response, status)
-    {
-        window.location = 'login.html';
-    });
 }
 function avanzaPannello()
 {
