@@ -964,7 +964,7 @@ async function stampaEtichettaPannello(id_distinta)
         var outerContainer = getEtichettaPannello(server_adress,server_port,data);
 
         var script=document.createElement("script");
-        script.innerHTML="setTimeout(function(){window.print();}, 2000);";
+        script.innerHTML="setTimeout(function(){window.print();}, 4000);";
         outerContainer.appendChild(script);
 
         printWindow.document.body.appendChild(outerContainer);
