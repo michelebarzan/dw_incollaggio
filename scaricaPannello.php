@@ -93,4 +93,57 @@
     else
         die("error1".$query2);
 
+    if($faccia == "fronte")
+    {
+        $database = "dw_produzione";
+        include "connessioneDb.php";
+
+        $query17="SELECT id_stazione FROM stazioni WHERE nome = 'assemblaggio_byrb'";
+        $result17=sqlsrv_query($conn,$query17);
+        if($result17==TRUE)
+        {
+            while($row17=sqlsrv_fetch_array($result17))
+            {
+                $id_stazione = $row17["id_stazione"];
+            }
+        }
+        else
+            die("error");
+
+        $query18="DELETE FROM pannelli_prodotti_ordini_di_produzione_utenti WHERE id_pannello_prodotto IN (SELECT id_pannello_prodotto FROM pannelli_prodotti_ordini_di_produzione WHERE id_distinta = $id_distinta AND stazione = $id_stazione)";
+        $result18=sqlsrv_query($conn,$query18);
+        if($result18==FALSE)
+            die("error".$query18);
+
+        $query19="DELETE FROM pannelli_prodotti_ordini_di_produzione WHERE id_distinta = $id_distinta AND stazione = $id_stazione";
+        $result19=sqlsrv_query($conn,$query19);
+        if($result19==FALSE)
+            die("error".$query19);
+            
+        $query20="INSERT INTO pannelli_prodotti_ordini_di_produzione (id_distinta,dataOra,stazione,errato) VALUES ($id_distinta, GETDATE(), $id_stazione,'false')";
+        $result20=sqlsrv_query($conn,$query20);
+        if($result20==FALSE)
+            die("error".$query20);
+
+        $query21="SELECT DISTINCT dw_incollaggio.dbo.distinta_pannelli_prodotti.utente
+                FROM dw_incollaggio.dbo.distinta_pannelli_prodotti INNER JOIN
+                                        dw_incollaggio.dbo.pannelli_prodotti ON dw_incollaggio.dbo.distinta_pannelli_prodotti.pannello_prodotto = dw_incollaggio.dbo.pannelli_prodotti.id_pannello_prodotto
+                WHERE (dw_incollaggio.dbo.pannelli_prodotti.id_distinta = $id_distinta) AND (dw_incollaggio.dbo.distinta_pannelli_prodotti.faccia = 'fronte') AND dw_incollaggio.dbo.distinta_pannelli_prodotti.utente <> (SELECT id_utente FROM utenti_mes WHERE username = 'stored_procedure')";
+        $result21=sqlsrv_query($conn,$query21);
+        if($result21==TRUE)
+        {
+            while($row21=sqlsrv_fetch_array($result21))
+            {
+                $id_utente = $row21["utente"];
+                
+                $query22="INSERT INTO pannelli_prodotti_ordini_di_produzione_utenti (id_pannello_prodotto,utente) SELECT id_pannello_prodotto, $id_utente FROM pannelli_prodotti_ordini_di_produzione WHERE id_distinta = $id_distinta AND stazione = $id_stazione";
+                $result22=sqlsrv_query($conn,$query22);
+                if($result22==FALSE)
+                    die("error".$query22);
+            }
+        }
+        else
+            die("error");
+    }
+
 ?>

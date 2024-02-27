@@ -8,7 +8,7 @@
 
     $pannelli=[];
 
-    if($produzione_per_cabina)
+    /*if($produzione_per_cabina)
     {
         $query2="SELECT DISTINCT 
                     TOP (100) PERCENT dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta, db_tecnico.dbo.pannelli.id_pannello, db_tecnico.dbo.pannelli.codice_pannello, 
@@ -25,11 +25,11 @@
                         FROM dbo.pannelli_caricati)) AND (dw_produzione.dbo.distinta_ordini_di_produzione.stazione =
                              (SELECT        id_stazione
                                FROM            dw_produzione.dbo.stazioni
-                               WHERE        (nome = 'incollaggio')))
+                               WHERE        (nome = 'assemblaggio_byrb')))
                 ORDER BY db_tecnico.dbo.pannelli.codice_pannello";
     }
     else
-    {
+    {*/
         $query2="SELECT DISTINCT 
 										 TOP (100) PERCENT dw_produzione.dbo.distinta_ordini_di_produzione.id_distinta, db_tecnico.dbo.pannelli.id_pannello, db_tecnico.dbo.pannelli.codice_pannello, 
 										 dw_produzione.dbo.distinta_ordini_di_produzione.numero_cabina, dw_produzione.dbo.distinta_ordini_di_produzione.pannello, dw_produzione.dbo.filtro_pannelli.elettrificato, db_tecnico.dbo.pannelli.profilo, 
@@ -44,9 +44,9 @@
 											   FROM            dbo.pannelli_caricati)) AND (dw_produzione.dbo.distinta_ordini_di_produzione.stazione =
 											 (SELECT        id_stazione
 											   FROM            dw_produzione.dbo.stazioni
-											   WHERE        (nome = 'incollaggio')))
+											   WHERE        (nome = 'assemblaggio_byrb')))
 				ORDER BY db_tecnico.dbo.pannelli.codice_pannello";
-    }
+    //}
     $result2=sqlsrv_query($conn,$query2);
     if($result2==TRUE)
     {
@@ -54,6 +54,7 @@
         {
             $pannello["id_distinta"]=$row2['id_distinta'];
             $pannello["id_pannello"]=$row2['id_pannello'];
+            $pannello["numero_cabina"]=utf8_encode($row2['numero_cabina']);
             $pannello["codice_pannello"]=utf8_encode($row2['codice_pannello']);
             $pannello["elettrificato"]=$row2['elettrificato'];
             $pannello["configurazione"]=strtoupper($row2['configurazione']);

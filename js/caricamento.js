@@ -587,9 +587,111 @@ function cleanPannelliItem()
         item.style.color="";
     }
 }
+async function getPannelloByBarcode(input)
+{
+    var value = input.value;
+    
+    input.value="";
+    document.getElementById("messageCodicePannello").innerHTML="";
+
+    if(view=="pannelli")
+    {
+        if(pannelli.length>0)
+        {
+            if(!isNaN(value))
+            {
+                Swal.fire
+                ({
+                    width:"100%",
+                    background:"transparent",
+                    title:"Caricamento in corso...",
+                    html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+                    allowOutsideClick:false,
+                    showCloseButton:false,
+                    showConfirmButton:false,
+                    allowEscapeKey:false,
+                    showCancelButton:false,
+                    onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+                });
+
+                document.getElementById("messageCodicePannello").innerHTML="<i class='fad fa-spinner-third fa-spin' style='color:#ddd'></i>";
+
+                var id_distinta = parseInt(value);
+
+                var id_distinta_incollaggio = [];
+                
+                var error = false;
+
+                var responseString = await getIdDistintaIncollaggio(id_distinta);
+                if(responseString.toLowerCase().indexOf("error")>-1 || responseString.toLowerCase().indexOf("warning")>-1 || responseString.toLowerCase().indexOf("notice")>-1)
+                    error = true;
+                else
+                    try {id_distinta_incollaggio = JSON.parse(responseString);} catch (err) {error = true;}
+
+                Swal.close();
+
+                if(id_distinta_incollaggio.length > 0)
+                {
+                    var found=false;
+                    var codice_pannello;
+                    var id_distinta;
+                    var id_pannello;
+                    var configurazione;
+
+                    for (let index = 0; index < id_distinta_incollaggio.length; index++)
+                    {
+                        const id_distinta_incollaggio_lcl = id_distinta_incollaggio[index];
+                        
+                        var pannelloObj = pannelli.filter(function (pannello_lcl) {return pannello_lcl.id_distinta == id_distinta_incollaggio_lcl})[0];
+
+                        if(pannelloObj != undefined)
+                        {
+                            found = true;
+                            codice_pannello=pannelloObj.codice_pannello;
+                            id_distinta=pannelloObj.id_distinta;
+                            id_pannello=pannelloObj.id_pannello;
+                            configurazione=pannelloObj.configurazione;
+
+                            break;
+                        }
+                    }
+    
+                    if(found)
+                    {
+                        checkPannelloPrecedente(id_distinta,id_pannello,codice_pannello,configurazione);
+                        document.getElementById("messageCodicePannello").innerHTML="";
+                    }
+                    else
+                    {
+                        document.getElementById("messageCodicePannello").innerHTML="<span style='color:#DA6969'>Pannello non trovato</span>";
+                    }
+                }
+                else
+                    document.getElementById("messageCodicePannello").innerHTML="<span style='color:#DA6969'>Pannello non trovato</span>";
+            }
+        }
+    }
+}
+function getIdDistintaIncollaggio(id_distinta)
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.post("getIdDistintaIncollaggio.php",{id_distinta},
+        function(response, status)
+        {
+            if(status=="success")
+            {
+                console.log(response);
+                resolve(response);
+            }
+            else
+                resolve("error");
+        });
+    });
+}
 function keyUpInputCodicePannello(input)
 {
-    if(view=="pannelli")
+    /*if(view=="pannelli")
     {
         var value=input.value;console.log(value.length);
 
@@ -674,7 +776,7 @@ function keyUpInputCodicePannello(input)
     else
     {
         input.value="";
-    }
+    }*/
 }
 async function getPdf(fileName)
 {
@@ -687,7 +789,7 @@ async function getPdf(fileName)
     iframe.setAttribute("onload","fixPdf(this)");
     var server_adress=await getServerValue("SERVER_ADDR");
     var server_port=await getServerValue("SERVER_PORT");
-    iframe.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_incollaggio_pdf/pdf.js/web/viewer.html?file=pdf/pannelli/"+fileName+".pdf");
+    iframe.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_mes_pdf/pdf.js/web/viewer.html?file=pdf/pannelli/"+fileName+".pdf");
     container.appendChild(iframe);
 }
 function fixPdf(iframe)
@@ -1295,14 +1397,6 @@ function indietro()
             }
         break;
     }
-}
-function logout()
-{
-    $.get("logout.php",
-    function(response, status)
-    {
-        window.location = 'login.html';
-    });
 }
 function getPopupRiavviaLinea()
 {

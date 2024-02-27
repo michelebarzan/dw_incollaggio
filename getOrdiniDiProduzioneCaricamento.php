@@ -19,7 +19,7 @@ FROM            dw_produzione.dbo.ordini_di_produzione INNER JOIN
           WHERE        (stazione =
                                         (SELECT        id_stazione
                                           FROM            dw_produzione.dbo.stazioni AS stazioni_1
-                                          WHERE        (nome = 'incollaggio')))
+                                          WHERE        (nome = 'assemblaggio_byrb')))
           GROUP BY ordine_di_produzione) AS totale_pannelli_ordini_di_produzione ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = totale_pannelli_ordini_di_produzione.id_ordine_di_produzione INNER JOIN
     dw_produzione.dbo.stati_ordini_di_produzione ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = dw_produzione.dbo.stati_ordini_di_produzione.ordine_di_produzione AND 
     dw_produzione.dbo.stazioni.id_stazione = dw_produzione.dbo.stati_ordini_di_produzione.stazione LEFT OUTER JOIN
@@ -30,8 +30,8 @@ FROM            dw_produzione.dbo.ordini_di_produzione INNER JOIN
           HAVING         (distinta_ordini_di_produzione_2.stazione =
                                         (SELECT        id_stazione
                                           FROM            dw_produzione.dbo.stazioni AS stazioni_2
-                                          WHERE        (nome = 'incollaggio')))) AS pannelli_caricati ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = pannelli_caricati.id_ordine_di_produzione
-WHERE        (dw_produzione.dbo.stazioni.nome = 'incollaggio') AND (dw_produzione.dbo.ordini_di_produzione.eliminato = 'false') AND (dw_produzione.dbo.stati_ordini_di_produzione.stato = 'aperto')
+                                          WHERE        (nome = 'assemblaggio_byrb')))) AS pannelli_caricati ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = pannelli_caricati.id_ordine_di_produzione
+WHERE        (dw_produzione.dbo.stazioni.nome = 'assemblaggio_byrb') AND (dw_produzione.dbo.ordini_di_produzione.eliminato = 'false') AND (dw_produzione.dbo.stati_ordini_di_produzione.stato = 'aperto')
 ORDER BY terminato, dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione DESC";
     $result2=sqlsrv_query($conn,$query2);
     if($result2==TRUE)

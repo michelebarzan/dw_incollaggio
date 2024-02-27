@@ -15,6 +15,11 @@
         <script src="js/caricamento.js"></script>
         <link href="css/caricamento.css" rel="stylesheet">
         <link href="css/fonts.css" rel="stylesheet">
+        
+		<script src="../dw_produzione_stampe/pannelli.js"></script>
+		<script src="../dw_produzione_stampe/doghe.js"></script>
+		<script src="../dw_produzione_stampe/pannelliGenerica.js"></script>
+		<script src="../dw_produzione_stampe/dogheGenerica.js"></script>
     </head>
     <body onclick="setFocus()">
         <header class="structure-header">
@@ -83,7 +88,7 @@
                     </div>
                     <div class="pdf-title-item" style="flex-direction: row;align-items: center;justify-content: flex-start;width:320px">
                         <div id="messageCodicePannello"></div>
-                        <input type="search" id="inputSearchCodicePannello" placeholder="Codice pannello..." onsearch="checkCodicePannello(this.value)" onkeyup="keyUpInputCodicePannello(this)">
+                        <input type="search" id="inputSearchCodicePannello" placeholder="Codice pannello..." onsearch="getPannelloByBarcode(this)" onkeyup="keyUpInputCodicePannello(this)">
                     </div>
                 </div>
                 <div id="pdfContainer"></div>

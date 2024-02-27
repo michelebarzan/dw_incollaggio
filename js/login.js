@@ -5,10 +5,120 @@ var checkCodiceCambiaStazione=false;
 var codiceCambiaStazione;
 var nClickNumpadButtonPopupCambiaStazione;
 var popupCodiceCambiaStazione=false;
+var stopLogin = false;
+var dw_mes_params;
 
 window.addEventListener("load", async function(event)
 {
+    Swal.fire
+    ({
+        width:"100%",
+        background:"transparent",
+        title:"Login in corso...",
+        html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+        allowOutsideClick:false,
+        showCloseButton:false,
+        showConfirmButton:true,
+        allowEscapeKey:false,
+        showCancelButton:false,
+        confirmButtonText:"Interrompi",
+        confirmButtonColor:"#DA6969",
+        onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";document.body.classList.remove("swal2-height-auto")}
+    }).then((result) => 
+    {
+        stopLogin = true;
+    });
+
     startClock();
+
+    dw_mes_params = await getDwMesParams();
+    
+    var tipo_login=await getSessionValue("tipo_login");
+
+    if(tipo_login == "utente")
+    {
+        var nome_login=await getSessionValue("username");
+        var id_utente=await getSessionValue("id_utente");
+
+        var container=document.getElementById("loginUsersContainer");
+        container.innerHTML = "";
+    
+        var item=document.createElement("button");
+        item.setAttribute("class","login-user-item");
+        item.setAttribute("onclick","location.reload()");
+    
+        var i=document.createElement("i");
+        i.setAttribute("class","fad fa-users");
+        item.appendChild(i);
+        
+        var span=document.createElement("span");
+        span.innerHTML=nome_login;
+        item.appendChild(span);
+    
+        var div=document.createElement("div");
+        item.appendChild(div);
+    
+        container.appendChild(item);
+    
+        setTimeout(() =>
+        {
+            if(!stopLogin)
+            {
+                $.post("login.php",
+                {
+                    username:nome_login,
+                    stazione:stazione.nome,
+                    id_utente
+                },
+                function(response, status)
+                {
+                    if(status=="success")
+                    {
+                        if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+                        {
+                            Swal.fire
+                            ({
+                                icon: 'error',
+                                title: 'Errore',
+                                text: "Se il problema persiste contatta l' amministratore",
+                                confirmButtonText:"Chiudi"
+                            });
+                            console.log(response);
+                        }
+                        else
+                        {
+                            window.location = stazione.pagina;
+                        }
+                    }
+                    else
+                    {
+                        Swal.fire
+                        ({
+                            icon: 'error',
+                            title: 'Errore',
+                            text: "Se il problema persiste contatta l' amministratore",
+                            confirmButtonText:"Chiudi"
+                        });
+                        console.log(status);
+                    }
+                });
+            }
+        }, 3000);
+    }
+    else
+    {
+        Swal.fire
+        ({
+            icon: 'error',
+            title: 'Errore',
+            text: "Login come squadra non consentito",
+            confirmButtonText:"OK",
+            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="black";document.getElementById("swal2-content").style.color="black";document.body.classList.remove("swal2-height-auto")}
+        }).then((result) => 
+        {
+            window.location = `${dw_mes_params.web_server_info.protocol}://${dw_mes_params.web_server_info.ip}:${dw_mes_params.web_server_info.port}/dw_mes_login/login.html?stazione=assemblaggio_byrb`;
+        });
+    }
 
     stazioni=await getAnagraficaStazioni();
 
@@ -21,7 +131,7 @@ window.addEventListener("load", async function(event)
     document.getElementById("loginStazioneContainer").value=stazione.nome;
     document.getElementById("loginStazioneContainer").innerHTML=stazione.label;
 
-    var container=document.getElementById("loginUsersContainer");
+    /*var container=document.getElementById("loginUsersContainer");
     utenti=await getUtentiStazioni();
     utenti.forEach(utente => 
     {
@@ -33,10 +143,6 @@ window.addEventListener("load", async function(event)
         var i=document.createElement("i");
         i.setAttribute("class","fad fa-user");
         item.appendChild(i);
-
-        /*var span=document.createElement("span");
-        span.innerHTML=utente.id_utente;
-        item.appendChild(span);*/
         
         var span=document.createElement("span");
         span.innerHTML=utente.username;
@@ -47,8 +153,20 @@ window.addEventListener("load", async function(event)
         item.appendChild(div);
 
         container.appendChild(item);
-    });
+    });*/
 });
+function getDwMesParams()
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.get("getDwMesParams.php",
+        function(response, status)
+        {
+            if(status=="success")
+                resolve(JSON.parse(response));
+        });
+    });
+}
 window.addEventListener("keydown", function(event)
 {
     var keyCode=event.keyCode;
@@ -99,7 +217,7 @@ function getAnagraficaStazioni()
         });
     });
 }
-function getUtentiStazioni()
+/*function getUtentiStazioni()
 {
     return new Promise(function (resolve, reject) 
     {
@@ -114,8 +232,8 @@ function getUtentiStazioni()
                 reject({status});
         });
     });
-}
-async function login(id_utente)
+}*/
+/*async function login(id_utente)
 {
     var button=document.getElementById("progressContainerLoginUserItem"+id_utente);
 
@@ -166,7 +284,7 @@ async function login(id_utente)
             console.log(status);
         }
     });
-}
+}*/
 function getPopupCambiaStazione(callback)
 {
     popupCodiceCambiaStazione=true;
