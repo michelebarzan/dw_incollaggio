@@ -4,8 +4,16 @@
 	
     $username= $_REQUEST ['username'];
     $stazione= $_REQUEST ['stazione'];
+    $id_utente= $_REQUEST ['id_utente'];
 
-    $error=true;
+    session_start();
+    $_SESSION['username']=$username;
+    $_SESSION['id_utente']=$id_utente;
+    $_SESSION['stazione']=$stazione;
+    
+    echo "ok";
+
+    /*$error=true;
 
     $q2="SELECT * FROM utenti_stazioni";
     $r2=sqlsrv_query($conn,$q2);
@@ -33,6 +41,6 @@
         {
             die("error");
         }
-    }
+    }*/
 
 ?>

@@ -9,7 +9,24 @@ var svgDefaultTextPadding=4;
 var stroke_width_lana_fresatura=15;
 var currentDrawing;
 var drawingFullscreen=false;
+var dw_mes_params;
 
+window.addEventListener("load", async function(event)
+{
+    dw_mes_params = await getDwMesParams();
+});
+function getDwMesParams()
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.get("getDwMesParams.php",
+        function(response, status)
+        {
+            if(status=="success")
+                resolve(JSON.parse(response));
+        });
+    });
+}
 function svuotaLogoutStazione(id_stazione)
 {
     $.get("svuotaLogoutStazione.php",{id_stazione},
@@ -100,10 +117,45 @@ function getFirstObjByPropValue(array,prop,propValue)
 }
 function logout()
 {
-    $.get("logout.php",
+    /*$.get("logout.php",
     function(response, status)
     {
         window.location = 'login.html';
+    });*/
+
+
+    Swal.fire
+    ({
+        width:"100%",
+        background:"transparent",
+        title:"Caricamento in corso...",
+        html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+        allowOutsideClick:false,
+        showCloseButton:false,
+        showConfirmButton:false,
+        allowEscapeKey:false,
+        showCancelButton:false,
+        onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+    });
+    
+    $.get("logout.php",
+    function(response, status)
+    {
+        if(status=="success")
+        {
+            if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+            {
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+            }
+        }
+        else
+        {
+            Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+            console.log(response);
+        }
+
+        window.location = `${dw_mes_params.web_server_info.protocol}://${dw_mes_params.web_server_info.ip}:${dw_mes_params.web_server_info.port}/dw_mes_login/login.html?stazione=assemblaggio_byrb`;
     });
 }
 async function checkLogoutStazione(id_stazione)
@@ -876,6 +928,88 @@ function eliminaPannello(id_distinta)
 async function stampaEtichettaPannello(id_distinta)
 {
 	if(id_distinta!=null && id_distinta!=undefined)
+    {
+        Swal.fire
+        ({
+            width:"100%",
+            background:"transparent",
+            title:"Caricamento in corso...",
+            html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+            allowOutsideClick:false,
+            showCloseButton:false,
+            showConfirmButton:false,
+            allowEscapeKey:false,
+            showCancelButton:false,
+            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+        });
+        
+        var server_adress=await getServerValue("SERVER_ADDR");
+        var server_port=await getServerValue("SERVER_PORT");
+
+        var data=await getDataEtichettaPannello(id_distinta);
+        
+        var printWindow = window.open('', '_blank', 'height=1080,width=1920');
+        
+        printWindow.document.body.setAttribute("onafterprint","window.close();");
+
+        printWindow.document.body.style.backgroundColor="white";
+        printWindow.document.body.style.overflow="hidden";
+
+        var link=document.createElement("link");
+        link.setAttribute("href","http://"+server_adress+":"+server_port+"/dw_produzione_stampe/css/fonts.css");
+        link.setAttribute("rel","stylesheet");
+        link.setAttribute("defer","defer");
+        printWindow.document.head.appendChild(link);
+
+        var outerContainer = getEtichettaPannello(server_adress,server_port,data);
+
+        var script=document.createElement("script");
+        script.innerHTML="setTimeout(function(){window.print();}, 2000);";
+        outerContainer.appendChild(script);
+
+        printWindow.document.body.appendChild(outerContainer);
+
+        Swal.close();
+    }
+}
+function getDataEtichettaPannello(id_distinta)
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.post("getDataEtichettaPannello.php",{id_distinta},
+        function(response, status)
+        {
+            if(status=="success")
+            {
+                if(response.toLowerCase().indexOf("error")>-1 || response.toLowerCase().indexOf("notice")>-1 || response.toLowerCase().indexOf("warning")>-1)
+                {
+                    Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                    console.log(response);
+                    resolve([]);
+                }
+                else
+                {
+                    try {
+                        resolve(JSON.parse(response));
+                    } catch (error) {
+                        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                        console.log(response);
+                        resolve({});
+                    }
+                }
+            }
+            else
+            {
+                Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+                console.log(response);
+                resolve({});
+            }
+        });
+    });   
+}
+/*async function stampaEtichettaPannello(id_distinta)
+{
+	if(id_distinta!=null && id_distinta!=undefined)
 	{
 		var server_adress=await getServerValue("SERVER_ADDR");
 		var server_port=await getServerValue("SERVER_PORT");
@@ -1069,7 +1203,7 @@ async function stampaEtichettaPannello(id_distinta)
 
 		printWindow.document.body.appendChild(outerContainer);
 	}
-}
+}*/
 function getDataEtichettaPannello(id_distinta)
 {
     return new Promise(function (resolve, reject) 
