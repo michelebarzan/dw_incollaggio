@@ -761,6 +761,7 @@ async function cambiaBancale()
 async function stampaEtichettaBancale(id_bancale_chiuso)
 {
     var bancale_chiuso=await getBancale(id_bancale_chiuso);
+
     if(bancale_chiuso.pannelli.length >0)
     {
         var costruzione = [];
@@ -800,7 +801,7 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
         printWindow.document.head.appendChild(style);
     
         var link=document.createElement("link");
-        link.setAttribute("href","http://"+server_adress+":"+server_port+"/dw_incollaggio/css/fonts.css");
+        link.setAttribute("href","http://"+server_adress+":"+server_port+"/"+url_applicazione_mes_stampe+"/css/fonts.css");
         link.setAttribute("rel","stylesheet");
         printWindow.document.head.appendChild(link);
     
@@ -841,7 +842,7 @@ async function stampaEtichettaBancale(id_bancale_chiuso)
         //---------Logo
         var img=document.createElement("img");
         img.setAttribute("style","min-width:10%;max-width:10%;width:10%;min-height:100%;max-height:100%;height:100%;box-sizing:border-box");
-        img.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_incollaggio/images/logo_bw.png");
+        img.setAttribute("src","http://"+server_adress+":"+server_port+"/"+url_applicazione_mes_stampe+"/images/logo_bw.png");
         row.appendChild(img);
     
         //---------Ordine di produzione
