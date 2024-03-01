@@ -14,7 +14,46 @@ var dw_mes_params;
 window.addEventListener("load", async function(event)
 {
     dw_mes_params = await getDwMesParams();
+
+    url_applicazione_mes_stampe = await getParametroMes("url_applicazione_mes_stampe");
+
+    //------------------------------------------------------------------------------------------
+
+    var script = document.createElement("script");
+    script.setAttribute("src","../"+url_applicazione_mes_stampe+"/pannelli.js");
+    document.head.appendChild(script);
+
+    var script = document.createElement("script");
+    script.setAttribute("src","../"+url_applicazione_mes_stampe+"/doghe.js");
+    document.head.appendChild(script);
+
+    var script = document.createElement("script");
+    script.setAttribute("src","../"+url_applicazione_mes_stampe+"/pannelliGenerica.js");
+    document.head.appendChild(script);
+
+    var script = document.createElement("script");
+    script.setAttribute("src","../"+url_applicazione_mes_stampe+"/dogheGenerica.js");
+    document.head.appendChild(script);
 });
+function getParametroMes(nome)
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.get("getParametroMes.php",
+        {
+            nome
+        },
+        function(response, status)
+        {
+            if(status=="success")
+            {
+                resolve(response);
+            }
+            else
+                reject({status});
+        });
+    });
+}
 function getDwMesParams()
 {
     return new Promise(function (resolve, reject) 
@@ -956,7 +995,7 @@ async function stampaEtichettaPannello(id_distinta)
         printWindow.document.body.style.overflow="hidden";
 
         var link=document.createElement("link");
-        link.setAttribute("href","http://"+server_adress+":"+server_port+"/dw_produzione_stampe/css/fonts.css");
+        link.setAttribute("href","http://"+server_adress+":"+server_port+"/"+url_applicazione_mes_stampe+"/css/fonts.css");
         link.setAttribute("rel","stylesheet");
         link.setAttribute("defer","defer");
         printWindow.document.head.appendChild(link);
