@@ -10,12 +10,15 @@ var stroke_width_lana_fresatura=15;
 var currentDrawing;
 var drawingFullscreen=false;
 var dw_mes_params;
+var url_applicazione_mes_stampe;
 
 window.addEventListener("load", async function(event)
 {
     dw_mes_params = await getDwMesParams();
 
     url_applicazione_mes_stampe = await getParametroMes("url_applicazione_mes_stampe");
+	
+	console.log(url_applicazione_mes_stampe)
 
     //------------------------------------------------------------------------------------------
 
@@ -1046,203 +1049,6 @@ function getDataEtichettaPannello(id_distinta)
         });
     });   
 }
-/*async function stampaEtichettaPannello(id_distinta)
-{
-	if(id_distinta!=null && id_distinta!=undefined)
-	{
-		var server_adress=await getServerValue("SERVER_ADDR");
-		var server_port=await getServerValue("SERVER_PORT");
-
-		var data=await getDataEtichettaPannello(id_distinta);
-
-		var eight = 6;
-		var width = 10;
-
-		var printWindow = window.open('', '_blank', 'height=1080,width=1920');
-		//printWindow.resizeTo(0,0);
-		//printWindow.moveTo(100000,100000);
-
-		//printWindow.document.body.setAttribute("onload","setTimeout(function(){window.print();}, 5000);");
-		printWindow.document.body.setAttribute("onafterprint","window.close();");
-
-		printWindow.document.body.style.backgroundColor="white";
-		printWindow.document.body.style.overflow="hidden";
-
-		var link=document.createElement("link");
-		link.setAttribute("href","http://"+server_adress+":"+server_port+"/dw_incollaggio/css/caricamento.css");
-		link.setAttribute("rel","stylesheet");
-		printWindow.document.head.appendChild(link);
-
-		var link=document.createElement("link");
-		link.setAttribute("href","http://"+server_adress+":"+server_port+"/dw_incollaggio/css/fonts.css");
-		link.setAttribute("rel","stylesheet");
-		printWindow.document.head.appendChild(link);
-
-		var outerContainer=document.createElement("div");
-		outerContainer.setAttribute("id","printContainer");
-		outerContainer.setAttribute("style","display: flex;flex-direction: row;align-items: flex-start;justify-content: flex-start;height: "+eight+"cm;width: "+width+"cm;border:.5mm solid black;box-sizing:border-box;margin:5mm");
-		
-		var innerContainer=document.createElement("div");
-		innerContainer.setAttribute("style","display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;min-width:90%;max-width:90%;width:90%;min-height:100%;max-height:100%;height:100%;box-sizing:border-box");
-
-		var row=document.createElement("div");
-		row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:13%;max-height:13%;height:13%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-
-		var img=document.createElement("img");
-		img.setAttribute("style","min-width:15%;max-width:15%;width:15%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;box-sizing:border-box");
-		img.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_incollaggio/images/logo_bw.png");
-		row.appendChild(img);
-
-		var div=document.createElement("div");
-		div.setAttribute("style","overflow:hidden;min-width:60%;max-width:60%;width:60%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-		var span=document.createElement("span");
-		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>Costruzione: </b>"+data.descrizione_commessa;
-		div.appendChild(span);
-		row.appendChild(div);
-
-		var div=document.createElement("div");
-		div.setAttribute("style","overflow:hidden;min-width:25%;max-width:25%;width:25%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-		var span=document.createElement("span");
-		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>0474/"+data.year+"</b>"
-		div.appendChild(span);
-		row.appendChild(div);
-
-		innerContainer.appendChild(row);
-
-		var row=document.createElement("div");
-		row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:18%;max-height:18%;height:18%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-
-		var div=document.createElement("div");
-		div.setAttribute("style","overflow:hidden;min-width:75%;max-width:75%;width:75%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-		var span=document.createElement("span");
-		span.setAttribute("style","text-align:center;font-family: 'Libre Barcode 39', cursive;font-size: 12mm;padding-top: 5mm;;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="*"+id_distinta+"*";
-		div.appendChild(span);
-		row.appendChild(div);
-
-		var div=document.createElement("div");
-		div.setAttribute("style","min-width:25%;max-width:25%;width:25%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-		var img=document.createElement("img");
-		img.setAttribute("style","min-height:100%;max-height:100%;height:100%;");
-		img.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_incollaggio/images/timone.png");
-		div.appendChild(img);
-		row.appendChild(div);
-
-		innerContainer.appendChild(row);
-
-		var row=document.createElement("div");
-		row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:22%;max-height:22%;height:22%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-
-		var div=document.createElement("div");
-		div.setAttribute("style","overflow:hidden;min-width:100%;max-width:100%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;box-sizing:border-box");
-		var span=document.createElement("span");
-		span.setAttribute("style","text-align:center;font-family: 'Questrial', sans-serif;font-size:6mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		var descrizione_pannello_array = data.descrizione_pannello.split(' ');
-		descrizione_pannello_array.shift();
-		descrizione_pannello_array.shift();
-		var descrizione_pannello = descrizione_pannello_array.join("-").replace(" ","-");
-		span.innerHTML="<b>"+descrizione_pannello+"-"+data.codice_pannello+"</b>";
-		div.appendChild(span);
-		var span=document.createElement("span");
-		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:4.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>XSIDE: </b>"+data.xside+" <b>YSIDE: </b>"+data.yside;
-		div.appendChild(span);
-		row.appendChild(div);
-
-		innerContainer.appendChild(row);
-
-		var row=document.createElement("div");
-		row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:9%;max-height:9%;height:9%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-
-		var div=document.createElement("div");
-		div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:50%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-		var span=document.createElement("span");
-		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>Larghezza: </b>"+data.larghezza;
-		div.appendChild(span);
-		row.appendChild(div);
-
-		var div=document.createElement("div");
-		div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:50%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-		var span=document.createElement("span");
-		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>Altezza: </b>"+data.altezza;
-		div.appendChild(span);
-		row.appendChild(div);
-
-		innerContainer.appendChild(row);
-
-		var row=document.createElement("div");
-		row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:15%;max-height:15%;height:15%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-
-		var div=document.createElement("div");
-		div.setAttribute("style","overflow:hidden;min-width:100%;max-width:100%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;box-sizing:border-box");
-		var span=document.createElement("span");
-		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>Finitura lato X: </b>"+data.finitura_lato_x;
-		div.appendChild(span);
-		var span=document.createElement("span");
-		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>Finitura lato Y: </b>"+data.finitura_lato_y;
-		div.appendChild(span);
-		row.appendChild(div);
-
-		innerContainer.appendChild(row);
-
-		var row=document.createElement("div");
-		row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:9%;max-height:9%;height:9%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;border-bottom:.5mm solid black;box-sizing:border-box");
-
-		var div=document.createElement("div");
-		div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:50%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-		var span=document.createElement("span");
-		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>Codice certificato: </b>"+data.codice_certificato;
-		div.appendChild(span);
-		row.appendChild(div);
-
-		var div=document.createElement("div");
-		div.setAttribute("style","overflow:hidden;min-width:50%;max-width:50%;width:50%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:row;align-items:center;justify-content:center;box-sizing:border-box");
-		var span=document.createElement("span");
-		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>Classe: </b>"+data.classe;
-		div.appendChild(span);
-		row.appendChild(div);
-
-		innerContainer.appendChild(row);
-
-		var row=document.createElement("div");
-		row.setAttribute("style","min-width:100%;max-width:100%;width:100%;min-height:15%;max-height:15%;height:15%;display: flex;flex-direction: row;align-items: center;justify-content: flex-start;box-sizing:border-box");
-
-		var div=document.createElement("div");
-		div.setAttribute("style","overflow:hidden;min-width:100%;max-width:100%;width:100%;min-height:100%;max-height:100%;height:100%;border-right:.5mm solid black;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;box-sizing:border-box");
-		var span=document.createElement("span");
-		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>N. cabina: </b>"+data.numero_cabina;
-		div.appendChild(span);
-		var span=document.createElement("span");
-		span.setAttribute("style","font-family: 'Questrial', sans-serif;font-size:3.5mm;min-width:calc(100% - 10px);max-width:calc(100% - 10px);width:calc(100% - 10px);margin-left:5px;margin-right:5px;white-space: nowrap;overflow: hidden;text-overflow: clip;");
-		span.innerHTML="<b>Lotto di prod.: </b>"+data.lotto;
-		div.appendChild(span);
-		row.appendChild(div);
-
-		innerContainer.appendChild(row);
-
-		outerContainer.appendChild(innerContainer);
-
-		var img=document.createElement("img");
-		img.setAttribute("style","min-width:10%;max-width:10%;width:10%;min-height:100%;max-height:100%;height:100%;box-sizing:border-box");
-		img.setAttribute("src","http://"+server_adress+":"+server_port+"/dw_incollaggio/images/alto.png");
-		outerContainer.appendChild(img);
-		
-		var script=document.createElement("script");
-		script.innerHTML="setTimeout(function(){window.print();}, 800);";
-		outerContainer.appendChild(script);
-
-		printWindow.document.body.appendChild(outerContainer);
-	}
-}*/
 function getDataEtichettaPannello(id_distinta)
 {
     return new Promise(function (resolve, reject) 
