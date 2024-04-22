@@ -334,6 +334,13 @@ body
     height: 35px;
     min-height: 35px;
 }
+.pannelli-item-text-container-row
+{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-evenly;
+}
 .odp-item span,.cabine-item span,.pannelli-item span
 {
     font-family: 'Questrial', sans-serif;
