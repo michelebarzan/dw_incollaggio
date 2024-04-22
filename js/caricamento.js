@@ -420,10 +420,20 @@ async function getListPannelli()
         var textContainer=document.createElement("div");
         textContainer.setAttribute("class","pannelli-item-text-container");
 
+        var textContainerRow=document.createElement("div");
+        textContainerRow.setAttribute("class","pannelli-item-text-container-row");
+
         var span=document.createElement("span");
-        span.setAttribute("style","margin-left:10px;");
+        span.setAttribute("style","margin-left:5px;");
         span.innerHTML=pannello.codice_pannello+" ("+pannello.configurazione+")";
-        textContainer.appendChild(span);
+        textContainerRow.appendChild(span);
+
+        var span=document.createElement("span");
+        span.setAttribute("style","margin-left:5px;");
+        span.innerHTML=pannello.numero_cabina;
+        textContainerRow.appendChild(span);
+
+        textContainer.appendChild(textContainerRow);
 
         if(pannello.elettrificato=="true")
         {
