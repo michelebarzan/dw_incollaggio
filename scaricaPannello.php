@@ -2,6 +2,8 @@
 
     include "connessione.php";
 
+    session_start();
+
     $id_distinta=$_REQUEST['id_distinta'];
     $faccia=$_REQUEST['faccia'];
     $configurazione=$_REQUEST['configurazione'];
@@ -125,25 +127,52 @@
         if($result20==FALSE)
             die("error".$query20);
 
-        $query21="SELECT DISTINCT dw_incollaggio.dbo.distinta_pannelli_prodotti.utente
-                FROM dw_incollaggio.dbo.distinta_pannelli_prodotti INNER JOIN
-                                        dw_incollaggio.dbo.pannelli_prodotti ON dw_incollaggio.dbo.distinta_pannelli_prodotti.pannello_prodotto = dw_incollaggio.dbo.pannelli_prodotti.id_pannello_prodotto
-                WHERE (dw_incollaggio.dbo.pannelli_prodotti.id_distinta = $id_distinta) AND (dw_incollaggio.dbo.distinta_pannelli_prodotti.faccia = 'fronte') AND dw_incollaggio.dbo.distinta_pannelli_prodotti.utente <> (SELECT id_utente FROM utenti_mes WHERE username = 'stored_procedure')";
-        $result21=sqlsrv_query($conn,$query21);
-        if($result21==TRUE)
+        $id_utenti = [];
+        if($_SESSION['id_squadra_uscita'] == null || $_SESSION['id_squadra_uscita'] == "")
         {
-            while($row21=sqlsrv_fetch_array($result21))
+            $query21="SELECT DISTINCT dw_incollaggio.dbo.distinta_pannelli_prodotti.utente
+                    FROM dw_incollaggio.dbo.distinta_pannelli_prodotti INNER JOIN
+                                            dw_incollaggio.dbo.pannelli_prodotti ON dw_incollaggio.dbo.distinta_pannelli_prodotti.pannello_prodotto = dw_incollaggio.dbo.pannelli_prodotti.id_pannello_prodotto
+                    WHERE (dw_incollaggio.dbo.pannelli_prodotti.id_distinta = $id_distinta) AND (dw_incollaggio.dbo.distinta_pannelli_prodotti.faccia = 'fronte') AND dw_incollaggio.dbo.distinta_pannelli_prodotti.utente <> (SELECT id_utente FROM utenti_mes WHERE username = 'stored_procedure')";
+            $result21=sqlsrv_query($conn,$query21);
+            if($result21==TRUE)
             {
-                $id_utente = $row21["utente"];
-                
-                $query22="INSERT INTO pannelli_prodotti_ordini_di_produzione_utenti (id_pannello_prodotto,utente) SELECT id_pannello_prodotto, $id_utente FROM pannelli_prodotti_ordini_di_produzione WHERE id_distinta = $id_distinta AND stazione = $id_stazione";
-                $result22=sqlsrv_query($conn,$query22);
-                if($result22==FALSE)
-                    die("error".$query22);
+                while($row21=sqlsrv_fetch_array($result21))
+                {
+                    $id_utente = $row21["utente"];
+                    
+                    array_push($id_utenti,$id_utente);
+                }
             }
+            else
+                die("error");
         }
         else
-            die("error");
+        {
+            $query21="SELECT utente
+                    FROM dw_produzione.dbo.utenti_squadre_mes
+                    WHERE (squadra = " . $_SESSION['id_squadra_uscita'] . ")";
+            $result21=sqlsrv_query($conn,$query21);
+            if($result21==TRUE)
+            {
+                while($row21=sqlsrv_fetch_array($result21))
+                {
+                    $id_utente = $row21["utente"];
+                    
+                    array_push($id_utenti,$id_utente);
+                }
+            }
+            else
+                die("error");
+        }
+            
+        foreach ($id_utenti as $id_utente)
+        {
+            $query22="INSERT INTO pannelli_prodotti_ordini_di_produzione_utenti (id_pannello_prodotto,utente) SELECT id_pannello_prodotto, $id_utente FROM pannelli_prodotti_ordini_di_produzione WHERE id_distinta = $id_distinta AND stazione = $id_stazione";
+            $result22=sqlsrv_query($conn,$query22);
+            if($result22==FALSE)
+                die("error".$query22);
+        }
     }
 
 ?>
