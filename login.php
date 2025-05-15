@@ -5,11 +5,13 @@
     $username= $_REQUEST ['username'];
     $stazione= $_REQUEST ['stazione'];
     $id_utente= $_REQUEST ['id_utente'];
+    $id_squadra= $_REQUEST ['id_squadra'];
 
     session_start();
     $_SESSION['username']=$username;
     $_SESSION['id_utente']=$id_utente;
     $_SESSION['stazione']=$stazione;
+    $_SESSION['id_squadra_uscita']=$id_squadra;
     
     echo "ok";
 
