@@ -35,10 +35,45 @@ window.addEventListener("load", async function(event)
     
     var tipo_login=await getSessionValue("tipo_login");
 
-    if(tipo_login == "utente")
+    stazioni=await getAnagraficaStazioni();
+
+    stazione=await getCookie("stazione");
+    if(stazione=="")
+        stazione=JSON.stringify(stazioni[0]);
+
+    stazione=JSON.parse(stazione);
+
+    document.getElementById("loginStazioneContainer").value=stazione.nome;
+    document.getElementById("loginStazioneContainer").innerHTML=stazione.label;
+
+    if(tipo_login == "squadra" && stazione.nome != "uscita")
     {
-        var nome_login=await getSessionValue("username");
-        var id_utente=await getSessionValue("id_utente");
+        Swal.fire
+        ({
+            icon: 'error',
+            title: 'Errore',
+            text: "Login come squadra non consentito",
+            confirmButtonText:"OK",
+            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="black";document.getElementById("swal2-content").style.color="black";document.body.classList.remove("swal2-height-auto")}
+        }).then((result) => 
+        {
+            window.location = `${dw_mes_params.web_server_info.protocol}://${dw_mes_params.web_server_info.ip}:${dw_mes_params.web_server_info.port}/dw_mes_login/login.html?stazione=assemblaggio_byrb`;
+        });
+    }
+    else
+    {
+        var id_squadra = "";
+        if(tipo_login == "squadra" && stazione.nome == "uscita")
+        {
+            id_squadra = await getSessionValue("id_squadra");
+            var nome_login="stored_procedure";
+            var id_utente=116;
+        }
+        else
+        {
+            var nome_login=await getSessionValue("username");
+            var id_utente=await getSessionValue("id_utente");
+        }
 
         var container=document.getElementById("loginUsersContainer");
         container.innerHTML = "";
@@ -68,7 +103,8 @@ window.addEventListener("load", async function(event)
                 {
                     username:nome_login,
                     stazione:stazione.nome,
-                    id_utente
+                    id_utente,
+                    id_squadra
                 },
                 function(response, status)
                 {
@@ -105,31 +141,6 @@ window.addEventListener("load", async function(event)
             }
         }, 3000);
     }
-    else
-    {
-        Swal.fire
-        ({
-            icon: 'error',
-            title: 'Errore',
-            text: "Login come squadra non consentito",
-            confirmButtonText:"OK",
-            onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="black";document.getElementById("swal2-content").style.color="black";document.body.classList.remove("swal2-height-auto")}
-        }).then((result) => 
-        {
-            window.location = `${dw_mes_params.web_server_info.protocol}://${dw_mes_params.web_server_info.ip}:${dw_mes_params.web_server_info.port}/dw_mes_login/login.html?stazione=assemblaggio_byrb`;
-        });
-    }
-
-    stazioni=await getAnagraficaStazioni();
-
-    stazione=await getCookie("stazione");
-    if(stazione=="")
-        stazione=JSON.stringify(stazioni[0]);
-
-    stazione=JSON.parse(stazione);
-
-    document.getElementById("loginStazioneContainer").value=stazione.nome;
-    document.getElementById("loginStazioneContainer").innerHTML=stazione.label;
 
     /*var container=document.getElementById("loginUsersContainer");
     utenti=await getUtentiStazioni();
