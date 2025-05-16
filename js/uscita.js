@@ -11,20 +11,7 @@ var bancale;
 
 window.addEventListener("load", async function(event)
 {
-            $.get("scaricaPannello.php",
-        {
-            /*id_distinta:pannello.id_distinta,
-            faccia:pannello.faccia,
-            configurazione:pannello.configurazione*/
-        },
-        function(response, status)
-        {
-            if(status=="success")
-            {
-                
-            }
-        });
-    /*startClock();
+    startClock();
 
     id_utente=await getSessionValue("id_utente");
 
@@ -53,7 +40,7 @@ window.addEventListener("load", async function(event)
 
     displayBancale();
     
-    interval = setInterval(intervalFunctions, frequenza_aggiornamento_dati_linea);*/
+    interval = setInterval(intervalFunctions, frequenza_aggiornamento_dati_linea);
 });
 async function displayBancale()
 {
