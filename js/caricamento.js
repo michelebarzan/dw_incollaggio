@@ -1293,7 +1293,7 @@ async function confermaSelectPannello(NumeroDima,ruotato)
         else
         {
             Swal.close();
-            if(pannelloObj.configurazione=="BF" && facciaPannelloSelezionato=="fronte")
+            if((pannelloObj.configurazione.toLowerCase()=="bf" || pannelloObj.configurazione.toLowerCase()=="carter") && facciaPannelloSelezionato=="fronte")
             {
                 Swal.fire
                 ({
