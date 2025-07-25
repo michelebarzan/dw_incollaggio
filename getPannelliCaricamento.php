@@ -1,6 +1,9 @@
 <?php
 
     include "connessione.php";
+	
+	set_time_limit(0);
+    ini_set('memory_limit', '-1');
 
     $id_ordine_di_produzione=$_REQUEST["id_ordine_di_produzione"];
     $numero_cabina=$_REQUEST["numero_cabina"];
