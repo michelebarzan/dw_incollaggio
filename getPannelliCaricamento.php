@@ -1,7 +1,24 @@
 <?php
 
-    include "connessione.php";
-	
+	// Load credentials from JSON
+	$dw_incollaggio_params_file = fopen("C:\dw_incollaggio_params.json", "r") or die("error");
+	$dw_incollaggio_params = json_decode(fread($dw_incollaggio_params_file, filesize("C:\dw_incollaggio_params.json")), true);
+	fclose($dw_incollaggio_params_file);
+
+	// Build connection array with extended login timeout
+	$connectionInfo = array(
+		"Database" => "dw_incollaggio",
+		"UID" => $dw_incollaggio_params['sql_server_info']['username'],
+		"PWD" => $dw_incollaggio_params['sql_server_info']['password'],
+		"LoginTimeout" => 60, // default is 15; increase to 60 seconds
+		"TrustServerCertificate" => true
+	);
+
+	// Establish connection
+	$conn = sqlsrv_connect($dw_incollaggio_params['sql_server_info']['ip'], $connectionInfo);
+	if(!$conn)
+		die("error");
+
 	set_time_limit(0);
     ini_set('memory_limit', '-1');
 
@@ -50,7 +67,8 @@
 											   WHERE        (nome = 'assemblaggio_byrb')))
 				ORDER BY db_tecnico.dbo.pannelli.codice_pannello";
     //}
-    $result2=sqlsrv_query($conn,$query2);
+    $options = array("QueryTimeout" => 240);
+	$result2 = sqlsrv_query($conn, $query2, array(), $options);
     if($result2==TRUE)
     {
         while($row2=sqlsrv_fetch_array($result2))
@@ -71,7 +89,7 @@
         }
     }
     else
-        die("error");
+        die(print_r(sqlsrv_errors(),TRUE));
 
     echo json_encode($pannelli);
 
