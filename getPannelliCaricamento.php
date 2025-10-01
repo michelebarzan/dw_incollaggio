@@ -1,24 +1,6 @@
 <?php
 
-	// Load credentials from JSON
-	$dw_incollaggio_params_file = fopen("C:\dw_incollaggio_params.json", "r") or die("error");
-	$dw_incollaggio_params = json_decode(fread($dw_incollaggio_params_file, filesize("C:\dw_incollaggio_params.json")), true);
-	fclose($dw_incollaggio_params_file);
-
-	// Build connection array with extended login timeout
-	$connectionInfo = array(
-		"Database" => "dw_incollaggio",
-		"UID" => $dw_incollaggio_params['sql_server_info']['username'],
-		"PWD" => $dw_incollaggio_params['sql_server_info']['password'],
-		"LoginTimeout" => 180, // default is 15; increase to 60 seconds
-		"TrustServerCertificate" => true
-	);
-	
-
-	// Establish connection
-	$conn = sqlsrv_connect($dw_incollaggio_params['sql_server_info']['ip'], $connectionInfo);
-	if(!$conn)
-		die("error");
+    include "connessione.php";
 	
 	// After successful sqlsrv_connect($conn, ...)
 
