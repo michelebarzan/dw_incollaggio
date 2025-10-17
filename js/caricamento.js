@@ -1,7 +1,5 @@
 var iframe;
 var id_utente;
-var interval;
-var frequenza_aggiornamento_dati_linea
 var stazione;
 var stazioni;
 var view;
@@ -21,9 +19,6 @@ window.addEventListener("load", async function(event)
     startClock();
 
     id_utente=await getSessionValue("id_utente");
-
-    frequenza_aggiornamento_dati_linea=await getParametro("frequenza_aggiornamento_dati_linea");
-    frequenza_aggiornamento_dati_linea=parseInt(frequenza_aggiornamento_dati_linea);
     
     var nome_stazione=await getSessionValue("stazione");
 
@@ -43,14 +38,16 @@ window.addEventListener("load", async function(event)
     getListOrdiniDiProduzione();
 
     setFocus();
+
+    var frequenza_aggiornamento_check_logout=await getParametro("frequenza_aggiornamento_check_logout");
+    frequenza_aggiornamento_check_logout=parseInt(frequenza_aggiornamento_check_logout);
+
+    var frequenza_aggiornamento_check_errori_plc=await getParametro("frequenza_aggiornamento_check_errori_plc");
+    frequenza_aggiornamento_check_errori_plc=parseInt(frequenza_aggiornamento_check_errori_plc);
     
-    interval = setInterval(intervalFunctions, frequenza_aggiornamento_dati_linea);
+    setInterval(() => checkLogoutStazione(stazione.id_stazione), frequenza_aggiornamento_check_logout);
+    setInterval(() => checkErroriPlc(), frequenza_aggiornamento_check_errori_plc);
 });
-function intervalFunctions()
-{
-    checkLogoutStazione(stazione.id_stazione);
-	checkErroriPlc();
-}
 function checkErroriPlc()
 {
 	$.get("checkErroriPlc.php",

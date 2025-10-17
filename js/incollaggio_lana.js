@@ -38,6 +38,11 @@ window.addEventListener("load", async function(event)
     displayPannello();
     
     interval = setInterval(intervalFunctions, frequenza_aggiornamento_dati_linea);
+
+    var frequenza_aggiornamento_check_logout=await getParametro("frequenza_aggiornamento_check_logout");
+    frequenza_aggiornamento_check_logout=parseInt(frequenza_aggiornamento_check_logout);
+    
+    setInterval(() => checkLogoutStazione(stazione.id_stazione), frequenza_aggiornamento_check_logout);
 });
 async function displayPannello()
 {
@@ -131,7 +136,6 @@ function getPannello()
 function intervalFunctions()
 {
     checkPannello();
-    checkLogoutStazione(stazione.id_stazione);
 }
 async function checkPannello()
 {
