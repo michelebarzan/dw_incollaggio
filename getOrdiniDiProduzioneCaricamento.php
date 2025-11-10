@@ -32,7 +32,8 @@ FROM            dw_produzione.dbo.ordini_di_produzione INNER JOIN
                                           FROM            dw_produzione.dbo.stazioni AS stazioni_2
                                           WHERE        (nome = 'assemblaggio_byrb')))) AS pannelli_caricati ON dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione = pannelli_caricati.id_ordine_di_produzione
 WHERE        (dw_produzione.dbo.stazioni.nome = 'assemblaggio_byrb') AND (dw_produzione.dbo.ordini_di_produzione.eliminato = 'false') AND (dw_produzione.dbo.stati_ordini_di_produzione.stato = 'aperto')
-ORDER BY terminato, dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione DESC";
+ORDER BY terminato, dw_produzione.dbo.ordini_di_produzione.id_ordine_di_produzione DESC
+OPTION (RECOMPILE)";
     $result2=sqlsrv_query($conn,$query2);
     if($result2==TRUE)
     {
