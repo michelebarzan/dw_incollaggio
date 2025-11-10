@@ -3,7 +3,15 @@
 	$dw_incollaggio_params=json_decode(fread($dw_incollaggio_params_file,filesize("C:\dw_incollaggio_params.json")), true);
 	fclose($dw_incollaggio_params_file);
 
-	$connectionInfo=array("Database"=>"dw_incollaggio", "UID"=>$dw_incollaggio_params['sql_server_3_info']['username'], "PWD"=>$dw_incollaggio_params['sql_server_3_info']['password']);
+	$connectionInfo = array
+	(
+		"Database"=>"dw_incollaggio",
+		"UID"=>$dw_incollaggio_params['sql_server_3_info']['username'],
+		"PWD"=>$dw_incollaggio_params['sql_server_3_info']['password'],
+		"ConnectionPooling" => 0,
+		"LoginTimeout"      => 5
+	);
+
 	$conn = sqlsrv_connect($dw_incollaggio_params['sql_server_3_info']['ip'],$connectionInfo);
 	if(!$conn)
 		die("error");
