@@ -696,6 +696,22 @@ function getIdDistintaIncollaggio(id_distinta)
         });
     });
 }
+function getAltertLanaPrefresataObj(codice_pannello,id_ordine_di_produzione)
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.post("getAltertLanaPrefresataObj.php",{codice_pannello,id_ordine_di_produzione},
+        function(response, status)
+        {
+            if(status=="success")
+            {
+                resolve(response);
+            }
+            else
+                resolve("error");
+        });
+    });
+}
 function keyUpInputCodicePannello(input)
 {
     /*if(view=="pannelli")
@@ -1184,80 +1200,111 @@ async function selezionaDima()
 
         var pannelloObj=getFirstObjByPropValue(pannelli,"id_distinta",pannelloSelezionato);
 
-		var anagrafica_dime=await getAnagraficaDime();
+        var alertLanaPrefresataObj = null;
+        var error = false;
+        var responseString = await getAltertLanaPrefresataObj(pannelloObj.codice_pannello,odpSelezionato);
+        if(responseString.toLowerCase().indexOf("error")>-1 || responseString.toLowerCase().indexOf("warning")>-1 || responseString.toLowerCase().indexOf("notice")>-1)
+            error = true;
+        else
+            try {alertLanaPrefresataObj = JSON.parse(responseString);} catch (err) {error = true;}
 
-		var outerContainer=document.createElement("div");
-		outerContainer.setAttribute("class","popup-dime-outer-container");
+        if(error)
+            Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #16",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+        else
+        {
+            if(alertLanaPrefresataObj.fresatura_sinistra)
+            {
+                var title = "";
 
-		var i=0;
-		anagrafica_dime.forEach(dimaObj => 
-		{
-			if(!dimaObj.hidden)
-			{
-				var dimeItem=document.createElement("button");
-				dimeItem.setAttribute("class","popup-dime-item");
-				if(i==0)
-					dimeItem.setAttribute("style","margin-top:0px");
+                if(alertLanaPrefresataObj.lung >= 590 && alertLanaPrefresataObj.lung <= 610)
+                    title = "CARICARE LANA PREFRESATA";
+                else
+                    title = "FRESARE LATO SINISTRO LANA DOPO IL TAGLIO";
 
+                await Swal.fire
+                ({
+                    icon:"error",
+                    title,
+                    onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="black";document.getElementsByClassName("swal2-title")[0].style.fontSize="24px";},
+                    confirmButtonText:"PROSEGUI"
+                });
+            }
 
-                var span=document.createElement("span");
-                span.setAttribute("style","color:#4C91CB;font-weight:bold;margin-right:10px");
-                span.innerHTML=dimaObj.NumeroDima;
-                dimeItem.appendChild(span);
+            var anagrafica_dime=await getAnagraficaDime();
 
-				var span=document.createElement("span");
-				span.innerHTML=dimaObj.descrizione;
-				dimeItem.appendChild(span);
+            var outerContainer=document.createElement("div");
+            outerContainer.setAttribute("class","popup-dime-outer-container");
 
-                if(dimaObj.auto_rotazione && pannelloObj.lung2 > 0 && pannelloObj.lung2 < pannelloObj.lung1)
+            var i=0;
+            anagrafica_dime.forEach(dimaObj => 
+            {
+                if(!dimaObj.hidden)
                 {
-                    dimeItem.setAttribute("onclick","Swal.close();confermaSelectPannello("+dimaObj.NumeroDima+",true)");
+                    var dimeItem=document.createElement("button");
+                    dimeItem.setAttribute("class","popup-dime-item");
+                    if(i==0)
+                        dimeItem.setAttribute("style","margin-top:0px");
+
 
                     var span=document.createElement("span");
-                    span.setAttribute("style","margin-left:auto");
-                    span.innerHTML="PANNELLO RUOTATO";
+                    span.setAttribute("style","color:#4C91CB;font-weight:bold;margin-right:10px");
+                    span.innerHTML=dimaObj.NumeroDima;
                     dimeItem.appendChild(span);
-                }
-                else
-                    dimeItem.setAttribute("onclick","Swal.close();confermaSelectPannello("+dimaObj.NumeroDima+",false)");
-				
-				outerContainer.appendChild(dimeItem);
-				i++;
-			}
-		});
 
-		Swal.fire
-		({
-			background:"#404040",
-			title:"SCEGLI UNA DIMA",
-			html:outerContainer.outerHTML,
-			allowOutsideClick:true,
-			showCloseButton:true,
-			showConfirmButton:true,
-			allowEscapeKey:true,
-			showCancelButton:false,
-			onOpen : function()
-					{
-						document.getElementsByClassName("swal2-title")[0].style.fontWeight="normal";
-						document.getElementsByClassName("swal2-title")[0].style.fontSize="12px";
-						document.getElementsByClassName("swal2-title")[0].style.color="#ddd";
-						document.getElementsByClassName("swal2-title")[0].style.width="100%";
-						document.getElementsByClassName("swal2-close")[0].style.width="40px";
-						document.getElementsByClassName("swal2-close")[0].style.height="40px";
-						document.getElementsByClassName("swal2-title")[0].style.margin="0px";
-						document.getElementsByClassName("swal2-title")[0].style.marginTop="5px";
-						document.getElementsByClassName("swal2-title")[0].style.fontFamily="'Montserrat',sans-serif";
-						document.getElementsByClassName("swal2-title")[0].style.textAlign="left";
-						document.getElementsByClassName("swal2-confirm")[0].style.display="none";
-						document.getElementsByClassName("swal2-popup")[0].style.paddingBottom="0px";
-						document.getElementsByClassName("swal2-popup")[0].style.paddingRight="0px";
-						document.getElementsByClassName("swal2-popup")[0].style.paddingLeft="0px";
-						document.getElementsByClassName("swal2-popup")[0].style.paddingTop="10px";
-						document.getElementsByClassName("swal2-header")[0].style.paddingLeft="20px";
-						document.getElementsByClassName("swal2-content")[0].style.padding="0px";
-						document.getElementsByClassName("swal2-actions")[0].style.margin="0px";
-					}
-		});
+                    var span=document.createElement("span");
+                    span.innerHTML=dimaObj.descrizione;
+                    dimeItem.appendChild(span);
+
+                    if(dimaObj.auto_rotazione && pannelloObj.lung2 > 0 && pannelloObj.lung2 < pannelloObj.lung1)
+                    {
+                        dimeItem.setAttribute("onclick","Swal.close();confermaSelectPannello("+dimaObj.NumeroDima+",true)");
+
+                        var span=document.createElement("span");
+                        span.setAttribute("style","margin-left:auto");
+                        span.innerHTML="PANNELLO RUOTATO";
+                        dimeItem.appendChild(span);
+                    }
+                    else
+                        dimeItem.setAttribute("onclick","Swal.close();confermaSelectPannello("+dimaObj.NumeroDima+",false)");
+                    
+                    outerContainer.appendChild(dimeItem);
+                    i++;
+                }
+            });
+
+            Swal.fire
+            ({
+                background:"#404040",
+                title:"SCEGLI UNA DIMA",
+                html:outerContainer.outerHTML,
+                allowOutsideClick:true,
+                showCloseButton:true,
+                showConfirmButton:true,
+                allowEscapeKey:true,
+                showCancelButton:false,
+                onOpen : function()
+                        {
+                            document.getElementsByClassName("swal2-title")[0].style.fontWeight="normal";
+                            document.getElementsByClassName("swal2-title")[0].style.fontSize="12px";
+                            document.getElementsByClassName("swal2-title")[0].style.color="#ddd";
+                            document.getElementsByClassName("swal2-title")[0].style.width="100%";
+                            document.getElementsByClassName("swal2-close")[0].style.width="40px";
+                            document.getElementsByClassName("swal2-close")[0].style.height="40px";
+                            document.getElementsByClassName("swal2-title")[0].style.margin="0px";
+                            document.getElementsByClassName("swal2-title")[0].style.marginTop="5px";
+                            document.getElementsByClassName("swal2-title")[0].style.fontFamily="'Montserrat',sans-serif";
+                            document.getElementsByClassName("swal2-title")[0].style.textAlign="left";
+                            document.getElementsByClassName("swal2-confirm")[0].style.display="none";
+                            document.getElementsByClassName("swal2-popup")[0].style.paddingBottom="0px";
+                            document.getElementsByClassName("swal2-popup")[0].style.paddingRight="0px";
+                            document.getElementsByClassName("swal2-popup")[0].style.paddingLeft="0px";
+                            document.getElementsByClassName("swal2-popup")[0].style.paddingTop="10px";
+                            document.getElementsByClassName("swal2-header")[0].style.paddingLeft="20px";
+                            document.getElementsByClassName("swal2-content")[0].style.padding="0px";
+                            document.getElementsByClassName("swal2-actions")[0].style.margin="0px";
+                        }
+            });
+        }
     }
 }
 async function confermaSelectPannello(NumeroDima,ruotato)
