@@ -13,41 +13,103 @@ var intervalOverflowPdf1;
 var intervalOverflowPdf2;
 var popupErroriPlc=false;
 var ordini_di_produzione;
+var counter_qc = 0;
+var stazione_mes = null;
 
 window.addEventListener("load", async function(event)
 {
     startClock();
 
-    id_utente=await getSessionValue("id_utente");
+    Swal.fire
+    ({
+        width:"100%",
+        background:"transparent",
+        title:"Caricamento in corso...",
+        html:'<i class="fad fa-spinner-third fa-spin fa-3x" style="color:white"></i>',
+        allowOutsideClick:false,
+        showCloseButton:false,
+        showConfirmButton:false,
+        allowEscapeKey:false,
+        showCancelButton:false,
+        onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
+    });
     
-    var nome_stazione=await getSessionValue("stazione");
+    var error = false;
 
-    stazioni=await getAnagraficaStazioni();
+    var responseString = await getStazioneMes();
+    if(responseString.toLowerCase().indexOf("error")>-1 || responseString.toLowerCase().indexOf("warning")>-1 || responseString.toLowerCase().indexOf("notice")>-1)
+        error = true;
+    else
+        try {stazione_mes = JSON.parse(responseString);} catch (err) {error = true;}
 
-    stazione=getFirstObjByPropValue(stazioni,"nome",nome_stazione);
+    if(error)
+        Swal.fire({icon:"error",title: "Errore. Se il problema persiste contatta l' amministratore #1",onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.color="gray";document.getElementsByClassName("swal2-title")[0].style.fontSize="14px";}});
+    else
+    {
+        Swal.close();
 
-    svuotaLogoutStazione(stazione.id_stazione);
+        id_utente=await getSessionValue("id_utente");
+        
+        var nome_stazione=await getSessionValue("stazione");
 
-    document.getElementById("infoStazioneContainer").innerHTML=stazione.label;
-    document.getElementById("infoStazioneContainer").setAttribute("nome",stazione.nome);
-    document.getElementById("infoStazioneContainer").setAttribute("id_stazione",stazione.id_stazione);
+        stazioni=await getAnagraficaStazioni();
 
-    var username=await getSessionValue("username");
-    document.getElementById("usernameContainer").innerHTML=username+'<i class="fad fa-user" style="margin-left:10px"></i>';
+        stazione=getFirstObjByPropValue(stazioni,"nome",nome_stazione);
 
-    getListOrdiniDiProduzione();
+        svuotaLogoutStazione(stazione.id_stazione);
 
-    setFocus();
+        document.getElementById("infoStazioneContainer").innerHTML=stazione.label;
+        document.getElementById("infoStazioneContainer").setAttribute("nome",stazione.nome);
+        document.getElementById("infoStazioneContainer").setAttribute("id_stazione",stazione.id_stazione);
 
-    var frequenza_aggiornamento_check_logout=await getParametro("frequenza_aggiornamento_check_logout");
-    frequenza_aggiornamento_check_logout=parseInt(frequenza_aggiornamento_check_logout);
+        var username=await getSessionValue("username");
+        document.getElementById("usernameContainer").innerHTML=username+'<i class="fad fa-user" style="margin-left:10px"></i>';
 
-    var frequenza_aggiornamento_check_errori_plc=await getParametro("frequenza_aggiornamento_check_errori_plc");
-    frequenza_aggiornamento_check_errori_plc=parseInt(frequenza_aggiornamento_check_errori_plc);
-    
-    setInterval(() => checkLogoutStazione(stazione.id_stazione), frequenza_aggiornamento_check_logout);
-    setInterval(() => checkErroriPlc(), frequenza_aggiornamento_check_errori_plc);
+        getListOrdiniDiProduzione();
+
+        setFocus();
+        
+        //------------------------------------------------------------------------------------------
+
+        var frequenza_aggiornamento_check_logout=await getParametro("frequenza_aggiornamento_check_logout");
+        frequenza_aggiornamento_check_logout=parseInt(frequenza_aggiornamento_check_logout);
+
+        var frequenza_aggiornamento_check_errori_plc=await getParametro("frequenza_aggiornamento_check_errori_plc");
+        frequenza_aggiornamento_check_errori_plc=parseInt(frequenza_aggiornamento_check_errori_plc);
+        
+        setInterval(() => checkLogoutStazione(stazione.id_stazione), frequenza_aggiornamento_check_logout);
+        setInterval(() => checkErroriPlc(), frequenza_aggiornamento_check_errori_plc);
+        
+        //------------------------------------------------------------------------------------------
+
+        url_applicazione_mes_controllo_qualita = await getParametroMes("url_applicazione_mes_controllo_qualita");
+        
+        //------------------------------------------------------------------------------------------
+
+        var link = document.createElement("link");
+        link.setAttribute("href","../" + url_applicazione_mes_controllo_qualita + "/css/controlloQualita.css");
+        link.setAttribute("rel","stylesheet");
+        document.head.appendChild(link);
+
+        var script = document.createElement("script");
+        script.setAttribute("src","../" + url_applicazione_mes_controllo_qualita + "/js/controlloQualita.js");
+        document.head.appendChild(script);
+    }
 });
+function getStazioneMes()
+{
+    return new Promise(function (resolve, reject) 
+    {
+        $.post("getStazioneMes.php",
+        function(response, status)
+        {
+            if(status=="success")
+                resolve(response);
+            else
+                resolve("error");
+        });
+    });
+}
 function checkErroriPlc()
 {
 	$.get("checkErroriPlc.php",
@@ -1325,6 +1387,8 @@ async function confermaSelectPannello(NumeroDima,ruotato)
             onOpen : function(){document.getElementsByClassName("swal2-title")[0].style.fontWeight="bold";document.getElementsByClassName("swal2-title")[0].style.color="white";}
         });
 
+        counter_qc++;
+
         NumeroDimaPannelloSelezionato = NumeroDima;
         var pannelloObj=getFirstObjByPropValue(pannelli,"id_distinta",pannelloSelezionato);
 
@@ -1336,6 +1400,10 @@ async function confermaSelectPannello(NumeroDima,ruotato)
         }
         else
         {
+                        console.log(stazione_mes.avviso_controllo_qualita ,counter_qc === 1 ,counter_qc % 20 === 0,counter_qc)
+            if (stazione_mes.avviso_controllo_qualita && (counter_qc === 1 || counter_qc % 20 === 0))
+                await getPopupAvvisoQC(stazione_mes.messaggio_controllo_qualita,"utente",stazione_mes.id_stazione,id_utente,odpSelezionato,[pannelloSelezionato],"pannelli");
+
             Swal.close();
             if((pannelloObj.configurazione.toLowerCase()=="bf" || pannelloObj.configurazione.toLowerCase()=="carter") && facciaPannelloSelezionato=="fronte")
             {
