@@ -93,6 +93,7 @@ window.addEventListener("load", async function(event)
 
         var script = document.createElement("script");
         script.setAttribute("src","../" + url_applicazione_mes_controllo_qualita + "/js/controlloQualita.js");
+        script.setAttribute("id","url_applicazione_mes_controllo_qualita");
         document.head.appendChild(script);
     }
 });
