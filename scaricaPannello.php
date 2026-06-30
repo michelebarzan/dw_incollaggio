@@ -159,9 +159,9 @@
         else
         {
             $query21="SELECT utente
-                    FROM dbo.utenti_squadre_mes
+                    FROM dw_produzione.dbo.utenti_squadre_mes
                     WHERE (squadra = " . $_SESSION['id_squadra_uscita'] . ")";
-            $result21=sqlsrv_query($conn40,$query21);
+            $result21=sqlsrv_query($conn8,$query21);
             if ($result21 !== FALSE)
             {
                 while($row21=sqlsrv_fetch_array($result21))
